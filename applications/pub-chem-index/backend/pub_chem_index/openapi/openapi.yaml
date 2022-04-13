@@ -3,7 +3,7 @@ info:
   title: PubChemIndex
   version: 1.0.0
 servers:
-- url: /
+- url: /api
 tags:
 - name: molecule
 paths:

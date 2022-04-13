@@ -107,6 +107,8 @@ components:
           type: array
           items:
             type: string
+servers:
+  - url: /api
 tags:
 - name: molecule
   description: ""

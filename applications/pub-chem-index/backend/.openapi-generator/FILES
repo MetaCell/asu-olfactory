@@ -1,4 +1,3 @@
-.dockerignore
 .gitignore
 .travis.yml
 README.md
@@ -14,7 +13,6 @@ pub_chem_index/models/base_model_.py
 pub_chem_index/models/molecule.py
 pub_chem_index/openapi/openapi.yaml
 pub_chem_index/test/__init__.py
-pub_chem_index/test/test_molecule_controller.py
 pub_chem_index/typing_utils.py
 pub_chem_index/util.py
 tox.ini
