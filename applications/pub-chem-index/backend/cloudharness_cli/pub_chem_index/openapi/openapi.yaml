@@ -1,0 +1,142 @@
+openapi: 3.0.2
+info:
+  title: PubChemIndex
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: molecule
+paths:
+  /molecules:
+    description: The REST endpoint/path used to list and create zero or more `Molecule`
+      entities.  This path contains a `GET` and `POST` operation to perform the list
+      and create tasks, respectively.
+    get:
+      description: Gets a list of all `Molecule` entities.
+      operationId: get_molecules
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns an array of `Molecule` entities.
+      summary: List All Molecules
+      tags:
+      - molecule
+      x-openapi-router-controller: cloudharness_cli.pub_chem_index.controllers.molecule_controller
+    post:
+      description: Creates a new instance of a `Molecule`.
+      operationId: create_molecule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Molecule'
+        description: A new `Molecule` to be created.
+        required: true
+      responses:
+        "201":
+          description: Successful response.
+      summary: Create a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: cloudharness_cli.pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage the list of molecules.
+  /molecules/{moleculeId}:
+    delete:
+      description: Deletes an existing `Molecule`.
+      operationId: delete_molecule
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: moleculeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Successful response.
+      summary: Delete a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: cloudharness_cli.pub_chem_index.controllers.molecule_controller
+    description: The REST endpoint/path used to get, update, and delete single instances
+      of an `Molecule`.  This path contains `GET`, `PUT`, and `DELETE` operations
+      used to perform the get, update, and delete tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: get_molecule
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: moleculeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Molecule'
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: cloudharness_cli.pub_chem_index.controllers.molecule_controller
+    put:
+      description: Updates an existing `Molecule`.
+      operationId: update_molecule
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: moleculeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Molecule'
+        description: Updated `Molecule` information.
+        required: true
+      responses:
+        "202":
+          description: Successful response.
+      summary: Update a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: cloudharness_cli.pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule.
+components:
+  schemas:
+    Molecule:
+      example:
+        synonyms:
+        - synonyms
+        - synonyms
+        cid: 0
+      properties:
+        cid:
+          title: cid
+          type: integer
+        synonyms:
+          items:
+            type: string
+          title: synonyms
+          type: array
+      required:
+      - cid
+      - synonyms
+      title: Molecule
+      type: object
