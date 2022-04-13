@@ -12,6 +12,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
+WORKDIR /usr/src/app
+RUN ls -la
 RUN pip3 install -e .
 
-ENTRYPOINT gunicorn --workers=$WORKERS --bind=0.0.0.0:$PORT $MODULE_NAME.__main__:app
+CMD python __main__

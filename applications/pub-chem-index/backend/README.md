@@ -15,7 +15,7 @@ To run the server, please execute the following from the root directory:
 
 ```
 pip3 install -r requirements.txt
-python3 -m cloudharness_cli.pub_chem_index
+python3 -m pub_chem_index
 ```
 
 and open your browser to here:
@@ -42,8 +42,8 @@ To run the server on a Docker container, please execute the following from the r
 
 ```bash
 # building the image
-docker build -t cloudharness_cli.pub_chem_index .
+docker build -t pub_chem_index .
 
 # starting up a container
-docker run -p 8080:8080 cloudharness_cli.pub_chem_index
+docker run -p 8080:8080 pub_chem_index
 ```

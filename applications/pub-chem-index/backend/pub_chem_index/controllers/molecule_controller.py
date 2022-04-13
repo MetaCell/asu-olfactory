@@ -1,8 +1,8 @@
 import connexion
 import six
 
-from cloudharness_cli.pub_chem_index.models.molecule import Molecule  # noqa: E501
-from cloudharness_cli.pub_chem_index import util
+from pub_chem_index.models.molecule import Molecule  # noqa: E501
+from pub_chem_index import util
 
 
 def create_molecule(molecule):  # noqa: E501
@@ -43,7 +43,7 @@ def get_molecule(molecule_id):  # noqa: E501
 
     :rtype: Molecule
     """
-    return Molecule(cid=1, synonyms=["A", "B"])
+    return 'do some magic!'
 
 
 def get_molecules():  # noqa: E501

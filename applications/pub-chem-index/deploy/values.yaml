@@ -1,5 +1,5 @@
 harness:
-  subdomain: pub-chem-index
+  subdomain: pubchem
   secured: false
   service:
     port: 8080

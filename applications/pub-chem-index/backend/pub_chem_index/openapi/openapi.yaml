@@ -4,6 +4,8 @@ info:
   version: 1.0.0
 servers:
 - url: /
+tags:
+- name: molecule
 paths:
   /molecules:
     description: The REST endpoint/path used to list and create zero or more `Molecule`
@@ -22,7 +24,9 @@ paths:
                 type: array
           description: Successful response - returns an array of `Molecule` entities.
       summary: List All Molecules
-      x-openapi-router-controller: pub_chem_index.controllers.default_controller
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     post:
       description: Creates a new instance of a `Molecule`.
       operationId: create_molecule
@@ -37,7 +41,9 @@ paths:
         "201":
           description: Successful response.
       summary: Create a Molecule
-      x-openapi-router-controller: pub_chem_index.controllers.default_controller
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
   /molecules/{moleculeId}:
     delete:
@@ -56,7 +62,9 @@ paths:
         "204":
           description: Successful response.
       summary: Delete a Molecule
-      x-openapi-router-controller: pub_chem_index.controllers.default_controller
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     description: The REST endpoint/path used to get, update, and delete single instances
       of an `Molecule`.  This path contains `GET`, `PUT`, and `DELETE` operations
       used to perform the get, update, and delete tasks, respectively.
@@ -80,7 +88,9 @@ paths:
                 $ref: '#/components/schemas/Molecule'
           description: Successful response - returns a single `Molecule`.
       summary: Get a Molecule
-      x-openapi-router-controller: pub_chem_index.controllers.default_controller
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     put:
       description: Updates an existing `Molecule`.
       operationId: update_molecule
@@ -104,7 +114,9 @@ paths:
         "202":
           description: Successful response.
       summary: Update a Molecule
-      x-openapi-router-controller: pub_chem_index.controllers.default_controller
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule.
 components:
   schemas:

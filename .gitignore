@@ -1,2 +1,5 @@
 cloud-harness
-deployment
+deployment/helm
+skaffold.yaml
+.vscode
+.overrides

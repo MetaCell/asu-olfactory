@@ -10,8 +10,8 @@ from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index.test import BaseTestCase
 
 
-class TestDefaultController(BaseTestCase):
-    """DefaultController integration test stubs"""
+class TestMoleculeController(BaseTestCase):
+    """MoleculeController integration test stubs"""
 
     def test_create_molecule(self):
         """Test case for create_molecule
