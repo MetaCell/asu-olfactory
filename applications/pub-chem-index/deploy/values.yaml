@@ -8,6 +8,8 @@ harness:
   database:
     type: postgres
     auto: true
+    postgres:
+      image: pubchem-postgres:latest
   deployment:
     auto: true
     port: 8080
@@ -15,3 +17,4 @@ harness:
     build:
       - cloudharness-base
       - cloudharness-flask
+      - pubchem-postgres
