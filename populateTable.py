@@ -36,14 +36,13 @@ try:
             DELIMITER ',' CSV HEADER;
             ''' % f
         cur.execute(sql_copy)
-    cur.execute("CREATE EXTENSION pg_trgm")
+    cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
     cur.execute("CREATE INDEX idx_gin ON synonyms USING gin (Synonym gin_trgm_ops);")
     conn.commit()
     cur.close()
     conn.close()
     end = time.time()
-    print("End Time")
-    print(end - start)
+    print("It took %s seconds", end - start)
 except Exception:
     traceback.print_exc()
     print("Error")
