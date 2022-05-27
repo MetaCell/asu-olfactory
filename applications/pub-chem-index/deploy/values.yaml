@@ -4,6 +4,10 @@ harness:
   service:
     port: 8080
     auto: true
+
+  database:
+    type: postgres
+    auto: true
   deployment:
     auto: true
     port: 8080
