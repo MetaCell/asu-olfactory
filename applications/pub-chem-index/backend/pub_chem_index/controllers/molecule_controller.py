@@ -5,6 +5,8 @@ from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index import util
 
 
+
+
 def create_molecule(molecule):  # noqa: E501
     """Create a Molecule
 
@@ -17,6 +19,8 @@ def create_molecule(molecule):  # noqa: E501
     """
     if connexion.request.is_json:
         molecule = Molecule.from_dict(connexion.request.get_json())  # noqa: E501
+
+    
     return 'do some magic!'
 
 
