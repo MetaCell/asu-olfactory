@@ -62,9 +62,29 @@ steps:
         - REGISTRY=${{REGISTRY}}/olphactory/
         - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
         - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
+        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/cloudharness-base
         title: Cloudharness base
         working_directory: ./cloud-harness
+      pubchem-postgres:
+        type: build
+        stage: build
+        tag: '${{CF_BUILD_ID}}'
+        dockerfile: infrastructure/base-images/pubchem-postgres/Dockerfile
+        registry: '${{CODEFRESH_REGISTRY}}'
+        buildkit: true
+        build_arguments:
+        - TAG=${{CF_BUILD_ID}}
+        - NAMESPACE=${{NAMESPACE}}
+        - DOMAIN=${{DOMAIN}}
+        - NOCACHE=${{CF_BUILD_ID}}
+        - REGISTRY=${{REGISTRY}}/olphactory/
+        - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
+        - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
+        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
+        image_name: olphactory/pubchem-postgres
+        title: Pubchem postgres
+        working_directory: ./.
   build_static_images:
     title: Build static images
     type: parallel
@@ -85,6 +105,7 @@ steps:
         - REGISTRY=${{REGISTRY}}/olphactory/
         - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
         - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
+        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/cloudharness-flask
         title: Cloudharness flask
         working_directory: ./cloud-harness/infrastructure/common-images/cloudharness-flask
@@ -107,6 +128,7 @@ steps:
         - REGISTRY=${{REGISTRY}}/olphactory/
         - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
         - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
+        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/pub-chem-index
         title: Pub chem index
         working_directory: ./applications/pub-chem-index/backend
@@ -141,6 +163,14 @@ steps:
         type: push
         title: Cloudharness flask
         candidate: '${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}'
+        tags:
+        - '${{DEPLOYMENT_PUBLISH_TAG}}'
+        registry: '${{REGISTRY_PUBLISH_URL}}'
+      publish_pubchem-postgres:
+        stage: publish
+        type: push
+        title: Pubchem postgres
+        candidate: '${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}'
         tags:
         - '${{DEPLOYMENT_PUBLISH_TAG}}'
         registry: '${{REGISTRY_PUBLISH_URL}}'
