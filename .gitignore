@@ -3,3 +3,5 @@ deployment/helm
 skaffold.yaml
 .vscode
 .overrides
+CID-Synonym-unfiltered
+CID-Synonym-unfiltered_*.csv

@@ -8,7 +8,7 @@ import traceback
 conn = psycopg2.connect(
     host='localhost',
     port=5432,
-    dbname='asu',
+    dbname='postgres',
     user='postgres',
     password='password'
 )
@@ -17,6 +17,15 @@ cur = conn.cursor()
 try:
     #Populate a table without GIN Indexing
     start = time.time()
+    cur.execute('''CREATE database mydb''')
+    conn = psycopg2.connect(
+    host='localhost',
+    port=5432,
+    dbname='asu',
+    user='postgres',
+    password='password'
+    )
+    cur = conn.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS synonyms_nongin(
             CID VARCHAR NOT NULL,
@@ -24,7 +33,7 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    path = "/home/walrus/code/metacell/asu/asu-olfactory/CID_Chunks/"
+    path = "CID_Chunks/"
     csv_files = glob.glob(os.path.join(path, "*.csv"))
   
     # loop over the list of csv files

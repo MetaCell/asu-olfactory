@@ -28,13 +28,7 @@ def tidy_split(df, column, sep=',', keep=False):
     new_values = list()
     df = df.dropna(subset=[column])
     for i, presplit in enumerate(df[column].astype(str)):
-        values = presplit.split(sep)
-        if keep and len(values) > 1:
-            indexes.append(i)
-            new_values.append(presplit)
-        for value in values:
-            indexes.append(i)
-            new_values.append(value)
+        new_values.append(presplit)
     new_df = df.iloc[indexes, :].copy()
     new_df[column] = new_values
     return new_df
