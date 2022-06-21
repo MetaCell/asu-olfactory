@@ -1,0 +1,19 @@
+harness:
+  subdomain: pubchem
+  secured: false
+  service:
+    port: 8080
+    auto: true
+
+  database:
+    type: postgres
+    auto: true
+    image_ref: pubchem-postgres
+  deployment:
+    auto: true
+    port: 8080
+  dependencies:
+    build:
+      - cloudharness-base
+      - cloudharness-flask
+      - pubchem-postgres
