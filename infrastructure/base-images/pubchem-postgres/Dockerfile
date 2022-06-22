@@ -17,7 +17,7 @@ RUN apt-get -y install -f git
 
 WORKDIR $HOME/workspace
 
-RUN git clone -b main https://github.com/MetaCell/asu-olfactory.git
+RUN git clone -b feature/20 https://github.com/MetaCell/asu-olfactory.git
 
 WORKDIR $HOME/workspace/asu-olfactory
 RUN wget https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz
