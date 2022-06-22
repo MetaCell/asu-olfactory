@@ -19,12 +19,11 @@ WORKDIR $HOME/workspace
 
 RUN git clone -b feature/20 https://github.com/MetaCell/asu-olfactory.git
 
+USER postgres
 WORKDIR $HOME/workspace/asu-olfactory
 RUN wget https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz
 RUN gunzip CID-Synonym-unfiltered.gz
 RUN mkdir CID_Chunks
-USER postgres
 RUN python3 scripts/normalize.py
 RUN less CID_Chunks/CID-Synonym-unfiltered_1.csv
 RUN python3 scripts/populateTable.py
-RUN less CID_Chunks/CID-Synonym-unfiltered_1.csv
