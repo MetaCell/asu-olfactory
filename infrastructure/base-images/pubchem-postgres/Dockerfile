@@ -12,17 +12,17 @@ CMD /bin/bash
 RUN apt -y install python3-pip wget 
 RUN pip install pandas psycopg2-binary wheel
 RUN apt update
-RUN apt-get -y install -f git-all
+RUN dpkg --configure -a
+RUN apt-get -y install -f git
 
 WORKDIR $HOME/workspace
 
 RUN git clone -b main https://github.com/MetaCell/asu-olfactory.git
-RUN cd asu-olfactory && ls
 
 WORKDIR $HOME/workspace/asu-olfactory
 RUN wget https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz
-RUN ls && gunzip CID-Synonym-unfiltered.gz
+RUN gunzip CID-Synonym-unfiltered.gz
 RUN mkdir CID_Chunks
-RUN ls && python3 scripts/normalize.py
+RUN python3 scripts/normalize.py
 RUN python3 scripts/populateTable.py
 RUN less CID_Chunks/CID-Synonym-unfiltered_1.csv

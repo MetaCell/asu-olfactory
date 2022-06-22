@@ -47,4 +47,6 @@ for chunk in pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=Non
   chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
   chunk.to_csv('CID_Chunks/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
   chunk_n = chunk_n + 1
+  if chunk_n == 10:
+      break;
     
