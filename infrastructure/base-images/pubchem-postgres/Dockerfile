@@ -1,5 +1,9 @@
 FROM postgres:14
 ENV DEBIAN_FRONTEND=noninteractive
+ENV POSTGRES_PASSWORD postgres 
+ENV POSTGRES_DB testdb 
+COPY init.sql /docker-entrypoint-initdb.d/
+
 RUN apt-get update && \
       apt-get -y install sudo
 
@@ -17,5 +21,6 @@ WORKDIR $HOME/workspace
 RUN git clone -b feature/20 https://github.com/MetaCell/asu-olfactory.git
 RUN cd asu-olfactory && ls
 
+EXPOSE 5432
 WORKDIR $HOME/workspace/asu-olfactory
 CMD [ "bash", "scripts/install.sh"]

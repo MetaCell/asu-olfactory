@@ -8,7 +8,7 @@ import traceback
 conn = psycopg2.connect(
     host='localhost',
     port=5432,
-    dbname='postgres',
+    dbname='asu',
     user='postgres',
     password='password'
 )
@@ -17,15 +17,6 @@ cur = conn.cursor()
 try:
     #Populate a table without GIN Indexing
     start = time.time()
-    cur.execute('''CREATE database mydb''')
-    conn = psycopg2.connect(
-    host='localhost',
-    port=5432,
-    dbname='asu',
-    user='postgres',
-    password='password'
-    )
-    cur = conn.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS synonyms_nongin(
             CID VARCHAR NOT NULL,
