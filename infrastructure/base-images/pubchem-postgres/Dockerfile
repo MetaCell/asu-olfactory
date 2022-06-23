@@ -3,10 +3,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
       apt-get -y install sudo
 
-RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
-
 USER root
-CMD /bin/bash
 
 # Update Ubuntu Software repository
 RUN apt -y install python3-pip wget 
@@ -18,12 +15,7 @@ RUN apt-get -y install -f git
 WORKDIR $HOME/workspace
 
 RUN git clone -b feature/20 https://github.com/MetaCell/asu-olfactory.git
+RUN cd asu-olfactory && ls
 
-USER postgres
 WORKDIR $HOME/workspace/asu-olfactory
-RUN wget https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz
-RUN gunzip CID-Synonym-unfiltered.gz
-RUN mkdir CID_Chunks
-RUN python3 scripts/normalize.py
-RUN less CID_Chunks/CID-Synonym-unfiltered_1.csv
-RUN python3 scripts/populateTable.py
+CMD [ "bash", "scripts/install.sh"]
