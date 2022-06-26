@@ -8,4 +8,4 @@ ls
 pwd
 cd ..
 ls
-python3 scripts/populateTable.py "/workspace/asu-olfactory/CID_Chunks/"
+python3 scripts/populateTable.py "/workspace/asu-olfactory/CID_Chunks"

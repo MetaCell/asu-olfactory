@@ -1,3 +1,4 @@
+from calendar import c
 import psycopg2
 import glob
 import os
@@ -30,6 +31,10 @@ try:
     print(path)
     print(sys.argv)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
+    print("Glob")
+    print(glob.glob(os.path.join(path, "*.csv")))
+    print("csv")
+    print(csv_files)
     print(os.getcwd())
     print("args")
     print(sys.argv)
