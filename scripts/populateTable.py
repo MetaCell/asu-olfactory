@@ -45,7 +45,7 @@ try:
     for f in csv_files:
         print(f)
         sql_copy = '''
-            COPY synonyms_nongin
+            \COPY synonyms_nongin
             FROM '%s'
             DELIMITER ',' CSV HEADER;
             ''' % f
