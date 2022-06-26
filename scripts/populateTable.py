@@ -26,7 +26,7 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    path = sys.argv[0]
+    path = sys.argv[1]
     print(path)
     print(sys.argv)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
@@ -55,7 +55,7 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    path = sys.argv[0]
+    path = sys.argv[1]
     print(path)
     print(sys.argv)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
