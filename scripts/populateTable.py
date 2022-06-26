@@ -6,7 +6,6 @@ import time
 import traceback
 import os
 import sys
-print(os.getcwd())
 
 conn = psycopg2.connect(
     host='172.17.0.2',
@@ -29,7 +28,9 @@ try:
     # use glob to get all the csv files in the folder
     path = "/workspace/asu-olfactory/CID_Chunks/"
     csv_files = glob.glob(os.path.join(path, "*.csv"))
-  
+    print(os.getcwd())
+    print("args")
+    print(sys.argv)
     # loop over the list of csv files
     for f in csv_files:
         print(f)
