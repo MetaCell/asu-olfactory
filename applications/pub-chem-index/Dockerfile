@@ -14,7 +14,7 @@ RUN dpkg --configure -a
 RUN apt-get -y install -f git
 
 WORKDIR $HOME/workspace
-
+RUN ls
 RUN git clone -b feature/20 https://github.com/MetaCell/asu-olfactory.git
 RUN cd asu-olfactory && ls
 

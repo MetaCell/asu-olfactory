@@ -4,6 +4,8 @@ import os
 import csv
 import time
 import traceback
+import os
+print(os.getcwd())
 
 conn = psycopg2.connect(
     host='172.17.0.2',
