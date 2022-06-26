@@ -1,4 +1,4 @@
-FROM postgres:14
+FROM ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -18,6 +18,5 @@ WORKDIR $HOME/workspace
 RUN git clone -b feature/20 https://github.com/MetaCell/asu-olfactory.git
 RUN cd asu-olfactory && ls
 
-EXPOSE 5432
 WORKDIR $HOME/workspace/asu-olfactory
 CMD [ "bash", "scripts/install.sh"]
