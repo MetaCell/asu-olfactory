@@ -5,4 +5,5 @@ python3 scripts/normalize.py
 ls
 cd CID_Chunks
 ls
+cd ..
 python3 scripts/populateTable.py "/workspace/asu-olfactory/CID_Chunks/"
