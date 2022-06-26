@@ -33,6 +33,9 @@ try:
     print(os.getcwd())
     print("args")
     print(sys.argv)
+    print("List all")
+    for i,j,y in os.walk('.'):
+        print(i)
     # loop over the list of csv files
     for f in csv_files:
         print(f)
