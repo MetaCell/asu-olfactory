@@ -5,6 +5,7 @@ import csv
 import time
 import traceback
 import os
+import sys
 print(os.getcwd())
 
 conn = psycopg2.connect(
@@ -26,7 +27,7 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    path = "CID_Chunks/"
+    path = "/workspace/asu-olfactory/CID_Chunks/"
     csv_files = glob.glob(os.path.join(path, "*.csv"))
   
     # loop over the list of csv files
@@ -51,7 +52,9 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    path = "/home/walrus/code/metacell/asu/asu-olfactory/CID_Chunks/"
+    path = sys.argv[0]
+    print(path)
+    print(sys.argv)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
   
     # loop over the list of csv files

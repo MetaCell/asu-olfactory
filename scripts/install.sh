@@ -3,4 +3,4 @@ gunzip CID-Synonym-unfiltered.gz
 mkdir CID_Chunks
 ls
 python3 scripts/normalize.py
-python3 scripts/populateTable.py
+python3 scripts/populateTable.py "/workspace/asu-olfactory/CID_Chunks/"
