@@ -26,7 +26,9 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    path = "/workspace/asu-olfactory/CID_Chunks/"
+    path = sys.argv[0]
+    print(path)
+    print(sys.argv)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
     print(os.getcwd())
     print("args")
