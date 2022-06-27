@@ -8,7 +8,7 @@ import traceback
 import os
 
 conn = psycopg2.connect(
-    host='172.17.0.2',
+    host='172.20.0.2',
     port=5432,
     dbname='asu',
     user='postgres',
@@ -27,12 +27,9 @@ try:
         """)
     # use glob to get all the csv files in the folder
     path = '/CID_Chunks'
-    print(path)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
-    print(csv_files)
     # loop over the list of csv files
     for f in csv_files:
-        print(f)
         sql_copy = '''
             COPY synonyms_nongin
             FROM '%s'
@@ -52,12 +49,9 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    print(path)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
-    print(csv_files)
     # loop over the list of csv files
     for f in csv_files:
-        print(f)
         sql_copy = '''
             COPY synonyms
             FROM '%s'

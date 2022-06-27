@@ -1,0 +1,20 @@
+version: "3.6"
+services:
+  db:
+    build:
+      context: infrastructure/base-images/pubchem-postgres
+    container_name: asu_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - asu_volume:/CID_Chunks
+  app:
+    build:
+      context: applications/pub-chem-index
+    container_name: asu_app
+    volumes:
+      - asu_volume:/CID_Chunks
+    depends_on:
+      - db
+volumes:
+  asu_volume:
