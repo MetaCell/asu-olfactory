@@ -4,14 +4,33 @@ services:
     build:
       context: infrastructure/base-images/pubchem-postgres
     container_name: asu_db
+    restart: always
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - asu_volume:/CID_Chunks
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   app:
     build:
       context: applications/pub-chem-index
     container_name: asu_app
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    links:
+      - db
+    environment:
+      PGHOST: 'db'
+      PGDATABASE: 'asu'
+      PGUSER: 'postgres'
+      PGPASSWORD: 'postgres'
     volumes:
       - asu_volume:/CID_Chunks
     depends_on:
