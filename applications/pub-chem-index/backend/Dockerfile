@@ -16,4 +16,3 @@ WORKDIR /usr/src/app
 RUN ls -la
 RUN pip3 install -e .
 
-CMD python __main__
