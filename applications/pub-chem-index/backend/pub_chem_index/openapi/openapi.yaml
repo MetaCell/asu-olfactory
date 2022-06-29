@@ -3,10 +3,21 @@ info:
   title: PubChemIndex
   version: 1.0.0
 servers:
-- url: /api
+- url: /
 tags:
 - name: molecule
 paths:
+  /ingestion:
+    get:
+      operationId: ingest
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: ok
+      x-openapi-router-controller: pub_chem_index.controllers.default_controller
   /molecules:
     description: The REST endpoint/path used to list and create zero or more `Molecule`
       entities.  This path contains a `GET` and `POST` operation to perform the list

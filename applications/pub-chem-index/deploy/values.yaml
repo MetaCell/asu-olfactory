@@ -8,12 +8,22 @@ harness:
   database:
     type: postgres
     auto: true
+    name: pubchem-db
     image_ref: pubchem-postgres
+    size: 100Gi
   deployment:
     auto: true
     port: 8080
+    volume:
+      auto: false
+      size: 10Gi
+      create: false
+      name: pubchem-db
+      mountpath: /CID_Chunks
   dependencies:
     build:
       - cloudharness-base
       - cloudharness-flask
       - pubchem-postgres
+    soft:
+    - argo

@@ -1,0 +1,8 @@
+apps:
+  pub_chem_index:
+    harness:
+      deployment:
+        args:
+        - /usr/src/app/pub_chem_index/__main__.py
+        command:
+        - python
