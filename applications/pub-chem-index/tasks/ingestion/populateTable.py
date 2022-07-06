@@ -8,7 +8,7 @@ import traceback
 import os
 
 conn = psycopg2.connect(
-    host='pubchem-postgres',
+    host='pubchem-db',
     port=5432,
     dbname='asu',
     user='postgres',
