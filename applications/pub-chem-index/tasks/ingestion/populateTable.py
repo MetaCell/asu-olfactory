@@ -6,6 +6,7 @@ import csv
 import time
 import traceback
 import os
+import sys
 
 conn = psycopg2.connect(
     host='pubchem-db',
@@ -42,13 +43,19 @@ try:
     # print("It took %s seconds to create Non GIN table. ", end - start)
     #Populate GIN indexed table, this will take about 30 minutes.
     start = time.time()
-    path = '/data/db/pgdata/chunks'
+    path = '/CID_Chunks'
     cur.execute("""
         CREATE TABLE IF NOT EXISTS synonyms(
             CID VARCHAR NOT NULL,
             Synonym VARCHAR
         )
         """)
+    files = [f1 for f1 in os.listdir('.') if os.path.isfile(f1)]
+    for f1 in files:
+      print(f1)
+    print(os.getcwd())
+    print(sys.argv)
+
     # use glob to get all the csv files in the folder
     csv_files = glob.glob(os.path.join(path, "*.csv"))
     # loop over the list of csv files
