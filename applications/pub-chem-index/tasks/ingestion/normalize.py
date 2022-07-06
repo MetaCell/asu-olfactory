@@ -45,5 +45,5 @@ inferred_sep = reader._engine.data.dialect.delimiter
 
 for chunk in list(pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=None, names=['CID', 'Syn']))[0:10]:
   chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
-  chunk.to_csv('/chunks/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
+  chunk.to_csv('/data/db/pgdata/chunks/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
     

@@ -17,8 +17,8 @@ RUN gunzip CID-Synonym-unfiltered.gz
 COPY populateTable.py /populateTable.py
 COPY install.sh /install.sh
 COPY normalize.py /normalize.py
-RUN mkdir /chunks
+RUN mkdir /data/db/pgdata/chunks
 RUN python3 normalize.py
-RUN cd /chunks && ls && cd .. && ls
+RUN ls /data/db/pgdata/chunks && ls ..
 
 ENTRYPOINT [ "python3", "populateTable.py"]
