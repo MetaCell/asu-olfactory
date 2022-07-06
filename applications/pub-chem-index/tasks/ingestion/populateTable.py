@@ -42,7 +42,7 @@ try:
     # print("It took %s seconds to create Non GIN table. ", end - start)
     #Populate GIN indexed table, this will take about 30 minutes.
     start = time.time()
-    path = '/CID_Chunks'
+    path = '/data/db/pgdata/chunks'
     cur.execute("""
         CREATE TABLE IF NOT EXISTS synonyms(
             CID VARCHAR NOT NULL,

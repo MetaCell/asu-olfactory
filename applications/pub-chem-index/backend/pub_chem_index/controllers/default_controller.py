@@ -12,7 +12,7 @@ def ingest():  # noqa: E501
 
     :rtype: str
     """
-    shared_directory = 'pubchem-db:/CID_Chunks'
+    shared_directory = 'pubchem-db:/data/db/pgdata'
     task_ingest = tasks.CustomTask('ingest', 'pub-chem-index-ingestion')
 
     op = operations.PipelineOperation(
