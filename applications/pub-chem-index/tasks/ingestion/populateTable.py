@@ -11,8 +11,8 @@ conn = psycopg2.connect(
     host='pubchem-db',
     port=5432,
     dbname='asu',
-    user='postgres',
-    password='postgres'
+    user='mnp',
+    password='metacell'
 )
 cur = conn.cursor()
 
