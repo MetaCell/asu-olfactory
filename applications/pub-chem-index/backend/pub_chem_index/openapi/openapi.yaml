@@ -39,17 +39,17 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/{moleculeByCID}:
+  /molecules/{cid}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
       description: Gets the details of a single instance of a `Molecule`.
-      operationId: get_molecule_by_cid
+      operationId: get_molecules_by_cid
       parameters:
       - description: A unique identifier for a `Molecule`.
         explode: false
         in: path
-        name: moleculeByCID
+        name: cid
         required: true
         schema:
           type: string
@@ -66,17 +66,17 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/{moleculeBySynonym}:
+  /molecules/{synonym}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
       description: Gets the details of a single instance of a `Molecule`.
-      operationId: get_molecule_by_synonym
+      operationId: get_molecules_by_synonym
       parameters:
       - description: A unique identifier for a `Molecule`.
         explode: false
         in: path
-        name: moleculeBySynonym
+        name: synonym
         required: true
         schema:
           type: string
