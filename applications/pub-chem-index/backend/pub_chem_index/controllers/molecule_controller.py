@@ -16,12 +16,12 @@ def get_molecules():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1="")
+    # task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1="")
 
-    op = operations.PipelineOperation(
-        'search-data-', (task_search))
-    execute = op.execute()
-    print(execute)
+    # op = operations.PipelineOperation(
+    #     'search-data-', (task_search))
+    # execute = op.execute()
+    # print(execute)
     return "Molecules found"
 
 def get_molecules_by_cid(cid):  # noqa: E501
@@ -34,13 +34,13 @@ def get_molecules_by_cid(cid):  # noqa: E501
 
     :rtype: Molecule
     """
-    print("Searching cid ", cid)
-    task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=cid)
+    # print("Searching cid ", cid)
+    # task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=cid)
 
-    op = operations.PipelineOperation(
-        'search-data-', (task_search))
-    execute = op.execute()
-    print(execute)
+    # op = operations.PipelineOperation(
+    #     'search-data-', (task_search))
+    # execute = op.execute()
+    # print(execute)
     return "Molecules found"
 
 
