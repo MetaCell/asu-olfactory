@@ -1,5 +1,7 @@
 import connexion
 import six
+import yaml
+
 from cloudharness.workflows import tasks, operations
 
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
@@ -19,7 +21,8 @@ def get_molecules():  # noqa: E501
     op = operations.PipelineOperation(
         'search-data-', (task_search))
     execute = op.execute()
-    return execute
+    print(execute)
+    return "Molecules found"
 
 def get_molecules_by_cid(cid):  # noqa: E501
     """Get a Molecule
@@ -37,7 +40,8 @@ def get_molecules_by_cid(cid):  # noqa: E501
     op = operations.PipelineOperation(
         'search-data-', (task_search))
     execute = op.execute()
-    return execute
+    print(execute)
+    return "Molecules found"
 
 
 def get_molecules_by_synonym(synonym):  # noqa: E501
@@ -50,10 +54,17 @@ def get_molecules_by_synonym(synonym):  # noqa: E501
 
     :rtype: Molecule
     """
-    print("Searching synonym ", synonym)
-    task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=synonym)
+    def f(synonym):
+        import time
+        time.sleep(2)
+        print('whatever')
+        print(synonym)
 
-    op = operations.PipelineOperation(
+    task_search = tasks.PythonTask('my-task', f(synonym))
+
+    op = operations.DistributedSyncOperation(
         'search-data-', (task_search))
+    print('\n', yaml.dump(op.to_workflow()))
     execute = op.execute()
+    print(execute)
     return execute
