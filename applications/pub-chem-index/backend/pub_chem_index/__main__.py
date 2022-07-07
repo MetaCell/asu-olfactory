@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 
-import connexion
+from cloudharness.utils.server import init_flask, main
 
-from pub_chem_index import encoder
 
-app = None
-
-def main():
-    global app
-    app = connexion.App(__name__, specification_dir='./openapi/')
-    app.app.json_encoder = encoder.JSONEncoder
-    app.add_api('openapi.yaml',
-                arguments={'title': 'PubChemIndex'},
-                pythonic_params=True)
-
-    app.run(port=8080)
-
+app = init_flask(title="Olphactory pubchem index API", webapp=True)
 
 if __name__ == '__main__':
     main()
