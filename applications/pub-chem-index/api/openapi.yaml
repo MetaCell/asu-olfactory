@@ -23,28 +23,11 @@ paths:
       operationId: getMolecules
       summary: List All Molecules
       description: Gets a list of all `Molecule` entities.
-    post:
-      requestBody:
-        description: A new `Molecule` to be created.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Molecule"
-        required: true
-      tags:
-        - molecule
-      responses:
-        "201":
-          description: Successful response.
-      operationId: createMolecule
-      summary: Create a Molecule
-      description: Creates a new instance of a `Molecule`.
-  "/molecules/{moleculeId}":
-    summary: Path used to manage a single Molecule.
+  "/molecules/{moleculeByCID}":
+    summary: Path used to manage a single Molecule search by CID.
     description: >-
-      The REST endpoint/path used to get, update, and delete single instances of an `Molecule`.  This
-      path contains `GET`, `PUT`, and `DELETE` operations used to perform the get, update, and delete
-      tasks, respectively.
+      The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
     get:
       tags:
         - molecule
@@ -55,36 +38,36 @@ paths:
               schema:
                 $ref: "#/components/schemas/Molecule"
           description: Successful response - returns a single `Molecule`.
-      operationId: getMolecule
+      operationId: getMoleculeByCID
       summary: Get a Molecule
       description: Gets the details of a single instance of a `Molecule`.
-    put:
-      requestBody:
-        description: Updated `Molecule` information.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Molecule"
-        required: true
-      tags:
-        - molecule
-      responses:
-        "202":
-          description: Successful response.
-      operationId: updateMolecule
-      summary: Update a Molecule
-      description: Updates an existing `Molecule`.
-    delete:
-      tags:
-        - molecule
-      responses:
-        "204":
-          description: Successful response.
-      operationId: deleteMolecule
-      summary: Delete a Molecule
-      description: Deletes an existing `Molecule`.
     parameters:
-      - name: moleculeId
+      - name: moleculeByCID
+        description: A unique identifier for a `Molecule`.
+        schema:
+          type: string
+        in: path
+        required: true
+  "/molecules/{moleculeBySynonym}":
+    summary: Path used to manage a single Molecule search by synonym.
+    description: >-
+      The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      tags:
+        - molecule
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Molecule"
+          description: Successful response - returns a single `Molecule`.
+      operationId: getMoleculeBySynonym
+      summary: Get Molecules by synonym.
+      description: Gets the details of a single instance of a `Molecule`.
+    parameters:
+      - name: moleculeBySynonym
         description: A unique identifier for a `Molecule`.
         schema:
           type: string
@@ -103,17 +86,17 @@ paths:
 components:
   schemas:
     Molecule:
-      description: ""
+      description: "List of synonyms matching search query"
       required:
-        - cid
+        - search
         - synonyms
       type: object
       properties:
-        cid:
+        search:
           description: ""
-          type: integer
+          type: string
         synonyms:
-          description: ""
+          description: "List of synonyms matching search query"
           type: array
           items:
             type: string
