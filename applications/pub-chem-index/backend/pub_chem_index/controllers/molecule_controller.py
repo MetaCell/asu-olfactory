@@ -16,7 +16,7 @@ def get_molecules():  # noqa: E501
     """
     task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1="")
 
-    op = operations.SingleTaskOperation(
+    op = operations.PipelineOperation(
         'search-data-', (task_search))
     execute = op.execute()
     return execute
@@ -34,7 +34,7 @@ def get_molecules_by_cid(cid):  # noqa: E501
     print("Searching cid ", cid)
     task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=cid)
 
-    op = operations.SingleTaskOperation(
+    op = operations.PipelineOperation(
         'search-data-', (task_search))
     execute = op.execute()
     return execute
@@ -53,7 +53,7 @@ def get_molecules_by_synonym(synonym):  # noqa: E501
     print("Searching synonym ", synonym)
     task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=synonym)
 
-    op = operations.SingleTaskOperation(
+    op = operations.PipelineOperation(
         'search-data-', (task_search))
     execute = op.execute()
     return execute
