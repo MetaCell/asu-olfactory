@@ -19,7 +19,7 @@ harness:
       size: 10Gi
       create: false
       name: pubchem-db
-      mountpath: /CID_Chunks
+      mountpath: /data/db
   dependencies:
     build:
       - cloudharness-base
