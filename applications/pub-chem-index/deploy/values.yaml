@@ -14,12 +14,6 @@ harness:
   deployment:
     auto: true
     port: 8080
-    volume:
-      auto: false
-      size: 10Gi
-      create: false
-      name: pubchem-db
-      mountpath: /data/db
   dependencies:
     build:
       - cloudharness-base
