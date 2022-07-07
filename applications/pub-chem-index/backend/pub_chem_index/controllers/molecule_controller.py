@@ -14,8 +14,12 @@ def get_molecules():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    return 'do some magic!'
+    task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1="")
 
+    op = operations.SingleTaskOperation(
+        'search-data-', (task_search))
+    execute = op.execute()
+    return execute
 
 def get_molecules_by_cid(cid):  # noqa: E501
     """Get a Molecule
@@ -27,7 +31,13 @@ def get_molecules_by_cid(cid):  # noqa: E501
 
     :rtype: Molecule
     """
-    return 'do some magic!'
+    print("Searching cid ", cid)
+    task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=cid)
+
+    op = operations.SingleTaskOperation(
+        'search-data-', (task_search))
+    execute = op.execute()
+    return execute
 
 
 def get_molecules_by_synonym(synonym):  # noqa: E501
