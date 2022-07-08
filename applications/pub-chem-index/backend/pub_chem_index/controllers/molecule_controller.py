@@ -16,13 +16,19 @@ def get_molecules():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    # task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1="")
+    def f():
+        import time
+        time.sleep(2)
+        return 'Get Molecules'
 
-    # op = operations.PipelineOperation(
-    #     'search-data-', (task_search))
-    # execute = op.execute()
-    # print(execute)
-    return "Molecules found"
+    task_search = tasks.PythonTask('my-task', f)
+
+    op = operations.DistributedSyncOperation(
+        'search-data-', (task_search))
+    print('\n', yaml.dump(op.to_workflow()))
+    execute = op.execute()
+    print(execute)
+    return execute
 
 def get_molecules_by_cid(cid):  # noqa: E501
     """Get a Molecule
