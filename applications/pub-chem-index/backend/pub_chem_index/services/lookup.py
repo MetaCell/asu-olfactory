@@ -24,7 +24,8 @@ def get_all_molecules():
         result = cur.fetchall()
         cur.close()
         conn.close()
-        return result
+        app2 = applications.get_configuration('pub-chem-index')
+        return {app2.db_name}
     except Exception as e:
         traceback.print_exc()
         return 'Error submitting operation: %s' % e, 500
