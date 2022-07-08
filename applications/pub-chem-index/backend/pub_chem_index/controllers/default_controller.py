@@ -18,4 +18,4 @@ def ingest():  # noqa: E501
     op = operations.PipelineOperation(
         'ingest-data-', (task_ingest, ), shared_directory=shared_directory)
     execute = op.execute()
-    return execute
+    return "Ingesting Data"
