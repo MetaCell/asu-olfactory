@@ -26,9 +26,11 @@ def get_molecules():  # noqa: E501
     op = operations.DistributedSyncOperation(
         'search-data-', (task_search))
     print('\n', yaml.dump(op.to_workflow()))
-    execute = op.execute()
-    print(execute)
-    return execute
+    try:
+        workflow = op.execute()
+        return workflow.raw.to_dict()
+    except Exception as e:
+        return 'Error submitting operation: %s' % e, 500
 
 def get_molecules_by_cid(cid):  # noqa: E501
     """Get a Molecule
