@@ -5,19 +5,37 @@ import csv
 import time
 import traceback
 
-def search_molecules_by_synonym(term):
-    conn = psycopg2.connect(
-        host='pubchem-db',
-        port=5432,
-        dbname='asu',
-        user='mnp',
-        password='metacell'
-    )
-    cur = conn.cursor()
+from cloudharness import applications
+
+def connect():
+    app = applications.get_configuration('pub-chem-index')
+    conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password=metacell"
+    conn = psycopg2.connect(conn_string)
+    return conn
+
+def get_all_molecules():
+    conn = connect()
+    cur = connect().cursor()
+
     try:
         cur.execute("""
-            SELECT * FROM synonyms WHERE Synonym LIKE %(term)s;
-            """, (term))
+            SELECT * FROM synonyms;
+            """)
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+        return result
+    except Exception as e:
+        traceback.print_exc()
+        return 'Error submitting operation: %s' % e, 500
+
+def search_molecules_by_synonym(term):
+    conn = connect()
+    cur = connect().cursor()
+    try:
+        cur.execute("""
+            SELECT * FROM synonyms WHERE Synonym LIKE %(search)s ESCAPE '='
+            """, dict(search= '%'+term+'%'))
         result = cur.fetchall()
         cur.close()
         conn.close()
@@ -28,14 +46,8 @@ def search_molecules_by_synonym(term):
 
 
 def search_molecules_by_cid(term):
-    conn = psycopg2.connect(
-        host='pubchem-db',
-        port=5432,
-        dbname='asu',
-        user='mnp',
-        password='metacell'
-    )
-    cur = conn.cursor()
+    conn = connect()
+    cur = connect().cursor()
     try:
         cur.execute("""
          SELECT * FROM synonyms WHERE CID = %s;

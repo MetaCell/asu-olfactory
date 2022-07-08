@@ -1,14 +1,8 @@
-import connexion
-import six
-import yaml
-import psycopg2
 import glob
 import os
 import csv
 import time
 import traceback
-
-from cloudharness.workflows import tasks, operations
 
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index import util
@@ -23,26 +17,7 @@ def get_molecules():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    conn = psycopg2.connect(
-        host='pubchem-db',
-        port=5432,
-        dbname='asu',
-        user='mnp',
-        password='metacell'
-    )
-    cur = conn.cursor()
-
-    try:
-        cur.execute("""
-            SELECT * FROM synonyms;
-            """)
-        result = cur.fetchall()
-        cur.close()
-        conn.close()
-        return result
-    except Exception as e:
-        traceback.print_exc()
-        return 'Error submitting operation: %s' % e, 500
+    return lookup.get_all_molecules()
 
 def search_molecules(term):  # noqa: E501
     """Get a Molecule
@@ -55,5 +30,5 @@ def search_molecules(term):  # noqa: E501
     :rtype: Molecule
     """
     if term.isnumeric():
-        return lookup.search_molecules_by_cid(str(term))
-    return lookup.search_molecules_by_synonym(str(term))
+        return lookup.search_molecules_by_cid(term)
+    return lookup.search_molecules_by_synonym(term)
