@@ -12,9 +12,9 @@ conn = psycopg2.connect(
     user='mnp',
     password='metacell'
 )
-cur = conn.cursor()
 
 def search_molecules_by_synonym(term):
+    cur = conn.cursor()
     try:
         cur.execute("""
             SELECT * FROM synonyms WHERE Synonym LIKE %s;
@@ -29,6 +29,7 @@ def search_molecules_by_synonym(term):
 
 
 def search_molecules_by_cid(term):
+    cur = conn.cursor()
     try:
         cur.execute("""
          SELECT * FROM synonyms WHERE CID = %s;

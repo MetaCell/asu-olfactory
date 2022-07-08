@@ -33,7 +33,7 @@ def get_molecules():  # noqa: E501
 
     try:
         cur.execute("""
-            SELECT * FROM synonyms WHERE Synonym LIKE '';
+            SELECT * FROM synonyms WHERE Synonym;
             """)
         result = cur.fetchall()
         cur.close()
