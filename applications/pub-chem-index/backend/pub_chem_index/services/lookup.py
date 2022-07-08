@@ -16,7 +16,7 @@ def search_molecules_by_synonym(term):
     cur = conn.cursor()
     try:
         cur.execute("""
-            SELECT * FROM synonyms WHERE Synonym LIKE %s;
+            SELECT * FROM synonyms WHERE Synonym LIKE %(term)s;
             """, (term))
         result = cur.fetchall()
         cur.close()
