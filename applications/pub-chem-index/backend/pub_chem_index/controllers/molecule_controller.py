@@ -53,7 +53,7 @@ def get_molecules_by_cid(cid):  # noqa: E501
 
     :rtype: Molecule
     """
-    return lookup.search_molecules_by_cid(cid)
+    return lookup.search_molecules_by_cid(str(cid))
 
 
 def get_molecules_by_synonym(synonym):  # noqa: E501
@@ -66,4 +66,4 @@ def get_molecules_by_synonym(synonym):  # noqa: E501
 
     :rtype: Molecule
     """
-    return lookup.search_molecules_by_synonym(synonym)
+    return lookup.search_molecules_by_synonym(str(synonym))
