@@ -1,12 +1,18 @@
 import connexion
 import six
 import yaml
+import psycopg2
+import glob
+import os
+import csv
+import time
+import traceback
 
 from cloudharness.workflows import tasks, operations
 
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index import util
-
+from pub_chem_index.services import lookup
 
 def get_molecules():  # noqa: E501
     """List All Molecules
@@ -16,20 +22,25 @@ def get_molecules():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    def f():
-        import time
-        time.sleep(2)
-        return 'Get Molecules'
+    conn = psycopg2.connect(
+        host='pubchem-db',
+        port=5432,
+        dbname='asu',
+        user='mnp',
+        password='metacell'
+    )
+    cur = conn.cursor()
 
-    task_search = tasks.PythonTask('my-task', f)
-
-    op = operations.DistributedSyncOperation(
-        'search-data-', (task_search))
-    print('\n', yaml.dump(op.to_workflow()))
     try:
-        workflow = op.execute()
-        return workflow.raw.to_dict()
+        cur.execute("""
+            SELECT * FROM synonyms WHERE Synonym LIKE '';
+            """)
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+        return result
     except Exception as e:
+        traceback.print_exc()
         return 'Error submitting operation: %s' % e, 500
 
 def get_molecules_by_cid(cid):  # noqa: E501
@@ -42,14 +53,7 @@ def get_molecules_by_cid(cid):  # noqa: E501
 
     :rtype: Molecule
     """
-    # print("Searching cid ", cid)
-    # task_search = tasks.CustomTask('search', 'pub-chem-index-search', env_variable1=cid)
-
-    # op = operations.PipelineOperation(
-    #     'search-data-', (task_search))
-    # execute = op.execute()
-    # print(execute)
-    return "Molecules found"
+    return lookup.search_molecules_by_cid(cid)
 
 
 def get_molecules_by_synonym(synonym):  # noqa: E501
@@ -62,17 +66,4 @@ def get_molecules_by_synonym(synonym):  # noqa: E501
 
     :rtype: Molecule
     """
-    def f(synonym):
-        import time
-        time.sleep(2)
-        print('whatever')
-        print(synonym)
-
-    task_search = tasks.PythonTask('my-task', f(synonym))
-
-    op = operations.DistributedSyncOperation(
-        'search-data-', (task_search))
-    print('\n', yaml.dump(op.to_workflow()))
-    execute = op.execute()
-    print(execute)
-    return execute
+    return lookup.search_molecules_by_synonym(synonym)
