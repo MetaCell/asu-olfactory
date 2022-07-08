@@ -5,19 +5,18 @@ import csv
 import time
 import traceback
 
-conn = psycopg2.connect(
-    host='pubchem-db',
-    port=5432,
-    dbname='asu',
-    user='mnp',
-    password='metacell'
-)
-
 def search_molecules_by_synonym(term):
+    conn = psycopg2.connect(
+        host='pubchem-db',
+        port=5432,
+        dbname='asu',
+        user='mnp',
+        password='metacell'
+    )
     cur = conn.cursor()
     try:
         cur.execute("""
-            SELECT * FROM synonyms WHERE Synonym LIKE %s;
+            SELECT * FROM synonyms
             """, (term))
         result = cur.fetchall()
         cur.close()
@@ -29,6 +28,13 @@ def search_molecules_by_synonym(term):
 
 
 def search_molecules_by_cid(term):
+    conn = psycopg2.connect(
+        host='pubchem-db',
+        port=5432,
+        dbname='asu',
+        user='mnp',
+        password='metacell'
+    )
     cur = conn.cursor()
     try:
         cur.execute("""
