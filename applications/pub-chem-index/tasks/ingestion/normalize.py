@@ -49,7 +49,7 @@ doc = codecs.open(file_name,'rU','UTF-8') #open for reading with "universal" typ
 reader = pd.read_csv(doc, sep = None, iterator = True)
 inferred_sep = reader._engine.data.dialect.delimiter
 
-for chunk in list(pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=None, names=['CID', 'Syn'])):
+for chunk in list(pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=None, names=['CID', 'Syn']))[0:5]:
   chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
   chunk.to_csv(dest_folder + '/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
   chunk_n = chunk_n + 1
