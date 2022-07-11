@@ -11,6 +11,13 @@ harness:
     name: pubchem-db
     image_ref: pubchem-postgres
     size: 100Gi
+    resources:
+      requests:
+        memory: 4096Mi
+        cpu: 1
+      limits:
+        memory: 16384Mi
+        cpu: 8
   deployment:
     auto: true
     port: 8080
