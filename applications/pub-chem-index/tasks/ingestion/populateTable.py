@@ -9,7 +9,10 @@ import os
 import sys
 import logging
 
-conn_string = f"postgres://pubchem-db:5432/asu?user=mnp&password=metacell"
+from cloudharness import applications
+
+app = applications.get_configuration('pub-chem-index')
+conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password=metacell"
 conn = psycopg2.connect(conn_string)
 cur = conn.cursor()
 

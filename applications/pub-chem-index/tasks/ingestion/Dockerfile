@@ -1,4 +1,6 @@
-FROM python:3.9
+ARG CLOUDHARNESS_BASE
+
+FROM $CLOUDHARNESS_BASE
 
 RUN apt-get update && \
       apt-get -y install sudo
