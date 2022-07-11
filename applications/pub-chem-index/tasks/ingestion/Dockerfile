@@ -5,8 +5,7 @@ FROM $CLOUDHARNESS_BASE
 USER root
 
 # Update Ubuntu Software repository
-RUN apt -y install python3-pip wget
-RUN pip install pandas psycopg2-binary wheel
+RUN pip install wget pandas psycopg2-binary wheel
 
 WORKDIR /
 COPY . .
