@@ -2,9 +2,6 @@ ARG CLOUDHARNESS_BASE
 
 FROM $CLOUDHARNESS_BASE
 
-RUN apt-get update && \
-      apt-get -y install sudo
-
 USER root
 
 # Update Ubuntu Software repository
