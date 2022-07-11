@@ -15,25 +15,20 @@ class Molecule(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, search=None, synonyms=None):  # noqa: E501
+    def __init__(self, synonyms=None):  # noqa: E501
         """Molecule - a model defined in OpenAPI
 
-        :param search: The search of this Molecule.  # noqa: E501
-        :type search: str
         :param synonyms: The synonyms of this Molecule.  # noqa: E501
         :type synonyms: List[str]
         """
         self.openapi_types = {
-            'search': str,
             'synonyms': List[str]
         }
 
         self.attribute_map = {
-            'search': 'search',
             'synonyms': 'synonyms'
         }
 
-        self._search = search
         self._synonyms = synonyms
 
     @classmethod
@@ -46,29 +41,6 @@ class Molecule(Model):
         :rtype: Molecule
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def search(self):
-        """Gets the search of this Molecule.
-
-
-        :return: The search of this Molecule.
-        :rtype: str
-        """
-        return self._search
-
-    @search.setter
-    def search(self, search):
-        """Sets the search of this Molecule.
-
-
-        :param search: The search of this Molecule.
-        :type search: str
-        """
-        if search is None:
-            raise ValueError("Invalid value for `search`, must not be `None`")  # noqa: E501
-
-        self._search = search
 
     @property
     def synonyms(self):

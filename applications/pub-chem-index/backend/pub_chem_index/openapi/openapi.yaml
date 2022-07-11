@@ -71,14 +71,10 @@ components:
     Molecule:
       description: List of synonyms matching search query
       example:
-        search: search
         synonyms:
         - synonyms
         - synonyms
       properties:
-        search:
-          title: search
-          type: string
         synonyms:
           description: List of synonyms matching search query
           items:
@@ -86,7 +82,6 @@ components:
           title: synonyms
           type: array
       required:
-      - search
       - synonyms
       title: Molecule
       type: object

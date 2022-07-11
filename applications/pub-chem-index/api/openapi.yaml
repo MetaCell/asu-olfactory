@@ -63,13 +63,9 @@ components:
     Molecule:
       description: "List of synonyms matching search query"
       required:
-        - search
         - synonyms
       type: object
       properties:
-        search:
-          description: ""
-          type: string
         synonyms:
           description: "List of synonyms matching search query"
           type: array
