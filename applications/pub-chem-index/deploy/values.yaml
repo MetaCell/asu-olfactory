@@ -13,11 +13,11 @@ harness:
     size: 100Gi
     resources:
       requests:
-        memory: 4096Mi
-        cpu: 1
+        memory: 8192Mi
+        cpu: 2
       limits:
-        memory: 16384Mi
-        cpu: 8
+        memory: 32768Mi
+        cpu: 2
   deployment:
     auto: true
     port: 8080
