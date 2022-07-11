@@ -10,7 +10,7 @@ conn = psycopg2.connect(
     port=5432,
     dbname='asu',
     user='postgres',
-    password='password'
+    password='postgres'
 )
 cur = conn.cursor()
 
