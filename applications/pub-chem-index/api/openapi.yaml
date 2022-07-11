@@ -62,14 +62,15 @@ components:
   schemas:
     Molecule:
       description: "List of synonyms matching search query"
-      required:
-        - synonyms
-      type: object
-      properties:
-        synonyms:
-          description: "List of synonyms matching search query"
-          type: array
-          items:
+      type: array
+      items:
+        type: object
+        properties:
+          search:
+            description: ""
+            type: string
+          synonyms:
+            description: "List of synonyms matching search query"
             type: string
 tags:
   - name: molecule

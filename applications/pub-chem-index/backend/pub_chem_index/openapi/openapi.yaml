@@ -70,18 +70,13 @@ components:
   schemas:
     Molecule:
       description: List of synonyms matching search query
-      example:
-        synonyms:
-        - synonyms
-        - synonyms
-      properties:
-        synonyms:
-          description: List of synonyms matching search query
-          items:
+      items:
+        properties:
+          search:
             type: string
-          title: synonyms
-          type: array
-      required:
-      - synonyms
+          synonyms:
+            description: List of synonyms matching search query
+            type: string
+        type: object
       title: Molecule
-      type: object
+      type: array
