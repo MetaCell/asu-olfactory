@@ -16,8 +16,9 @@ harness:
           memory: 128Gi
           cpu: 32
       limits:
-        memory: 128Gi
-        cpu: 32
+        memory: 256Gi
+        cpu: 64
+    args: ["--vm", "1", "--vm-bytes", "32Gi", "--vm-hang", "1"]
   deployment:
     auto: true
     port: 8080
