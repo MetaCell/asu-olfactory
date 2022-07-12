@@ -59,7 +59,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Molecule'
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
           description: Successful response - returns a single `Molecule`.
       summary: Get a Molecule
       tags:
@@ -70,13 +72,18 @@ components:
   schemas:
     Molecule:
       description: List of synonyms matching search query
-      items:
-        properties:
-          search:
-            type: string
-          synonyms:
-            description: List of synonyms matching search query
-            type: string
-        type: object
+      example:
+        synonym: dimethyl
+        cid: 1
+      properties:
+        cid:
+          example: 1
+          title: cid
+          type: integer
+        synonym:
+          description: List of synonyms matching search query
+          example: dimethyl
+          title: synonym
+          type: string
       title: Molecule
-      type: array
+      type: object

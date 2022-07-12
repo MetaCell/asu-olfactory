@@ -36,7 +36,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Molecule"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Molecule"
           description: Successful response - returns a single `Molecule`.
       operationId: searchMolecules
       summary: Get a Molecule
@@ -62,16 +64,16 @@ components:
   schemas:
     Molecule:
       description: "List of synonyms matching search query"
-      type: array
-      items:
-        type: object
-        properties:
-          search:
-            description: ""
-            type: string
-          synonyms:
-            description: "List of synonyms matching search query"
-            type: string
+      type: object
+      properties:
+        cid:
+          description: ""
+          type: integer
+          example : 1
+        synonym:
+          description: "List of synonyms matching search query"
+          type: string
+          example: dimethyl
 tags:
   - name: molecule
     description: ""

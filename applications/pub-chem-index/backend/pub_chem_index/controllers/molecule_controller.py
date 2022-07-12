@@ -27,7 +27,7 @@ def search_molecules(term):  # noqa: E501
     :param term: A unique identifier for a &#x60;Molecule&#x60;.
     :type term: str
 
-    :rtype: Molecule
+    :rtype: List[Molecule]
     """
     if term.isnumeric():
         return lookup.search_molecules_by_cid(term)
