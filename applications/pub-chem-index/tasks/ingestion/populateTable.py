@@ -43,7 +43,7 @@ try:
         cur.execute(sql_copy)
         logging.info("Ingesting file %s", f)
     cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-    cur.execute("CREATE INDEX idx_gin ON synonyms USING gin (Synonym gin_trgm_ops);")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gin ON synonyms USING gin (Synonym gin_trgm_ops);")
     
     
 except Exception:

@@ -52,7 +52,7 @@ def search_molecules_by_cid(term):
         cur.execute("""
          SELECT * FROM synonyms WHERE CID = %s;
          """,
-         (term))
+         (term,))
         result = cur.fetchall()
         cur.close()
         conn.close()
