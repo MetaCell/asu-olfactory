@@ -13,12 +13,12 @@ harness:
     size: 100Gi
     resources:
       requests:
-          memory: 32Gi
-          cpu: 8
+          memory: 16Gi
+          cpu: 4
       limits:
-        memory: 32Gi
-        cpu: 8
-    args: ["--vm", "1", "--vm-bytes", "32Gi", "--vm-hang", "1"]
+        memory: 16Gi
+        cpu: 4
+    args: ["--vm", "1", "--vm-bytes", "16Gi", "--vm-hang", "1"]
   deployment:
     auto: true
     port: 8080
