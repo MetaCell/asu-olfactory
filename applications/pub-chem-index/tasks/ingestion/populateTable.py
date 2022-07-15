@@ -44,7 +44,7 @@ try:
         logging.info("Ingesting file %s", f)
     cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gin ON synonyms USING gin (Synonym gin_trgm_ops);")
-    
+    cur.execute("CREATE INDEX IF NOT EXISTS cid_idx ON synonyms (CID);")   
     
 except Exception:
     logging.error("Error during ingestion", exc_info=True)
