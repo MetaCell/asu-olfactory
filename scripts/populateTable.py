@@ -12,7 +12,7 @@ conn = psycopg2.connect(
     port=5432,
     dbname='asu',
     user='postgres',
-    password='password'
+    password='postgres'
 )
 cur = conn.cursor()
 
@@ -27,7 +27,6 @@ try:
         """)
     # use glob to get all the csv files in the folder
     path = '/CID_Chunks'
-    print(path)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
     print(csv_files)
     # loop over the list of csv files
@@ -52,7 +51,6 @@ try:
         )
         """)
     # use glob to get all the csv files in the folder
-    print(path)
     csv_files = glob.glob(os.path.join(path, "*.csv"))
     print(csv_files)
     # loop over the list of csv files

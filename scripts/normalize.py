@@ -1,6 +1,8 @@
 import pandas as pd 
 import codecs
 
+#"https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
+
 chunk_size=50000
 
 def tidy_split(df, column, sep=',', keep=False):
