@@ -1,7 +1,6 @@
 import React from 'react'
 export const CustomDropdown = (props) => (
   <div className="form-group">
-    <strong>{props.username}</strong>
     <select
       className="form-control"
       name="{props.username}"
@@ -21,25 +20,32 @@ export default class CustomListDropDown extends React.Component {
     super()
     this.state = {
       collection: [],
+      selectedValue: '',
       value: '',
     }
   }
-  componentDidMount() {
-    fetch('https://pubchem.olfactory.dev.metacell.us/molecules')
-      .then((response) => response.json())
-      .then((res) => this.setState({ collection: res }))
+  handleSelectChange = (event) => {
+    this.setState({ selectedValue: event.target.value })
   }
-  onChange = (event) => {
+  handleInputChange = (event) => {
     this.setState({ value: event.target.value })
+  }
+  handleClick () {
+    fetch(`https://pubchem.olfactory.dev.metacell.us/molecules/${this.state.value}`)
+    .then((response) => { response.json() })
+    .then((res) => this.setState({ collection: res }))
+    var event = new Event('input', { bubbles: true });
+    this.myinput.dispatchEvent(event);
   }
   render() {
     return (
       <div className="container mt-4">
-        <h2>React Dropdown List with Bootstrap Example</h2>
+        <h2>Pubchem search sample React app</h2>
+        <input value={this.state.value} onChange={(e) => {this.handleInputChange(e)}} />
+        <button onClick={this.handleClick.bind(this)}>Search</button>
         <CustomDropdown
-          name={this.state.username}
           options={this.state.collection}
-          onChange={this.onChange}
+          onChange={this.handleSelectChange}
         />
       </div>
     )
