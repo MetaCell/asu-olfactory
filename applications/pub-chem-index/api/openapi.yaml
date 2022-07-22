@@ -1,4 +1,3 @@
----
 openapi: 3.0.2
 info:
   title: PubChemIndex
@@ -6,12 +5,12 @@ info:
 paths:
   /molecules:
     summary: Path used to manage the list of molecules.
-    description: "The REST endpoint/path used to list and create zero or more `Molecule`\
-      \ entities.  This path contains a `GET` and `POST` operation to perform the\
-      \ list and create tasks, respectively."
+    description: >-
+      The REST endpoint/path used to list and create zero or more `Molecule` entities.  This path
+      contains a `GET` and `POST` operation to perform the list and create tasks, respectively.
     get:
       tags:
-      - molecule
+        - molecule
       responses:
         "200":
           content:
@@ -19,96 +18,62 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Molecule'
+                  $ref: "#/components/schemas/Molecule"
           description: Successful response - returns an array of `Molecule` entities.
       operationId: getMolecules
       summary: List All Molecules
       description: Gets a list of all `Molecule` entities.
-    post:
-      requestBody:
-        description: A new `Molecule` to be created.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Molecule'
-        required: true
-      tags:
-      - molecule
-      responses:
-        "201":
-          description: Successful response.
-      operationId: createMolecule
-      summary: Create a Molecule
-      description: Creates a new instance of a `Molecule`.
-  /molecules/{moleculeId}:
-    summary: Path used to manage a single Molecule.
-    description: "The REST endpoint/path used to get, update, and delete single instances\
-      \ of an `Molecule`.  This path contains `GET`, `PUT`, and `DELETE` operations\
-      \ used to perform the get, update, and delete tasks, respectively."
+  "/molecules/{term}":
+    summary: Path used to manage a single Molecule search by CID.
+    description: >-
+      The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
     get:
       tags:
-      - molecule
+        - molecule
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Molecule'
+                type: array
+                items:
+                  $ref: "#/components/schemas/Molecule"
           description: Successful response - returns a single `Molecule`.
-      operationId: getMolecule
+      operationId: searchMolecules
       summary: Get a Molecule
       description: Gets the details of a single instance of a `Molecule`.
-    put:
-      requestBody:
-        description: Updated `Molecule` information.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Molecule'
-        required: true
-      tags:
-      - molecule
-      responses:
-        "202":
-          description: Successful response.
-      operationId: updateMolecule
-      summary: Update a Molecule
-      description: Updates an existing `Molecule`.
-    delete:
-      tags:
-      - molecule
-      responses:
-        "204":
-          description: Successful response.
-      operationId: deleteMolecule
-      summary: Delete a Molecule
-      description: Deletes an existing `Molecule`.
     parameters:
-    - name: moleculeId
-      description: A unique identifier for a `Molecule`.
-      schema:
-        type: string
-      in: path
-      required: true
+      - name: term
+        description: A unique identifier for a `Molecule`.
+        schema:
+          type: string
+        in: path
+        required: true
+  /ingestion:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: ok
+      operationId: ingest
 components:
   schemas:
     Molecule:
-      description: ""
-      required:
-      - cid
-      - synonyms
+      description: "List of synonyms matching search query"
       type: object
       properties:
         cid:
           description: ""
           type: integer
-        synonyms:
-          description: ""
-          type: array
-          items:
-            type: string
-servers:
-  - url: /api
+          example : 1
+        synonym:
+          description: "List of synonyms matching search query"
+          type: string
+          example: dimethyl
 tags:
-- name: molecule
-  description: ""
+  - name: molecule
+    description: ""

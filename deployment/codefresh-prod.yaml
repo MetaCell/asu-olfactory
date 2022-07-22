@@ -25,11 +25,11 @@ steps:
       git: github
   prepare_deployment:
     title: Prepare helm chart
-    image: python:3.7
+    image: python:3.9.10
     stage: prepare
     working_directory: .
     commands:
-    - pip install cloud-harness/tools
+    - bash cloud-harness/install.sh
     - harness-deployment . cloud-harness -t ${{DEPLOYMENT_TAG}} -d ${{DOMAIN}} -r
       ${{REGISTRY}} -rs ${{REGISTRY_SECRET}} -e prod
   prepare_deployment_view:
@@ -90,6 +90,15 @@ steps:
         type: push
         title: Pubchem postgres
         candidate: '${{REGISTRY}}/olphactory/pubchem-postgres:${{DEPLOYMENT_TAG}}'
+        tags:
+        - '${{DEPLOYMENT_PUBLISH_TAG}}'
+        - latest
+        registry: '${{REGISTRY_PUBLISH_URL}}'
+      publish_pub-chem-index-ingestion:
+        stage: publish
+        type: push
+        title: Pub chem index ingestion
+        candidate: '${{REGISTRY}}/olphactory/pub-chem-index-ingestion:${{DEPLOYMENT_TAG}}'
         tags:
         - '${{DEPLOYMENT_PUBLISH_TAG}}'
         - latest
