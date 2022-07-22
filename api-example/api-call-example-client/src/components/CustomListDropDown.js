@@ -3,13 +3,13 @@ export const CustomDropdown = (props) => (
   <div className="form-group">
     <select
       className="form-control"
-      name="{props.username}"
+      name="{syn}"
       onChange={props.onChange}
     >
       <option defaultValue>Select {props.name}</option>
       {props.options.map((item, index) => (
         <option key={index} value={item.id}>
-          {item.username}
+          {item.name}
         </option>
       ))}
     </select>
@@ -34,10 +34,11 @@ export default class CustomListDropDown extends React.Component {
     fetch(`http://localhost:3010/?id=${this.state.value}`)
     .then(response => { return response.json() })
     .then((data) => {
-      Promise.resolve(data)
+      const options = data.map( item => { return { id : item[0], name: item[1] }})
+      this.setState({ collection: options })
     })
     .catch((error) => {
-      Promise.reject(error)
+      
     })
   }
   render() {
