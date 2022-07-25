@@ -1,0 +1,19 @@
+*Installation*
+
+Start the proxy server first to avoid CORS blocking from localhost
+
+```
+cd ..\api-call-example-server
+npm install express
+node app.js
+```
+
+This will get the server proxy running on localhost:3010
+Now build and start the actual client which uses the proxy server
+
+```
+cd ..\api-call-example-client
+npm install
+npm run build 
+npm start
+```
