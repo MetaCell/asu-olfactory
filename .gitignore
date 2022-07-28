@@ -3,5 +3,5 @@ deployment/helm
 skaffold.yaml
 .vscode
 .overrides
-api-example/api-call-example-client/build
-api-example/api-call-example-client/node_modules
+applications/pub-chem-index/backend/api-call-example-client/build
+applications/pub-chem-index/backend/api-call-example-client/node_modules
