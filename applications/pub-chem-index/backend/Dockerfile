@@ -19,12 +19,10 @@ WORKDIR /usr/src/app
 RUN ls -la
 RUN pip3 install -e .
 
-
 WORKDIR ${BUILDDIR}
 RUN npm install
 COPY ./api-call-example-client $BUILDDIR
 RUN npm run build
 COPY --from=base $BUILDDIR/build /usr/src/app/static
-
 
 CMD python __main__
