@@ -11,7 +11,7 @@ COPY ./api-call-example-client ${BUILDDIR}
 RUN ls -la
 COPY requirements.txt /usr/src/app/
 
-RUN sudo apt-get install libpq-dev
+RUN apt-get install libpq-dev
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
