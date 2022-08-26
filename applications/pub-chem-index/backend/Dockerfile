@@ -26,5 +26,6 @@ RUN ls -la
 RUN npm install
 RUN npm run build
 RUN ls -la 
+COPY --from=build ${BUILDDIR}/build /usr/src/app/static
 
 CMD python __main__
