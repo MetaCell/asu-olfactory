@@ -24,7 +24,7 @@ RUN pip3 install -e .
 WORKDIR ${BUILDDIR}
 RUN ls -la
 RUN npm install
-RUN npm run build && cp build /usr/src/app/static 
+RUN npm run build && ls -la && cp -r build /usr/src/app/static 
 RUN ls -la 
 
 CMD python __main__
