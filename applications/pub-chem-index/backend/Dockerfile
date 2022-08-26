@@ -23,6 +23,6 @@ WORKDIR ${BUILDDIR}
 RUN ls -la
 RUN npm install
 RUN npm run build
-COPY --from=base $BUILDDIR/build /usr/src/app/static
+COPY --from=build $BUILDDIR/build /usr/src/app/static
 
 CMD python __main__

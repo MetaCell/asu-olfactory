@@ -147,7 +147,7 @@ steps:
     - HELM_REPO_USE_HTTP=false
     - HELM_REPO_CONTEXT_PATH=
     - TIMEOUT=600s
-    - VALUESFILE_values=./deployment/helm/values.yaml
+    - VALUESFILE_values=./cloud-harness/deployment/helm/values.yaml
   publish:
     type: parallel
     stage: publish
