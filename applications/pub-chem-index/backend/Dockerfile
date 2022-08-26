@@ -11,7 +11,8 @@ COPY ./api-call-example-client ${BUILDDIR}
 RUN ls -la
 COPY requirements.txt /usr/src/app/
 
-RUN pip3 install psycopg2-binary
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
