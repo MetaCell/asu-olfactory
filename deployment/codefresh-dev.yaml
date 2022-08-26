@@ -28,9 +28,9 @@ steps:
     title: Prepare helm chart
     image: python:3.7
     stage: prepare
-    working_directory: .
+    working_directory: ./cloud-harness
     commands:
-    - pip install -r cloud-harness/requirements.txt
+    - pip install -r requirements.txt
     - harness-deployment cloud-harness . -t ${{CF_BUILD_ID}} -d ${{DOMAIN}} -r ${{REGISTRY}}
       -rs ${{REGISTRY_SECRET}} -e dev
   prepare_deployment_view:
