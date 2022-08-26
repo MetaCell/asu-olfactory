@@ -12,7 +12,7 @@ RUN ls -la
 COPY requirements.txt /usr/src/app/
 
 RUN apk update
-RUN apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk add postgresql-dev gcc python3-dev musl-dev npm
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
