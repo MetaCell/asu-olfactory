@@ -5,6 +5,7 @@ git_push.sh
 pub_chem_index/__init__.py
 pub_chem_index/__main__.py
 pub_chem_index/controllers/__init__.py
+pub_chem_index/controllers/default_controller.py
 pub_chem_index/controllers/molecule_controller.py
 pub_chem_index/controllers/security_controller_.py
 pub_chem_index/encoder.py

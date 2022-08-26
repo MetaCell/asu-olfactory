@@ -1,53 +1,12 @@
-import connexion
-import six
+import glob
+import os
+import csv
+import time
+import traceback
 
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index import util
-
-
-
-
-def create_molecule(molecule):  # noqa: E501
-    """Create a Molecule
-
-    Creates a new instance of a &#x60;Molecule&#x60;. # noqa: E501
-
-    :param molecule: A new &#x60;Molecule&#x60; to be created.
-    :type molecule: dict | bytes
-
-    :rtype: None
-    """
-    if connexion.request.is_json:
-        molecule = Molecule.from_dict(connexion.request.get_json())  # noqa: E501
-
-    
-    return 'do some magic!'
-
-
-def delete_molecule(molecule_id):  # noqa: E501
-    """Delete a Molecule
-
-    Deletes an existing &#x60;Molecule&#x60;. # noqa: E501
-
-    :param molecule_id: A unique identifier for a &#x60;Molecule&#x60;.
-    :type molecule_id: str
-
-    :rtype: None
-    """
-    return 'do some magic!'
-
-
-def get_molecule(molecule_id):  # noqa: E501
-    """Get a Molecule
-
-    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
-
-    :param molecule_id: A unique identifier for a &#x60;Molecule&#x60;.
-    :type molecule_id: str
-
-    :rtype: Molecule
-    """
-    return 'do some magic!'
+from pub_chem_index.services import lookup
 
 
 def get_molecules():  # noqa: E501
@@ -58,21 +17,18 @@ def get_molecules():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    return 'do some magic!'
+    return lookup.get_all_molecules()
 
+def search_molecules(term):  # noqa: E501
+    """Get a Molecule
 
-def update_molecule(molecule_id, molecule):  # noqa: E501
-    """Update a Molecule
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
 
-    Updates an existing &#x60;Molecule&#x60;. # noqa: E501
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
 
-    :param molecule_id: A unique identifier for a &#x60;Molecule&#x60;.
-    :type molecule_id: str
-    :param molecule: Updated &#x60;Molecule&#x60; information.
-    :type molecule: dict | bytes
-
-    :rtype: None
+    :rtype: List[Molecule]
     """
-    if connexion.request.is_json:
-        molecule = Molecule.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    if term.isnumeric():
+        return lookup.search_molecules_by_cid(term)
+    return lookup.search_molecules_by_synonym(term)

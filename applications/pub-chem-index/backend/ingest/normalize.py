@@ -1,8 +1,6 @@
 import pandas as pd 
 import codecs
 
-#"https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
-
 chunk_size=50000
 
 def tidy_split(df, column, sep=',', keep=False):
@@ -48,7 +46,4 @@ inferred_sep = reader._engine.data.dialect.delimiter
 for chunk in pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=None, names=['CID', 'Syn']):
   chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
   chunk.to_csv('/CID_Chunks/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
-  chunk_n = chunk_n + 1
-  if chunk_n == 10:
-      break;
     

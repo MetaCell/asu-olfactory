@@ -4,7 +4,6 @@ import connexion
 
 from pub_chem_index import encoder
 
-
 def main():
     www_path = "static"
     app = connexion.App(__name__, specification_dir='./openapi/')
@@ -22,7 +21,6 @@ def main():
         return flask.send_from_directory(www_path, path)
 
     app.run(port=8080)
-
 
 if __name__ == '__main__':
     main()

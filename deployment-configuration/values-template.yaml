@@ -1,2 +1,5 @@
-domain: asu.local
-namespace: asu.local
+domain: olphactory.metacell.us
+namespace: CHANGE ME
+backup:
+  active: false
+mainapp: pub-chem-index

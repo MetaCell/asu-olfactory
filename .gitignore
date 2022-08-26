@@ -5,3 +5,7 @@ skaffold.yaml
 .overrides
 applications/pub-chem-index/backend/api-call-example-client/build
 applications/pub-chem-index/backend/api-call-example-client/node_modules
+CID-Synonym-unfiltered
+CID-Synonym-unfiltered_*.csv
+api-call-example/build
+api-call-example/node_modules
