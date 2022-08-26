@@ -176,7 +176,7 @@ steps:
     image: codefresh/cfstep-helm:3.6.2
     title: Installing chart
     environment:
-    - CHART_REF=./cloud-harness/deployment/helm
+    - CHART_REF=./deployment/helm
     - RELEASE_NAME=${{NAMESPACE}}
     - KUBE_CONTEXT=${{CLUSTER_NAME}}
     - NAMESPACE=${{NAMESPACE}}
@@ -184,7 +184,7 @@ steps:
     - HELM_REPO_USE_HTTP=false
     - HELM_REPO_CONTEXT_PATH=
     - TIMEOUT=600s
-    - VALUESFILE_values=./cloud-harness/deployment/helm/values.yaml
+    - VALUESFILE_values=./deployment/helm/values.yaml
   publish:
     type: parallel
     stage: publish
