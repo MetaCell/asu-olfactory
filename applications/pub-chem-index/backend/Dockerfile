@@ -18,13 +18,11 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 
 WORKDIR /usr/src/app
-RUN ls -la
 RUN pip3 install -e .
 
 WORKDIR ${BUILDDIR}
-RUN ls -la
 RUN npm install
-RUN npm run build && ls && cp -r build /usr/src/app/static 
-RUN ls -la 
+RUN npm run build
+COPY build /usr/src/app/static 
 
 CMD python __main__
