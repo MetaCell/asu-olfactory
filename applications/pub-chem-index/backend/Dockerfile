@@ -23,5 +23,3 @@ RUN pip3 install -e .
 WORKDIR ${BUILDDIR}
 RUN npm install
 RUN npm run build && cp -r build /usr/src/app/static 
-
-CMD python __main__
