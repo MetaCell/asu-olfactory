@@ -5,7 +5,7 @@ from pub_chem_index import encoder
 app = init_flask(title="Olphactory pubchem index API", webapp=False)
 
 def main():
-    www_path = "www"
+    www_path = "/usr/src/app/pub_chem_index/www"
 
     @app.route('/test-route', methods=['GET'])
     def index():

@@ -25,5 +25,4 @@ RUN pwd && ls
 WORKDIR ${BUILDDIR}
 RUN npm install
 RUN npm run build && cp -r build /usr/src/app/static && ls /usr/src/app
-COPY --from=base build /usr/src/app/pub_chem_index/www
-RUN ls /usr/src/app/pub_chem_index/www
+RUN cp -r build /usr/src/app/pub_chem_index/www && ls /usr/src/app/pub_chem_index/www
