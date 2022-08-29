@@ -24,4 +24,4 @@ WORKDIR ${BUILDDIR}
 RUN npm install
 RUN npm run build && cp -r build /usr/src/app/static
 RUN cd build && ls && cd ..
-RUN cd /usr/app/static && ls
+RUN cd /usr/src/app/static && ls
