@@ -7,7 +7,7 @@ app = init_flask(title="Olphactory pubchem index API", webapp=False)
 def main():
     www_path = "www"
 
-    @app.route('/', methods=['GET'])
+    @app.route('/test-route', methods=['GET'])
     def index():
         return flask.send_from_directory(www_path, 'index.html')
 
