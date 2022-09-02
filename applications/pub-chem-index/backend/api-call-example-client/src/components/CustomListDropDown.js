@@ -31,7 +31,7 @@ export default class CustomListDropDown extends React.Component {
     this.setState({ value: event.target.value })
   }
   handleClick () {
-    fetch(`/api/molecules/${this.state.value}`)
+    fetch(`/molecules/${this.state.value}`)
     .then(response => { return response.json() })
     .then((data) => {
       const options = data.map( item => { return { id : item[0], name: item[1] }})
