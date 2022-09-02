@@ -27,10 +27,6 @@ def init_webapp_routes(app):
             return error
         return index()
 
-    @app.route('/static/<path:path>', methods=['GET'])
-    def send_static(path):
-        return flask.send_from_directory(os.path.join(www_path, 'static'), path)
-
 app = init_flask(title="Olphactory pubchem index API", webapp=False, init_app_fn=init_webapp_routes)
 
 def main():
