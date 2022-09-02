@@ -5,7 +5,7 @@ from pub_chem_index import encoder
 
 app = init_flask(title="Olphactory pubchem index API", webapp=False)
 
-def init_webapp_routes(www_path):
+def init_webapp_routes(app, www_path):
     @app.route('/test', methods=['GET'])
     def test():
         return 'routing ok'
@@ -33,7 +33,8 @@ def init_webapp_routes(www_path):
 
 def main():
     www = os.path.dirname(os.path.abspath(__file__)) + "/www"
-    init_webapp_routes(www)
+    with app.app_context():
+        init_webapp_routes(app, www)
     app.run(host='0.0.0.0', port=8080)
 
 if __name__ == '__main__':
