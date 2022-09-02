@@ -3,9 +3,9 @@ import flask, os
 from flask import redirect
 from pub_chem_index import encoder
 
-app = init_flask(title="Olphactory pubchem index API", webapp=False)
+def init_webapp_routes(app):
+    www_path = os.path.dirname(os.path.abspath(__file__)) + "/www"
 
-def init_webapp_routes(app, www_path):
     @app.route('/test', methods=['GET'])
     def test():
         return 'routing ok'
@@ -31,10 +31,9 @@ def init_webapp_routes(app, www_path):
     def send_static(path):
         return flask.send_from_directory(os.path.join(www_path, 'static'), path)
 
+app = init_flask(title="Olphactory pubchem index API", webapp=False, init_app_fn=init_webapp_routes)
+
 def main():
-    www = os.path.dirname(os.path.abspath(__file__)) + "/www"
-    with app.app_context():
-        init_webapp_routes(app, www)
     app.run(host='0.0.0.0', port=8080)
 
 if __name__ == '__main__':
