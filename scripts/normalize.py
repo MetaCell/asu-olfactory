@@ -1,9 +1,24 @@
-import pandas as pd 
+import pandas as pd
+import os
+import csv
 import codecs
 
 #"https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
 
 chunk_size=50000
+
+added_col_dic = {
+    "CID-InChI-Key": ["InChI", "Key"],
+    "CID-Mass": ["Molecule", "Mass1", "Mass2"],
+    "CID-PMID": ["CID-PMID", "CID-PMID-2"],
+    "CID-Parent": ["CID-Parent"],
+    "CID-Patent": ["CID-Patent"],
+    "CID-SID": ["CID-SID"],
+    "CID-MeSH": ["CID-MeSH"],
+    "CID-SMILES": ["CID-SMILES"],
+    "CID-Synonym-filtered": ["CID-Synonym-filtered"],
+    "CID-Title": ["CID-Title"]
+  }
 
 def tidy_split(df, column, sep=',', keep=False):
     """
@@ -38,17 +53,29 @@ def tidy_split(df, column, sep=',', keep=False):
 
 chunk_n = 1
 
-file_name = '/CID_Chunks/CID-Synonym-unfiltered'
+directory = '../CID'
+file_list = [directory + f for f in os.listdir(directory) if f.startswith('CID-')]
 
-doc = codecs.open(file_name,'rU','UTF-8') #open for reading with "universal" type set
+for file in sorted(file_list):
+      file_name = os.path.basename(file)
+      column_name      = ['CID', file_name]
+      types            = { file_name: 'string', 'CID': 'Int64' }
+      if file_name in added_col_dic:
+        column_name = ['CID'] + added_col_dic[file_name]
+        types = { 'CID': 'Int64' }
+        for c in column_name:
+          if c is not 'CID':
+            types[c] = 'string'
+          
+      print("Reading : " + file_name)
+      for chuck in pd.read_csv(file, quoting=csv.QUOTE_NONE, names=column_name, dtype=types, sep='\t', header=None):
+        chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
+        folder_path = '../CID_Chunks/'+file_name
+        isExist = os.path.exists(folder_path)
 
-reader = pd.read_csv(doc, sep = None, iterator = True)
-inferred_sep = reader._engine.data.dialect.delimiter
-
-for chunk in pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=None, names=['CID', 'Syn']):
-  chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
-  chunk.to_csv('/CID_Chunks/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
-  chunk_n = chunk_n + 1
-  if chunk_n == 10:
-      break;
-    
+        if not isExist:
+            # Create a new directory because it does not exist 
+            os.makedirs(folder_path)
+        chunk.to_csv(folder_path+'/'+file_name+'_'+str(chunk_n)+'.csv', index=False)
+        chunk_n = chunk_n + 1
+      chunk_n = 0
