@@ -54,7 +54,7 @@ def tidy_split(df, column, sep=',', keep=False):
 chunk_n = 1
 
 directory = '../CID'
-file_list = [directory + f for f in os.listdir(directory) if f.startswith('CID-')]
+file_list = [directory + '/' + f for f in os.listdir(directory) if f.startswith('CID-')]
 
 for file in sorted(file_list):
       file_name = os.path.basename(file)
@@ -68,13 +68,15 @@ for file in sorted(file_list):
             types[c] = 'string'
           
       print("Reading : " + file_name)
-      for chuck in pd.read_csv(file, quoting=csv.QUOTE_NONE, names=column_name, dtype=types, sep='\t', header=None):
+      doc = codecs.open(file_name,'rU','UTF-8')
+      for chuck in pd.read_csv(doc, quoting=csv.QUOTE_NONE, names=column_name, dtype=types, sep='\t', header=None):
         chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
         folder_path = '../CID_Chunks/'+file_name
         isExist = os.path.exists(folder_path)
 
         if not isExist:
-            # Create a new directory because it does not exist 
+            # Create a new directory because it does not exist
+            print("Creating directory " + folder_path) 
             os.makedirs(folder_path)
         chunk.to_csv(folder_path+'/'+file_name+'_'+str(chunk_n)+'.csv', index=False)
         chunk_n = chunk_n + 1
