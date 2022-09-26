@@ -16,8 +16,10 @@ added_col_dic = {
     "CID-SID": ["CID-SID"],
     "CID-MeSH": ["CID-MeSH"],
     "CID-SMILES": ["CID-SMILES"],
-    "CID-Synonym-filtered": ["CID-Synonym-filtered"],
-    "CID-Title": ["CID-Title"]
+    "CID-Synonym-filtered": ["SYN", "CID-Synonym-filtered"],
+    "CID-Synonym-unfiltered": ["SYN", "CID-Synonym-unfiltered"],
+    "CID-Title": ["CID-Title"],
+    "CID-UIPAC": ["CID-UIPAC"]
   }
 
 def tidy_split(df, column, sep=',', keep=False):
@@ -68,6 +70,7 @@ for file in sorted(file_list):
             types[c] = 'string'
           
       print("Reading : " + file_name)
+      print("Using column names : " + column_name)
       doc = codecs.open(file,'rU','UTF-8')
       for chunk in pd.read_csv(doc, quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip'):
         #print("first chunk")
