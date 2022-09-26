@@ -68,12 +68,13 @@ for file in sorted(file_list):
             types[c] = 'string'
           
       print("Reading : " + file_name)
-      doc = codecs.open(file_name,'rU','UTF-8')
-      for chuck in pd.read_csv(doc, quoting=csv.QUOTE_NONE, names=column_name, dtype=types, sep='\t', header=None):
-        chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
+      doc = codecs.open(file,'rU','UTF-8')
+      for chunk in pd.read_csv(doc, quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip'):
+        #print("first chunk")
+        chunk = tidy_split(chunk, 'CID', sep=',', keep=False)
         folder_path = '../CID_Chunks/'+file_name
         isExist = os.path.exists(folder_path)
-
+        #print("chunk " + chunk)        
         if not isExist:
             # Create a new directory because it does not exist
             print("Creating directory " + folder_path) 
