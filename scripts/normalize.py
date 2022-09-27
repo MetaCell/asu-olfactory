@@ -10,16 +10,16 @@ chunk_size=50000
 added_col_dic = {
     "CID-InChI-Key": ["CID", "InChI", "Key"],
     "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
-    "CID-PMID": ["CID", "Syn"],
-    "CID-Parent": ["CID", "Syn"],
-    "CID-Patent": ["CID", "Syn"],
-    "CID-SID": ["CID", "Syn"],
-    "CID-MeSH": ["CID", "Syn"],
-    "CID-SMILES": ["CID", "Syn"],
+    "CID-PMID": ["CID", "CID-PMID"],
+    "CID-Parent": ["CID", "CID-Parent"],
+    "CID-Patent": ["CID", "CID-Patent"],
+    "CID-SID": ["CID", "CID-SID"],
+    "CID-MeSH": ["CID", "CID-MeSH"],
+    "CID-SMILES": ["CID", "CID-SMILES"],
     "CID-Synonym-filtered": ["CID", "Syn"],
     "CID-Synonym-unfiltered": ["CID", "Syn"],
-    "CID-Title": ["CID", "Syn"],
-    "CID-UIPAC": ["CID", "Syn"]
+    "CID-Title": ["CID", "CID-Title"],
+    "CID-IUPAC": ["CID", "CID-IUPAC"]
   }
 
 def tidy_split(df, column, sep=',', keep=False):
@@ -70,7 +70,7 @@ for file in sorted(file_list):
             types[c] = 'string'
           
       print("Reading : " + file_name)
-      print("Using column names : " + column_name)
+      print("Using column names : " + str(column_name))
       doc = pd.read_csv(file, engine='python', quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip')
       for chunk in doc:
         #print("first chunk")
