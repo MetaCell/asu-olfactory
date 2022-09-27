@@ -8,18 +8,18 @@ import codecs
 chunk_size=50000
 
 added_col_dic = {
-    "CID-InChI-Key": ["InChI", "Key"],
-    "CID-Mass": ["Molecule", "Mass1", "Mass2"],
-    "CID-PMID": ["CID-PMID", "CID-PMID-2"],
-    "CID-Parent": ["CID-Parent"],
-    "CID-Patent": ["CID-Patent"],
-    "CID-SID": ["CID-SID"],
-    "CID-MeSH": ["CID-MeSH"],
-    "CID-SMILES": ["CID-SMILES"],
-    "CID-Synonym-filtered": ["SYN", "CID-Synonym-filtered"],
-    "CID-Synonym-unfiltered": ["SYN", "CID-Synonym-unfiltered"],
-    "CID-Title": ["CID-Title"],
-    "CID-UIPAC": ["CID-UIPAC"]
+    "CID-InChI-Key": ["CID", "InChI", "Key"],
+    "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
+    "CID-PMID": ["CID", "Syn"],
+    "CID-Parent": ["CID", "Syn"],
+    "CID-Patent": ["CID", "Syn"],
+    "CID-SID": ["CID", "Syn"],
+    "CID-MeSH": ["CID", "Syn"],
+    "CID-SMILES": ["CID", "Syn"],
+    "CID-Synonym-filtered": ["CID", "Syn"],
+    "CID-Synonym-unfiltered": ["CID", "Syn"],
+    "CID-Title": ["CID", "Syn"],
+    "CID-UIPAC": ["CID", "Syn"]
   }
 
 def tidy_split(df, column, sep=',', keep=False):
@@ -63,7 +63,7 @@ for file in sorted(file_list):
       column_name      = ['CID', file_name]
       types            = { file_name: 'string', 'CID': 'Int64' }
       if file_name in added_col_dic:
-        column_name = ['CID'] + added_col_dic[file_name]
+        column_name = added_col_dic[file_name]
         types = { 'CID': 'Int64' }
         for c in column_name:
           if c is not 'CID':
@@ -71,8 +71,8 @@ for file in sorted(file_list):
           
       print("Reading : " + file_name)
       print("Using column names : " + column_name)
-      doc = codecs.open(file,'rU')
-      for chunk in pd.read_csv(doc, quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip'):
+      doc = pd.read_csv(file, engine='python', quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip')
+      for chunk in doc:
         #print("first chunk")
         chunk = tidy_split(chunk, 'CID', sep=',', keep=False)
         folder_path = '../CID_Chunks/'+file_name
