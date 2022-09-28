@@ -71,17 +71,17 @@ for file in sorted(file_list):
           
       print("Reading : " + file_name)
       print("Using column names : " + str(column_name))
-      doc = pd.read_csv(file, engine='python', quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip')
+      folder_path = '../CID_Chunks/'+file_name
+      isExist = os.path.exists(folder_path)
+      #print("chunk " + chunk)        
+      if not isExist:
+          # Create a new directory because it does not exist
+          print("Creating directory " + folder_path) 
+          os.makedirs(folder_path)
+      doc = pd.read_csv(codecs.open(file,'rU','UTF-8'), quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip')
       for chunk in doc:
         #print("first chunk")
         chunk = tidy_split(chunk, 'CID', sep=',', keep=False)
-        folder_path = '../CID_Chunks/'+file_name
-        isExist = os.path.exists(folder_path)
-        #print("chunk " + chunk)        
-        if not isExist:
-            # Create a new directory because it does not exist
-            print("Creating directory " + folder_path) 
-            os.makedirs(folder_path)
         chunk.to_csv(folder_path+'/'+file_name+'_'+str(chunk_n)+'.csv', index=False)
         chunk_n = chunk_n + 1
       chunk_n = 0
