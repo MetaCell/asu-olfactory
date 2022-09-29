@@ -50,7 +50,7 @@ try:
                 COPY %s
                 FROM '%s'
                 DELIMITER ',' CSV HEADER;
-               '''  % (table_name % f)
+               '''  % (table_name , f)
             logging.info("Query is %s", sql_copy)
             cur.execute(sql_copy)
         cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
