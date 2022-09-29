@@ -1,10 +1,28 @@
-import pandas as pd 
+import pandas as pd
+import os
+import csv
 import codecs
 import sys
-import os
 import logging
 
+#"https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
+
 chunk_size=50000
+
+added_col_dic = {
+    "CID-InChI-Key": ["CID", "InChI", "Key"],
+    "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
+    "CID-PMID": ["CID", "CID-PMID"],
+    "CID-Parent": ["CID", "CID-Parent"],
+    "CID-Patent": ["CID", "CID-Patent"],
+    "CID-SID": ["CID", "CID-SID"],
+    "CID-MeSH": ["CID", "CID-MeSH"],
+    "CID-SMILES": ["CID", "CID-SMILES"],
+    "CID-Synonym-filtered": ["CID", "Syn"],
+    "CID-Synonym-unfiltered": ["CID", "Syn"],
+    "CID-Title": ["CID", "CID-Title"],
+    "CID-IUPAC": ["CID", "CID-IUPAC"]
+  }
 
 def tidy_split(df, column, sep=',', keep=False):
     """
@@ -39,18 +57,37 @@ def tidy_split(df, column, sep=',', keep=False):
 
 chunk_n = 1
 
-file_name = sys.argv[1]
+directory = sys.argv[1]
 dest_folder = sys.argv[2]
 logging.info("Normalizing files from %s to %s")
 if not os.path.exists(dest_folder):
     os.makedirs(dest_folder)
-doc = codecs.open(file_name,'rU','UTF-8') #open for reading with "universal" type set
 
-reader = pd.read_csv(doc, sep = None, iterator = True)
-inferred_sep = reader._engine.data.dialect.delimiter
+file_list = [directory + '/' + f for f in os.listdir(directory) if f.startswith('CID-')]
 
-for chunk in list(pd.read_csv(doc, sep=inferred_sep, chunksize=chunk_size, header=None, names=['CID', 'Syn'])):
-  chunk = tidy_split(chunk, 'Syn', sep=',', keep=False)
-  chunk.to_csv(dest_folder + '/CID-Synonym-unfiltered_'+str(chunk_n)+'.csv', index=False)
-  chunk_n = chunk_n + 1
+for file in sorted(file_list):
+      file_name = os.path.basename(file)
+      column_name      = ['CID', file_name]
+      types            = { file_name: 'string', 'CID': 'Int64' }
+      if file_name in added_col_dic:
+        column_name = added_col_dic[file_name]
+        types = { 'CID': 'Int64' }
+        for c in column_name:
+          if c is not 'CID':
+            types[c] = 'string'
+          
+      logging.inf("Reading %s ", file_name)
+      logging.inf("Using column names %s ", str(column_name))
+      folder_path = dest_folder+'/'+file_name
+      isExist = os.path.exists(folder_path)
+      if not isExist:
+          # Create a new directory because it does not exist
+          logging.info("Creating directory %s", folder_path) 
+          os.makedirs(folder_path)
+      doc = pd.read_csv(codecs.open(file,'rU','UTF-8'), quoting=csv.QUOTE_NONE, names=column_name, chunksize=chunk_size, dtype=types, sep='\t', header=None, on_bad_lines='skip')
+      for chunk in doc:
+        chunk = tidy_split(chunk, 'CID', sep=',', keep=False)
+        chunk.to_csv(folder_path+'/'+file_name+'_'+str(chunk_n)+'.csv', index=False)
+        chunk_n = chunk_n + 1
+      chunk_n = 0
     
