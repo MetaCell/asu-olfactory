@@ -6,9 +6,10 @@ import csv
 import time
 import traceback
 import os
+import logging
 
 conn = psycopg2.connect(
-    host='172.17.0.2',
+    host='localhost',
     port=5432,
     dbname='asu',
     user='postgres',
@@ -25,27 +26,27 @@ try:
     file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
 
     for folder in sorted(file_list):
-        print(folder)
+        logging.info("Folder %s" , folder)
         file_name = os.path.basename(folder)
-        print(file_name)
+        logging.info("File name %s" ,file_name)
         csv_files = glob.glob(os.path.join(folder, "*.csv"))
 
         #Populate GIN indexed table, this will take about 30 minutes.
         start = time.time()
         sql_copy = """
-            CREATE TABLE IF NOT EXISTS '%s'(
+            CREATE TABLE IF NOT EXISTS %s(
                 CID VARCHAR NOT NULL,
                 Synonym VARCHAR
             )
             """ % file_name 
         cur.execute(sql_copy)
             
-        print(csv_files)
+        logging.info("CSV Files %s" ,csv_files)
         # loop over the list of csv files
         for f in csv_files:
-            print(f)
+            logging.info("Ingesting file %s" ,f)
             sql_copy = '''
-                COPY '%s'
+                COPY %s
                 FROM '%s'
                 DELIMITER ',' CSV HEADER;
                '''  % file_name % f
@@ -56,7 +57,7 @@ try:
         cur.close()
         conn.close()
         end = time.time()
-        print("It took %s seconds to create GIN table. ", end - start)
+        logging.info("It took %s seconds to create GIN table. ", end - start)
 except Exception:
     traceback.print_exc()
     print("Error")
