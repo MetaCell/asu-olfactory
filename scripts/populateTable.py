@@ -76,7 +76,7 @@ try:
         cur.execute(sql_copy)
         print("Table created %s", sql_copy)
         
-        f = 1
+        fd = 1
         # loop over the list of csv files
         for f in csv_files:
             logging.info("Ingesting file %s", f)
@@ -87,11 +87,11 @@ try:
                '''  % (table_name , f)
             logging.info("Query is %s", sql_copy)
             cur.execute(sql_copy)
-            f = f + 1
-            if f == 10:
+            fd = fd + 1
+            if fd == 10:
                 break
         cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-        sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
+        sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name,added_col_dic[file_name][1])
         cur.execute(sql_copy)
         sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
         cur.execute(sql_copy)
