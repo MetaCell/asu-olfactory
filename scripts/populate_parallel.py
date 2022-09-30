@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sys
 import csv
 import logging
 import dask.dataframe as dd
@@ -8,6 +9,9 @@ import aiopg
 import shutil
 import stat
 from functools import reduce
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
 #
 # WARNING!!! use head command on files for debugging
 # head -n 500000 CID-SMILES > CID-SMILES-head
@@ -18,16 +22,16 @@ from functools import reduce
 added_col_dic = {
   "CID-InChI-Key": ["CID", "InChI", "Key"],
   "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
-  "CID-PMID": ["CID", "CID-PMID"],
-  "CID-Parent": ["CID", "CID-Parent"],
-  "CID-Patent": ["CID", "CID-Patent"],
-  "CID-SID": ["CID", "CID-SID"],
-  "CID-MeSH": ["CID", "CID-MeSH"],
-  "CID-SMILES": ["CID", "MID", "CID-SMILES"],
+  "CID-PMID": ["CID", "PMID"],
+  "CID-Parent": ["CID", "Parent"],
+  "CID-Patent": ["CID", "Patent"],
+  "CID-SID": ["CID", "SID"],
+  "CID-MeSH": ["CID", "MeSH"],
+  "CID-SMILES": ["CID", "MID", "SMILES"],
   "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
-  "CID-Title": ["CID", "CID-Title"],
-  "CID-IUPAC": ["CID", "CID-IUPAC"]
+  "CID-Title": ["CID", "Title"],
+  "CID-IUPAC": ["CID", "IUPAC"]
 }
 
 async def execute_sql(pool, sql):
@@ -99,7 +103,7 @@ async def populate_table(table_name, path, dns):
   pool.close()
 
 async def go():
-  path = os.path.dirname(os.path.realpath(__file__)) + "../CID"
+  path = os.path.dirname(os.path.realpath(__file__)) + "/../CID"
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
