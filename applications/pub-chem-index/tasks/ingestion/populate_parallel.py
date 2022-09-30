@@ -1,3 +1,4 @@
+from async_timeout import timeout
 import pandas as pd
 import os
 import csv
@@ -33,7 +34,7 @@ added_col_dic = {
 async def execute_sql(pool, sql):
   #print(sql)
   async with pool.acquire() as conn:
-    async with conn.cursor() as cur:
+    async with conn.cursor(timeout=500000) as cur:
       await cur.execute(sql)
 
 def change_permissions_recursive(path, mode):
@@ -61,11 +62,17 @@ async def populate_table(table_name, path, dns):
   table_name = table_name.replace("-", "_")
 
   sql_copy = """
-  DROP TABLE IF EXISTS %s; CREATE TABLE %s (
+  DROP TABLE IF EXISTS %s
+  """ % (table_name)  #better management
+
+  await execute_sql(pool, sql_copy)
+
+  sql_copy = """
+  CREATE TABLE %s (
       CID VARCHAR NOT NULL,
       %s
   )
-  """ % (table_name, table_name, str_column_names)  #better management
+  """ % (table_name, str_column_names)  #better management
 
   await execute_sql(pool, sql_copy)
 
@@ -92,6 +99,8 @@ async def populate_table(table_name, path, dns):
   await execute_sql(pool, sql_copy)
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
   await execute_sql(pool, sql_copy) 
+
+  pool.close()
 
 async def go():
   path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
@@ -120,7 +129,7 @@ async def go():
                       , on_bad_lines='skip')
 
       output = '/tmp/CID/'
-      #delete tmp
+      # #delete tmp
       if os.path.isdir(output):
         shutil.rmtree(output)
       #spit out and populate
