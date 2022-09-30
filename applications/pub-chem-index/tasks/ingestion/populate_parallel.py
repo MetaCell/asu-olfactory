@@ -54,16 +54,6 @@ async def populate_table(table_name, path, dns):
   # loop over the list of csv files
   file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
 
-  #!!!! RUN IN PARALLEL ??
-
-  # pool.map(ins_into_db, [i+1 for i in range(7)])
-  # pool.close()
-  # pool.join()
-
-
-  #with Pool(processes=len(my_queries)) as pool:
-      #pool.map(partial(execute_query,rs_conn_string), my_queries)
-
   sql_list = []
   for f in file_list:
     logging.info("Ingesting file %s", f)
