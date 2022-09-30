@@ -111,7 +111,8 @@ async def go():
 
       output = path + '/tmp/'
       #delete tmp
-      #hutil.rmtree(output)
+      if os.path.isdir(output):
+        shutil.rmtree(output)
       #spit out and populate
       df.to_csv(output + "export-*.csv")
       await populate_table(file_name, output, dns) 
