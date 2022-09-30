@@ -128,7 +128,7 @@ async def go():
                       , header=None
                       , on_bad_lines='skip')
 
-      output = '/tmp/CID/' + file_name
+      output = '/tmp/CID/' + file_name + '/'
       #delete tmp
       if os.path.isdir(output):
         shutil.rmtree(output)
