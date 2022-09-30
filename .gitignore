@@ -9,3 +9,4 @@ CID-Synonym-unfiltered
 CID-Synonym-unfiltered_*.csv
 api-call-example/build
 api-call-example/node_modules
+applications/pub-chem-index/tasks/ingestion/data/

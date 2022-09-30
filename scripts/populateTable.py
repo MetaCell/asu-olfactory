@@ -22,7 +22,7 @@ try:
     start = time.time()
     # use glob to get all the csv files in the folder
 
-    path = "/tmp/CID"
+    path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
     logging.info("Populating table using files from %s", path)
 
     file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
