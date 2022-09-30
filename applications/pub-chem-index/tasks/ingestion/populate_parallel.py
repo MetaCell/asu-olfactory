@@ -46,9 +46,8 @@ async def populate_table(table_name, path, dns):
       Value VARCHAR
   )
   """ % table_name #better management
-  async with pool.acquire() as conn:
-    async with conn.cursor() as cur:
-      await cur.execute(sql_copy)
+
+  await execute_sql(pool, sql_copy)
 
   logging.info("Table created")
 
@@ -78,11 +77,11 @@ async def populate_table(table_name, path, dns):
     
   await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
 
-  await cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+  await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
-  await cur.execute(sql_copy)
+  await execute_sql(pool, sql_copy)
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
-  await cur.execute(sql_copy) 
+  await execute_sql(pool, sql_copy) 
 
 async def go():
   path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
