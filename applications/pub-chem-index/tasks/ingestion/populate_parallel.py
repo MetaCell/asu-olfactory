@@ -6,7 +6,8 @@ import dask.dataframe as dd
 import asyncio
 import aiopg
 import shutil
-
+import stat
+from functools import reduce
 #
 # WARNING!!! use head command on files for debugging
 # head -n 500000 CID-SMILES > CID-SMILES-head
@@ -22,8 +23,8 @@ added_col_dic = {
   "CID-Patent": ["CID", "CID-Patent"],
   "CID-SID": ["CID", "CID-SID"],
   "CID-MeSH": ["CID", "CID-MeSH"],
-  "CID-SMILES": ["CID", "CID-SMILES"],
-  "CID-Synonym-filtered": ["CID", "Syn"],
+  "CID-SMILES": ["CID", "MID", "CID-SMILES"],
+  "CID-Synonym-filtered-head": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
   "CID-Title": ["CID", "CID-Title"],
   "CID-IUPAC": ["CID", "CID-IUPAC"]
@@ -35,17 +36,36 @@ async def execute_sql(pool, sql):
     async with conn.cursor() as cur:
       await cur.execute(sql)
 
+def change_permissions_recursive(path, mode):
+  for root, dirs, files in os.walk(path, topdown=False):
+    for file in [os.path.join(root, f) for f in files]:
+      if file.startswith('export-'):
+          os.chmod(file, mode)
+  #os.chmod(path, mode)
+
 async def populate_table(table_name, path, dns):
   #Populate GIN indexed table, this will take about 30 minutes.
   pool = await aiopg.create_pool(dns)
 
+  column_names = added_col_dic[table_name]
+  main_column = column_names[1]
+
+  str_column_names =""
+
+  for i in column_names:
+    if i != "CID":
+      str_column_names+=i + ' VARCHAR,'
+
+  str_column_names = str_column_names[:len(str_column_names)-1]
+
   table_name = table_name.replace("-", "_")
+
   sql_copy = """
-  CREATE TABLE IF NOT EXISTS %s (
+  DROP TABLE %s; CREATE TABLE %s (
       CID VARCHAR NOT NULL,
-      Value VARCHAR
+      %s
   )
-  """ % table_name #better management
+  """ % (table_name, table_name, str_column_names)  #better management
 
   await execute_sql(pool, sql_copy)
 
@@ -68,7 +88,7 @@ async def populate_table(table_name, path, dns):
   await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
+  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % table_name, main_column
   await execute_sql(pool, sql_copy)
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
   await execute_sql(pool, sql_copy) 
@@ -78,7 +98,7 @@ async def go():
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
-  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-SMILES-head')]
+  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-Synonym-filtered-head')]
   for file in sorted(file_list):
       file_name = os.path.basename(file)
       column_name      = ['CID', file_name]
@@ -99,12 +119,15 @@ async def go():
                       , header=None
                       , on_bad_lines='skip')
 
-      output = path + '/tmp/'
+      output = '/tmp/CID/'
       #delete tmp
       if os.path.isdir(output):
         shutil.rmtree(output)
       #spit out and populate
       df.to_csv(output + "export-*.csv")
+
+      change_permissions_recursive(output, stat.S_IROTH)
+
       await populate_table(file_name, output, dns) 
 
 loop = asyncio.get_event_loop()
