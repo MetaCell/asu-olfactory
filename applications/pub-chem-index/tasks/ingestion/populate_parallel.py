@@ -57,11 +57,11 @@ async def populate_table(table_name, path, dns):
         logging.info("Query is %s", sql_copy)
         await cur.execute(sql_copy)
 
-        await cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-        sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
-        await cur.execute(sql_copy)
-        sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
-        await cur.execute(sql_copy) 
+      await cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+      sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
+      await cur.execute(sql_copy)
+      sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
+      await cur.execute(sql_copy) 
 
 async def go():
   path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
