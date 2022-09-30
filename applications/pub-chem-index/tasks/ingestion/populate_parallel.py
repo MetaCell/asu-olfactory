@@ -9,6 +9,12 @@ import aiopg
 import shutil
 import stat
 from functools import reduce
+
+from cloudharness import applications
+
+app = applications.get_configuration('pub-chem-index')
+conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password=metacell"
+
 #
 # WARNING!!! use head command on files for debugging
 # head -n 500000 CID-SMILES > CID-SMILES-head
@@ -19,16 +25,16 @@ from functools import reduce
 added_col_dic = {
   "CID-InChI-Key": ["CID", "InChI", "Key"],
   "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
-  "CID-PMID": ["CID", "CID-PMID"],
-  "CID-Parent": ["CID", "CID-Parent"],
-  "CID-Patent": ["CID", "CID-Patent"],
-  "CID-SID": ["CID", "CID-SID"],
-  "CID-MeSH": ["CID", "CID-MeSH"],
-  "CID-SMILES": ["CID", "MID", "CID-SMILES"],
+  "CID-PMID": ["CID", "PMID"],
+  "CID-Parent": ["CID", "Parent"],
+  "CID-Patent": ["CID", "Patent"],
+  "CID-SID": ["CID", "SID"],
+  "CID-MeSH": ["CID", "MeSH"],
+  "CID-SMILES": ["CID", "MID", "SMILES"],
   "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
-  "CID-Title": ["CID", "CID-Title"],
-  "CID-IUPAC": ["CID", "CID-IUPAC"]
+  "CID-Title": ["CID", "Title"],
+  "CID-IUPAC": ["CID", "IUPAC"]
 }
 
 async def execute_sql(pool, sql):
@@ -105,9 +111,10 @@ async def populate_table(table_name, path, dns):
 async def go():
   path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
   logging.info("Populating table using files from %s", path)
-  dns = 'dbname=asu user=postgres password=postgres host=localhost'
+  #dns = 'dbname=asu user=postgres password=postgres host=localhost'
+  dns = conn_string
 
-  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-Synonym-filtered')]
+  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
   for file in sorted(file_list):
       file_name = os.path.basename(file)
       column_name      = ['CID', file_name]
@@ -128,7 +135,7 @@ async def go():
                       , header=None
                       , on_bad_lines='skip')
 
-      output = '/tmp/CID/'
+      output = '/tmp/CID/' + file_name + '/'
       # #delete tmp
       if os.path.isdir(output):
         shutil.rmtree(output)

@@ -11,5 +11,4 @@ cd data/db/
 ls -la /data/db/
 pwd
 
-python3 /normalize.py /data/db /data/db/CID_Chunks
-python3 /populateTable.py /data/db/CID_Chunks
+python3 /populate_parallel.py
