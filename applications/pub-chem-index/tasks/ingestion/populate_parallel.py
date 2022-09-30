@@ -29,57 +29,60 @@ added_col_dic = {
   "CID-IUPAC": ["CID", "CID-IUPAC"]
 }
 
-async def execute_sql(cur, sql):
+async def execute_sql(pool, sql):
   #print(sql)
-  await cur.execute(sql)
+  async with pool.acquire() as conn:
+    async with conn.cursor() as cur:
+      await cur.execute(sql)
 
 async def populate_table(table_name, path, dns):
   #Populate GIN indexed table, this will take about 30 minutes.
   pool = await aiopg.create_pool(dns)
 
+  table_name = table_name.replace("-", "_")
+  sql_copy = """
+  CREATE TABLE IF NOT EXISTS %s (
+      CID VARCHAR NOT NULL,
+      Value VARCHAR
+  )
+  """ % table_name #better management
   async with pool.acquire() as conn:
     async with conn.cursor() as cur:
-      table_name = table_name.replace("-", "_")
-      sql_copy = """
-      CREATE TABLE IF NOT EXISTS %s (
-          CID VARCHAR NOT NULL,
-          Value VARCHAR
-      )
-      """ % table_name #better management
       await cur.execute(sql_copy)
-      logging.info("Table created")
 
-      # loop over the list of csv files
-      file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
+  logging.info("Table created")
 
-      #!!!! RUN IN PARALLEL ??
+  # loop over the list of csv files
+  file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
 
-      # pool.map(ins_into_db, [i+1 for i in range(7)])
-      # pool.close()
-      # pool.join()
+  #!!!! RUN IN PARALLEL ??
+
+  # pool.map(ins_into_db, [i+1 for i in range(7)])
+  # pool.close()
+  # pool.join()
 
 
-      #with Pool(processes=len(my_queries)) as pool:
-          #pool.map(partial(execute_query,rs_conn_string), my_queries)
+  #with Pool(processes=len(my_queries)) as pool:
+      #pool.map(partial(execute_query,rs_conn_string), my_queries)
 
-      sql_list = []
-      for f in file_list:
-        logging.info("Ingesting file %s", f)
-        sql_copy = '''
-            COPY %s
-            FROM '%s'
-            DELIMITER ',' CSV HEADER;
-            '''  % (table_name , f)
-        logging.info("Query is %s", sql_copy)
-        sql_list.append(sql_copy)
-        
-      await asyncio.gather(*[execute_sql(cur, sql_list[i]) for i in range(len(sql_list))])
+  sql_list = []
+  for f in file_list:
+    logging.info("Ingesting file %s", f)
+    sql_copy = '''
+        COPY %s
+        FROM '%s'
+        DELIMITER ',' CSV HEADER;
+        '''  % (table_name , f)
+    logging.info("Query is %s", sql_copy)
+    sql_list.append(sql_copy)
+    
+  await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
 
-      await cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-      sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
-      await cur.execute(sql_copy)
-      sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
-      await cur.execute(sql_copy) 
+  await cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
+  await cur.execute(sql_copy)
+  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
+  await cur.execute(sql_copy) 
 
 async def go():
   path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
@@ -101,7 +104,7 @@ async def go():
       df = dd.read_csv(file
                       , quoting=csv.QUOTE_NONE
                       , names=column_name
-                      , blocksize=25e6 #25MB
+                      , blocksize=1e6 #1MB
                       , dtype=types
                       , sep='\t'
                       , header=None
