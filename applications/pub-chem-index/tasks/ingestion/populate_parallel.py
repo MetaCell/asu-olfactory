@@ -29,9 +29,14 @@ added_col_dic = {
   "CID-IUPAC": ["CID", "CID-IUPAC"]
 }
 
+async def execute_sql(cur, sql):
+  #print(sql)
+  await cur.execute(sql)
+
 async def populate_table(table_name, path, dns):
   #Populate GIN indexed table, this will take about 30 minutes.
   pool = await aiopg.create_pool(dns)
+
   async with pool.acquire() as conn:
     async with conn.cursor() as cur:
       table_name = table_name.replace("-", "_")
@@ -47,6 +52,17 @@ async def populate_table(table_name, path, dns):
       # loop over the list of csv files
       file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
 
+      #!!!! RUN IN PARALLEL ??
+
+      # pool.map(ins_into_db, [i+1 for i in range(7)])
+      # pool.close()
+      # pool.join()
+
+
+      #with Pool(processes=len(my_queries)) as pool:
+          #pool.map(partial(execute_query,rs_conn_string), my_queries)
+
+      sql_list = []
       for f in file_list:
         logging.info("Ingesting file %s", f)
         sql_copy = '''
@@ -55,7 +71,9 @@ async def populate_table(table_name, path, dns):
             DELIMITER ',' CSV HEADER;
             '''  % (table_name , f)
         logging.info("Query is %s", sql_copy)
-        await cur.execute(sql_copy)
+        sql_list.append(sql_copy)
+        
+      await asyncio.gather(*[execute_sql(cur, sql_list[i]) for i in range(len(sql_list))])
 
       await cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
       sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
@@ -91,7 +109,7 @@ async def go():
 
       output = path + '/tmp/'
       #delete tmp
-      shutil.rmtree(output)
+      #hutil.rmtree(output)
       #spit out and populate
       df.to_csv(output + "export-*.csv")
       await populate_table(file_name, output, dns) 
