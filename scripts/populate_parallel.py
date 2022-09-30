@@ -61,11 +61,17 @@ async def populate_table(table_name, path, dns):
   table_name = table_name.replace("-", "_")
 
   sql_copy = """
-  DROP TABLE IF EXISTS %s; CREATE TABLE %s (
+  DROP TABLE IF EXISTS %s
+  """ % (table_name)  #better management
+
+  await execute_sql(pool, sql_copy)
+
+  sql_copy = """
+  CREATE TABLE %s (
       CID VARCHAR NOT NULL,
       %s
   )
-  """ % (table_name, table_name, str_column_names)  #better management
+  """ % (table_name, str_column_names)  #better management
 
   await execute_sql(pool, sql_copy)
 
@@ -83,18 +89,17 @@ async def populate_table(table_name, path, dns):
         DELIMITER '\t' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
-    sql_list.append(sql_copy)
+    await execute_sql(pool, sql_copy)
     
-  await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
-
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
   await execute_sql(pool, sql_copy)
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
   await execute_sql(pool, sql_copy) 
+  pool.close()
 
 async def go():
-  path = os.path.dirname(os.path.realpath(__file__)) + "../CID-head"
+  path = os.path.dirname(os.path.realpath(__file__)) + "../CID"
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
