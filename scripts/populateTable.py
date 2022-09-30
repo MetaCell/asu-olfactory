@@ -8,6 +8,21 @@ import traceback
 import os
 import logging
 
+added_col_dic = {
+    "CID-InChI-Key": ["CID", "InChI", "Key"],
+    "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
+    "CID-PMID": ["CID", "PMID"],
+    "CID-Parent": ["CID", "Parent"],
+    "CID-Patent": ["CID", "Patent"],
+    "CID-SID": ["CID", "SID"],
+    "CID-MeSH": ["CID", "MeSH"],
+    "CID-SMILES": ["CID", "SMILES"],
+    "CID-Synonym-filtered": ["CID", "Syn"],
+    "CID-Synonym-unfiltered": ["CID", "Syn"],
+    "CID-Title": ["CID", "Title"],
+    "CID-IUPAC": ["CID", "IUPAC"]
+  }
+
 conn = psycopg2.connect(
     host='localhost',
     port=5432,
@@ -37,12 +52,31 @@ try:
         sql_copy = """
             CREATE TABLE IF NOT EXISTS %s(
                 CID VARCHAR NOT NULL,
-                Synonym VARCHAR
+                %s VARCHAR
             )
-            """ % table_name 
+            """ % (table_name, added_col_dic[file_name][1]) 
+
+        if file_name == "CID-InChI-Key":
+            sql_copy = """
+            CREATE TABLE IF NOT EXISTS %s(
+                CID VARCHAR NOT NULL,
+                %s VARCHAR
+                %s VARCHAR
+            )
+            """ % (table_name, added_col_dic[file_name][1],added_col_dic[file_name][2]) 
+        elif file_name == "CID-Mass":
+            sql_copy = """
+            CREATE TABLE IF NOT EXISTS %s(
+                CID VARCHAR NOT NULL,
+                %s VARCHAR
+                %s VARCHAR
+                %s VARCHAR
+            )
+            """ % (table_name, added_col_dic[file_name][1],added_col_dic[file_name][2], added_col_dic[file_name][3])        
         cur.execute(sql_copy)
-        logging.info("Table created")
+        print("Table created %s", sql_copy)
         
+        f = 1
         # loop over the list of csv files
         for f in csv_files:
             logging.info("Ingesting file %s", f)
@@ -53,11 +87,15 @@ try:
                '''  % (table_name , f)
             logging.info("Query is %s", sql_copy)
             cur.execute(sql_copy)
+            f = f + 1
+            if f == 10:
+                break
         cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
         sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
         cur.execute(sql_copy)
         sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
-        cur.execute(sql_copy)   
+        cur.execute(sql_copy)
+        conn.commit()   
 except Exception:
     logging.error("Error during ingestion", exc_info=True)
     exit(1)

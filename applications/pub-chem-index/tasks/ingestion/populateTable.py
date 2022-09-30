@@ -16,6 +16,21 @@ conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]
 conn = psycopg2.connect(conn_string)
 cur = conn.cursor()
 
+added_col_dic = {
+    "CID-InChI-Key": ["CID", "InChI", "Key"],
+    "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
+    "CID-PMID": ["CID", "PMID"],
+    "CID-Parent": ["CID", "Parent"],
+    "CID-Patent": ["CID", "Patent"],
+    "CID-SID": ["CID", "SID"],
+    "CID-MeSH": ["CID", "MeSH"],
+    "CID-SMILES": ["CID", "SMILES"],
+    "CID-Synonym-filtered": ["CID", "Syn"],
+    "CID-Synonym-unfiltered": ["CID", "Syn"],
+    "CID-Title": ["CID", "Title"],
+    "CID-IUPAC": ["CID", "IUPAC"]
+  }
+
 try:
     #Populate a table without GIN Indexing
     start = time.time()
@@ -36,11 +51,29 @@ try:
         sql_copy = """
             CREATE TABLE IF NOT EXISTS %s(
                 CID VARCHAR NOT NULL,
-                Synonym VARCHAR
+                %s VARCHAR
             )
-            """ % table_name 
+            """ % (table_name, added_col_dic[file_name][1]) 
+
+        if file_name == "CID-InChI-Key":
+            sql_copy = """
+            CREATE TABLE IF NOT EXISTS %s(
+                CID VARCHAR NOT NULL,
+                %s VARCHAR
+                %s VARCHAR
+            )
+            """ % (table_name, added_col_dic[file_name][1],added_col_dic[file_name][2]) 
+        elif file_name == "CID-Mass":
+            sql_copy = """
+            CREATE TABLE IF NOT EXISTS %s(
+                CID VARCHAR NOT NULL,
+                %s VARCHAR
+                %s VARCHAR
+                %s VARCHAR
+            )
+            """ % (table_name, added_col_dic[file_name][1],added_col_dic[file_name][2], added_col_dic[file_name][3])        
         cur.execute(sql_copy)
-        logging.info("Table created")
+        logging.info("Table created %s", sql_copy)
         
         # loop over the list of csv files
         for f in csv_files:
@@ -56,12 +89,12 @@ try:
         sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (Synonym gin_trgm_ops);''' % table_name
         cur.execute(sql_copy)
         sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
-        cur.execute(sql_copy)   
+        cur.execute(sql_copy)
+        conn.commit()   
 except Exception:
     logging.error("Error during ingestion", exc_info=True)
     exit(1)
 finally:
-    conn.commit()
     cur.close()
     conn.close()
     end = time.time()
