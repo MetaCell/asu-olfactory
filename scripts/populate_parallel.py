@@ -18,16 +18,16 @@ from functools import reduce
 added_col_dic = {
   "CID-InChI-Key": ["CID", "InChI", "Key"],
   "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
-  "CID-PMID": ["CID", "PMID"],
-  "CID-Parent": ["CID", "Parent"],
-  "CID-Patent": ["CID", "Patent"],
-  "CID-SID": ["CID", "SID"],
-  "CID-MeSH": ["CID", "MeSH"],
-  "CID-SMILES": ["CID", "MID", "SMILES"],
-  "CID-Synonym-filtered-head": ["CID", "Synonym"],
+  "CID-PMID": ["CID", "CID-PMID"],
+  "CID-Parent": ["CID", "CID-Parent"],
+  "CID-Patent": ["CID", "CID-Patent"],
+  "CID-SID": ["CID", "CID-SID"],
+  "CID-MeSH": ["CID", "CID-MeSH"],
+  "CID-SMILES": ["CID", "MID", "CID-SMILES"],
+  "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
-  "CID-Title": ["CID", "Title"],
-  "CID-IUPAC": ["CID", "IUPAC"]
+  "CID-Title": ["CID", "CID-Title"],
+  "CID-IUPAC": ["CID", "CID-IUPAC"]
 }
 
 async def execute_sql(pool, sql):
@@ -61,7 +61,7 @@ async def populate_table(table_name, path, dns):
   table_name = table_name.replace("-", "_")
 
   sql_copy = """
-  DROP TABLE %s; CREATE TABLE %s (
+  DROP TABLE IF EXISTS %s; CREATE TABLE %s (
       CID VARCHAR NOT NULL,
       %s
   )
@@ -94,11 +94,11 @@ async def populate_table(table_name, path, dns):
   await execute_sql(pool, sql_copy) 
 
 async def go():
-  path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
+  path = os.path.dirname(os.path.realpath(__file__)) + "../CID-head"
   logging.info("Populating table using files from %s", path)
-  dns = 'dbname=asu port=5432 user=postgres password=postgres host=localhost'
+  dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
-  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-Synonym-filtered')]
+  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
   for file in sorted(file_list):
       file_name = os.path.basename(file)
       column_name      = ['CID', file_name]
