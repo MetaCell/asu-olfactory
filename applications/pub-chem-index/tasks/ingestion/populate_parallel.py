@@ -24,7 +24,7 @@ added_col_dic = {
   "CID-SID": ["CID", "CID-SID"],
   "CID-MeSH": ["CID", "CID-MeSH"],
   "CID-SMILES": ["CID", "MID", "CID-SMILES"],
-  "CID-Synonym-filtered-head": ["CID", "Synonym"],
+  "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
   "CID-Title": ["CID", "CID-Title"],
   "CID-IUPAC": ["CID", "CID-IUPAC"]
@@ -61,7 +61,7 @@ async def populate_table(table_name, path, dns):
   table_name = table_name.replace("-", "_")
 
   sql_copy = """
-  DROP TABLE %s; CREATE TABLE %s (
+  DROP TABLE IF EXISTS %s; CREATE TABLE %s (
       CID VARCHAR NOT NULL,
       %s
   )
