@@ -80,7 +80,7 @@ async def populate_table(table_name, path, dns):
     sql_copy = '''
         COPY %s
         FROM '%s'
-        DELIMITER ',' CSV HEADER;
+        DELIMITER '\t' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
     sql_list.append(sql_copy)
@@ -88,7 +88,7 @@ async def populate_table(table_name, path, dns):
   await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % table_name, main_column
+  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
   await execute_sql(pool, sql_copy)
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
   await execute_sql(pool, sql_copy) 
@@ -98,7 +98,7 @@ async def go():
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
-  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-Synonym-filtered-head')]
+  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-Synonym-filtered')]
   for file in sorted(file_list):
       file_name = os.path.basename(file)
       column_name      = ['CID', file_name]
@@ -113,7 +113,7 @@ async def go():
       df = dd.read_csv(file
                       , quoting=csv.QUOTE_NONE
                       , names=column_name
-                      , blocksize=1e6 #1MB
+                      , blocksize=150e6 #150MB
                       , dtype=types
                       , sep='\t'
                       , header=None
@@ -124,7 +124,7 @@ async def go():
       if os.path.isdir(output):
         shutil.rmtree(output)
       #spit out and populate
-      df.to_csv(output + "export-*.csv")
+      df.to_csv(output + "export-*.csv", sep='\t', index=False)
 
       change_permissions_recursive(output, stat.S_IROTH)
 
