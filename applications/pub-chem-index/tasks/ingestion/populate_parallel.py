@@ -31,7 +31,7 @@ added_col_dic = {
   "CID-Patent": ["CID", "Patent"],
   "CID-SID": ["CID", "SID"],
   "CID-MeSH": ["CID", "MeSH"],
-  "CID-SMILES": ["CID", "MID", "SMILES"],
+  "CID-SMILES": ["CID", "MID"],
   "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
   "CID-Title": ["CID", "Title"],

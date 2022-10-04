@@ -18,13 +18,13 @@ paths:
                 type: string
           description: ok
       x-openapi-router-controller: pub_chem_index.controllers.default_controller
-  /molecules:
+  /molecules/synonyms:
     description: The REST endpoint/path used to list and create zero or more `Molecule`
       entities.  This path contains a `GET` and `POST` operation to perform the list
       and create tasks, respectively.
     get:
       description: Gets a list of all `Molecule` entities.
-      operationId: get_molecules
+      operationId: get_synonyms
       responses:
         "200":
           content:
@@ -39,12 +39,262 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/{term}:
+  /molecules/synonyms/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
       description: Gets the details of a single instance of a `Molecule`.
-      operationId: search_molecules
+      operationId: search_synonyms
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/smiles:
+    description: The REST endpoint/path used to list and create zero or more `Molecule`
+      entities.  This path contains a `GET` and `POST` operation to perform the list
+      and create tasks, respectively.
+    get:
+      description: Gets a list of all `Molecule` entities.
+      operationId: get_smiles
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns an array of `Molecule` entities.
+      summary: List All Smiles
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage the list of molecules.
+  /molecules/smiles/{term}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_smiles
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/inchi:
+    description: The REST endpoint/path used to list and create zero or more `Molecule`
+      entities.  This path contains a `GET` and `POST` operation to perform the list
+      and create tasks, respectively.
+    get:
+      description: Gets a list of all `Molecule` entities.
+      operationId: get_inchi
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule_Inchi'
+                type: array
+          description: Successful response - returns an array of `Molecule` entities.
+      summary: List All Molecules
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage the list of molecules.
+  /molecules/inchi/{term}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_inchi
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule_Inchi'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/uipac:
+    description: The REST endpoint/path used to list and create zero or more `Molecule`
+      entities.  This path contains a `GET` and `POST` operation to perform the list
+      and create tasks, respectively.
+    get:
+      description: Gets a list of all `Molecule` entities.
+      operationId: get_uipac
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns an array of `Molecule` entities.
+      summary: List All Molecules
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage the list of molecules.
+  /molecules/uipac/{term}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_uipac
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/mesh:
+    description: The REST endpoint/path used to list and create zero or more `Molecule`
+      entities.  This path contains a `GET` and `POST` operation to perform the list
+      and create tasks, respectively.
+    get:
+      description: Gets a list of all `Molecule` entities.
+      operationId: get_mesh
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns an array of `Molecule` entities.
+      summary: List All Molecules
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage the list of molecules.
+  /molecules/mesh/{term}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_mesh
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/title:
+    description: The REST endpoint/path used to list and create zero or more `Molecule`
+      entities.  This path contains a `GET` and `POST` operation to perform the list
+      and create tasks, respectively.
+    get:
+      description: Gets a list of all `Molecule` entities.
+      operationId: get_title
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns an array of `Molecule` entities.
+      summary: List All Molecules
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage the list of molecules.
+  /molecules/title/{term}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_title
       parameters:
       - description: A unique identifier for a `Molecule`.
         explode: false
@@ -86,4 +336,27 @@ components:
           title: synonym
           type: string
       title: Molecule
+      type: object
+    Molecule_Inchi:
+      description: List of synonyms matching search query
+      example:
+        inchi: dimethyl
+        key : 1
+        cid: 1
+      properties:
+        cid:
+          example: 1
+          title: cid
+          type: integer
+        inchi:
+          description: List of synonyms matching search query
+          example: dimethyl
+          title: inchi
+          type: string
+        key:
+          description: List of synonyms matching search query
+          example: dimethyl
+          title: key
+          type: string
+      title: Molecule_Inchi
       type: object

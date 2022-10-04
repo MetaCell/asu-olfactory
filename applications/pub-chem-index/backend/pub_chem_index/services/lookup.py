@@ -13,14 +13,14 @@ def connect():
     conn = psycopg2.connect(conn_string)
     return conn
 
-def get_all_molecules():
+def get_all_values(table_name):
     conn = connect()
     cur = connect().cursor()
 
     try:
         cur.execute("""
-            SELECT * FROM synonyms;
-            """)
+            SELECT * FROM %s;
+            """, table_name)
         result = cur.fetchall()
         cur.close()
         conn.close()
@@ -29,13 +29,13 @@ def get_all_molecules():
         traceback.print_exc()
         return 'Error submitting operation: %s' % e, 500
 
-def search_molecules_by_synonym(term):
+def search_table_by_value(table_name, key, term):
     conn = connect()
     cur = connect().cursor()
     try:
         cur.execute("""
-            SELECT * FROM synonyms WHERE Synonym LIKE %(search)s ESCAPE '='
-            """, dict(search= '%'+term+'%'))
+            SELECT * FROM %s WHERE %s LIKE %(search)s ESCAPE '='
+            """, ( table_name, key, dict(search= '%'+term+'%')))
         result = cur.fetchall()
         cur.close()
         conn.close()
@@ -45,14 +45,14 @@ def search_molecules_by_synonym(term):
         return 'Error submitting operation: %s' % e, 500
 
 
-def search_molecules_by_cid(term):
+def search_table_by_cid(table_name, term):
     conn = connect()
     cur = connect().cursor()
     try:
         cur.execute("""
-         SELECT * FROM synonyms WHERE CID = %s;
+         SELECT * FROM %s WHERE CID = %s;
          """,
-         (term,))
+         (table_name, term))
         result = cur.fetchall()
         cur.close()
         conn.close()
