@@ -2,6 +2,7 @@ from async_timeout import timeout
 import pandas as pd
 import os
 import csv
+import sys
 import logging
 import dask.dataframe as dd
 import asyncio
@@ -87,7 +88,6 @@ async def populate_table(table_name, path, dns):
   # loop over the list of csv files
   file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
 
-  sql_list = []
   for f in file_list:
     logging.info("Ingesting file %s", f)
     sql_copy = '''
@@ -96,9 +96,7 @@ async def populate_table(table_name, path, dns):
         DELIMITER '\t' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
-    sql_list.append(sql_copy)
-    
-  await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
+    execute_sql(pool, sql_copy)    
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
@@ -109,10 +107,14 @@ async def populate_table(table_name, path, dns):
   pool.close()
 
 async def go():
-  path = os.path.dirname(os.path.realpath(__file__)) + "/data/db"
+  path = sys.argv[1]
   logging.info("Populating table using files from %s", path)
   #dns = 'dbname=asu user=postgres password=postgres host=localhost'
   dns = conn_string
+  dest_folder = sys.argv[2]
+  logging.info("Normalizing files from %s" + dest_folder)
+  if not os.path.exists(dest_folder):
+    os.makedirs(dest_folder)
 
   file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
   for file in sorted(file_list):
@@ -135,7 +137,9 @@ async def go():
                       , header=None
                       , on_bad_lines='skip')
 
-      output = '/tmp/CID/' + file_name + '/'
+      output = dest_folder + '/' + file_name + '/'
+      logging.info("Ouput folder %s " + output)
+
       # #delete tmp
       if os.path.isdir(output):
         shutil.rmtree(output)
