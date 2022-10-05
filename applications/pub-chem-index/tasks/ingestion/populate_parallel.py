@@ -93,7 +93,7 @@ async def populate_table(table_name, path, dns):
     sql_copy = '''
         COPY %s
         FROM '%s'
-        DELIMITER ',' CSV HEADER;
+        DELIMITER '\t' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
     execute_sql(pool, sql_copy)    
