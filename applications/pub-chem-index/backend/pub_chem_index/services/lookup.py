@@ -20,7 +20,7 @@ def get_all_values(table_name):
     try:
         cur.execute("""
             SELECT * FROM %s;
-            """, table_name.replace("'", ""))
+            """, table_name)
         result = cur.fetchall()
         cur.close()
         conn.close()
@@ -35,7 +35,7 @@ def search_table_by_value(table_name, key, term):
     try:
         cur.execute("""
             SELECT * FROM %s WHERE %s LIKE %(search)s ESCAPE '='
-            """, ( table_name.replace("'", ""), key.replace("'", ""), dict(search= '%'+term+'%')))
+            """, ( table_name, key, dict(search= '%'+term+'%')))
         result = cur.fetchall()
         cur.close()
         conn.close()
@@ -52,7 +52,7 @@ def search_table_by_cid(table_name, term):
         cur.execute("""
          SELECT * FROM %s WHERE CID = %s;
          """,
-         (table_name.replace("'", ""), term))
+         (table_name, (term,)))
         result = cur.fetchall()
         cur.close()
         conn.close()
