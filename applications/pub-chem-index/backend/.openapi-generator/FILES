@@ -12,6 +12,7 @@ pub_chem_index/encoder.py
 pub_chem_index/models/__init__.py
 pub_chem_index/models/base_model_.py
 pub_chem_index/models/molecule.py
+pub_chem_index/models/molecule_inchi.py
 pub_chem_index/openapi/openapi.yaml
 pub_chem_index/test/__init__.py
 pub_chem_index/typing_utils.py
