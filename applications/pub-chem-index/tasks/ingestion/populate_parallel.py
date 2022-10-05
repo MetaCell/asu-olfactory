@@ -96,7 +96,7 @@ async def populate_table(table_name, path, dns):
         DELIMITER '\t' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
-    execute_sql(pool, sql_copy)    
+    await execute_sql(pool, sql_copy)    
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
