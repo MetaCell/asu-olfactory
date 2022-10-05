@@ -93,15 +93,17 @@ async def populate_table(table_name, path, dns):
     sql_copy = '''
         COPY %s
         FROM '%s'
-        DELIMITER '\t' CSV HEADER;
+        DELIMITER ',' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
     execute_sql(pool, sql_copy)    
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
+  logging.info("Index Gin is %s", sql_copy)
   await execute_sql(pool, sql_copy)
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
+  logging.info("cid_idx %s", sql_copy)
   await execute_sql(pool, sql_copy) 
 
   pool.close()
