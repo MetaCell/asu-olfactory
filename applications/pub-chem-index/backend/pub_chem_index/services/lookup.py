@@ -4,6 +4,7 @@ import os
 import csv
 import time
 import traceback
+import logging
 
 from cloudharness import applications
 
@@ -19,6 +20,7 @@ def get_all_values(table_name):
 
     try:
         tquery = "select * from {}".format(table_name)
+        logging.info("Lookup query %s", tquery)
         cur.execute(tquery)
         result = cur.fetchall()
         cur.close()
@@ -33,6 +35,7 @@ def search_table_by_value(table_name, key, term):
     cur = connect().cursor()
     try:
         table_query =  "SELECT * FROM {0} WHERE {1} LIKE '{2}';".format(table_name, key, term)
+        logging.info("Lookup query %s", table_query)
         cur.execute(table_query)
         result = cur.fetchall()
         cur.close()
@@ -48,6 +51,7 @@ def search_table_by_cid(table_name, term):
     cur = connect().cursor()
     try:
         table_query =  "SELECT * from {0} WHERE CID = '{1}'".format(table_name, term)
+        logging.info("Lookup query %s", table_query)
         cur.execute(table_query)
         result = cur.fetchall()
         cur.close()
