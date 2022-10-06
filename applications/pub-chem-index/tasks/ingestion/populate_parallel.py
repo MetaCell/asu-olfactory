@@ -88,6 +88,7 @@ async def populate_table(table_name, path, dns):
   # loop over the list of csv files
   file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
 
+  sql_list = []
   for f in file_list:
     logging.info("Ingesting file %s", f)
     sql_copy = '''
@@ -96,7 +97,9 @@ async def populate_table(table_name, path, dns):
         DELIMITER '\t' CSV HEADER;
         '''  % (table_name , f)
     logging.info("Query is %s", sql_copy)
-    await execute_sql(pool, sql_copy)    
+    sql_list.append(sql_copy)
+    
+  await asyncio.gather(*[execute_sql(pool, sql_list[i]) for i in range(len(sql_list))])
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
