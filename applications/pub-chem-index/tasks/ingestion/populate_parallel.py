@@ -136,6 +136,7 @@ async def go():
                       , blocksize=150e6 #150MB
                       , dtype=types
                       , sep='\t'
+                      , encoding='latin'
                       , header=None
                       , on_bad_lines='skip')
 
