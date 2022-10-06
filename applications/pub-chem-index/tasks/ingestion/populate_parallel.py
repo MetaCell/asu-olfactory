@@ -118,8 +118,10 @@ async def go():
   if not os.path.exists(dest_folder):
     os.makedirs(dest_folder)
 
-  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
+  file_list = [path for f in os.listdir(path) if f.startswith('CID-')]
+  logging.info("File list %s", file_list)
   for file in sorted(file_list):
+      logging.info("f %s", file)
       file_name = os.path.basename(file)
       column_name      = ['CID', file_name]
       types            = { file_name: 'string', 'CID': 'Int64' }
