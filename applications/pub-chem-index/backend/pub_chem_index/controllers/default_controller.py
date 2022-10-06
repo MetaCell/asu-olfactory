@@ -13,9 +13,9 @@ def ingest():  # noqa: E501
     :rtype: str
     """
     shared_directory = 'pubchem-db:/data/db'
-    task_ingest = tasks.CustomTask('ingest', 'pub-chem-index-ingestion')
+    task_ingest = tasks.CustomTask('ingest', 'pub-chem-index-ingestion', shared_directory=shared_directory)
 
     op = operations.PipelineOperation(
-        'ingest-data-', (task_ingest, ))
-    execute = op.execute()
+        'ingest-data-', (task_ingest, ), shared_directory=shared_directory)
+    op.execute()
     return "Ingesting Data"
