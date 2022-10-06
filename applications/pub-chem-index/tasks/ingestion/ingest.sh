@@ -8,4 +8,4 @@ ls -ls
 ls -la /data/db/CID-MeSH
 pwd
 
-python3 /populate_parallel.py CID-MeSH /data/db/CID
+python3 /populate_parallel.py /data/db /data/db/CID
