@@ -10,7 +10,7 @@ harness:
     auto: true
     name: pubchem-db
     image_ref: pubchem-postgres
-    size: 100Gi
+    size: 240Gi
     resources:
       requests:
           memory: 8Gi
