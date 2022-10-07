@@ -130,13 +130,25 @@ async def go():
           if c is not 'CID':
             types[c] = 'string'
 
-      df = dd.read_csv(file
+      if file_name == 'CID-Title':
+        logging.info("Using latin encoding");
+        df = dd.read_csv(file
                       , quoting=csv.QUOTE_NONE
                       , names=column_name
                       , blocksize=150e6 #150MB
                       , dtype=types
                       , sep='\t'
                       , encoding='latin'
+                      , header=None
+                      , on_bad_lines='skip')
+      else:
+        logging.info("Not using encoding");
+        df = dd.read_csv(file
+                      , quoting=csv.QUOTE_NONE
+                      , names=column_name
+                      , blocksize=150e6 #150MB
+                      , dtype=types
+                      , sep='\t'
                       , header=None
                       , on_bad_lines='skip')
 
