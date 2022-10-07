@@ -8,6 +8,7 @@ cd /data/db/
 [ -d "CID-Title" ] && echo "CID files exist. Skipping download" || wget -q -nc https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Title.gz && gunzip CID-Title.gz
 [ -d "CID-SMILES" ] && echo "CID files exist. Skipping download" || wget -q -nc https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-SMILES.gz && gunzip CID-SMILES.gz
 
+rm *.gz
 ls -la /data/db
 pwd
 
