@@ -64,7 +64,7 @@ def get_title():  # noqa: E501
     return lookup.get_all_values('cid_title')
 
 
-def get_uipac():  # noqa: E501
+def get_iupac():  # noqa: E501
     """List All Molecules
 
     Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
@@ -72,7 +72,7 @@ def get_uipac():  # noqa: E501
 
     :rtype: List[Molecule]
     """
-    return lookup.get_all_values('cid_uipac')
+    return lookup.get_all_values('cid_iupac')
 
 
 def search_inchi(term):  # noqa: E501
@@ -153,7 +153,7 @@ def search_title(term):  # noqa: E501
     return lookup.search_table_by_value('cid_title', 'title' ,term)
 
 
-def search_uipac(term):  # noqa: E501
+def search_iupac(term):  # noqa: E501
     """Get a Molecule
 
     Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
@@ -164,5 +164,5 @@ def search_uipac(term):  # noqa: E501
     :rtype: List[Molecule]
     """
     if term.isnumeric():
-        return lookup.search_table_by_cid('cid_uipac', term)
-    return lookup.search_table_by_value('cid_uipac', 'uipac' ,term)
+        return lookup.search_table_by_cid('cid_iupac', term)
+    return lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
