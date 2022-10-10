@@ -168,13 +168,13 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/uipac:
+  /molecules/iupac:
     description: The REST endpoint/path used to list and create zero or more `Molecule`
       entities.  This path contains a `GET` and `POST` operation to perform the list
       and create tasks, respectively.
     get:
       description: Gets a list of all `Molecule` entities.
-      operationId: get_uipac
+      operationId: get_iupac
       responses:
         "200":
           content:
@@ -189,12 +189,12 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/uipac/{term}:
+  /molecules/iupac/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
       description: Gets the details of a single instance of a `Molecule`.
-      operationId: search_uipac
+      operationId: search_iupac
       parameters:
       - description: A unique identifier for a `Molecule`.
         explode: false
