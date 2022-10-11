@@ -27,7 +27,7 @@ added_col_dic = {
   "CID-Patent": ["CID", "Patent"],
   "CID-SID": ["CID", "SID"],
   "CID-MeSH": ["CID", "MeSH"],
-  "CID-SMILES": ["CID", "MID", "SMILES"],
+  "CID-SMILES-head": ["CID", "MID", "SMILES"],
   "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
   "CID-Title": ["CID", "Title"],
@@ -52,7 +52,9 @@ async def populate_table(table_name, path, dns):
   pool = await aiopg.create_pool(dns)
 
   column_names = added_col_dic[table_name]
-  main_column = column_names[1]
+  column_names = [x.upper() for x in column_names]
+  main_column  = column_names[1].upper()
+  table_name   = table_name.replace("-", "_").upper()
 
   str_column_names =""
 
@@ -62,8 +64,6 @@ async def populate_table(table_name, path, dns):
 
   str_column_names = str_column_names[:len(str_column_names)-1]
 
-  table_name = table_name.replace("-", "_")
-
   sql_copy = """
   DROP TABLE IF EXISTS %s
   """ % (table_name)  #better management
@@ -72,7 +72,7 @@ async def populate_table(table_name, path, dns):
 
   sql_copy = """
   CREATE TABLE %s (
-      CID VARCHAR NOT NULL,
+      CID INTEGER NOT NULL PRIMARY KEY,
       %s
   )
   """ % (table_name, str_column_names)  #better management
@@ -103,7 +103,7 @@ async def populate_table(table_name, path, dns):
   pool.close()
 
 async def go():
-  path = os.path.dirname(os.path.realpath(__file__)) + "/../CID"
+  path = os.path.dirname(os.path.realpath(__file__)) + "/../CID" #/db/head
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
