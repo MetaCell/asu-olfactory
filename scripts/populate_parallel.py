@@ -37,7 +37,7 @@ added_col_dic = {
 async def execute_sql(pool, sql):
   #print(sql)
   async with pool.acquire() as conn:
-    async with conn.cursor() as cur:
+    async with conn.cursor(timeout=5000000) as cur:
       await cur.execute(sql)
 
 def change_permissions_recursive(path, mode):
@@ -96,9 +96,9 @@ async def populate_table(table_name, path, dns):
     await execute_sql(pool, sql_copy)
     
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
+  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
   await execute_sql(pool, sql_copy)
-  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
+  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx_%s ON %s (CID);''' % (table_name, table_name)
   await execute_sql(pool, sql_copy) 
   pool.close()
 
