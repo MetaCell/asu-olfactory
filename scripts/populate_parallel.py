@@ -26,7 +26,7 @@ added_col_dic = {
   "CID-SID": ["CID", "SID"],
   "CID-MeSH": ["CID", "MeSH"],
   "CID-SMILES": ["CID", "MID", "SMILES"],
-  "CID-Synonym-filtered-head": ["CID", "Synonym"],
+  "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
   "CID-Title": ["CID", "Title"],
   "CID-IUPAC": ["CID", "IUPAC"]
@@ -84,13 +84,14 @@ async def bulk_insert(chunk, table_name, pool):
       sql_insert = 'insert into '+table_name.lower()+' VALUES {}'.format(template)
       sql_insert_values = cur.mogrify(sql_insert, chunk).decode('utf8')
       #print()
-      await cur.execute(sql_insert_values) 
+      #await cur.execute(sql_insert_values) 
+      await execute_sql(pool, sql_insert_values)
 
 
 async def create_indexes(pool, table_name):
   column_names = added_col_dic[table_name]
   column_names = [x.upper() for x in column_names]
-  main_column  = column_names[1].upper()
+  main_column  = column_names[1]#.upper()
   table_name   = table_name.replace("-", "_").upper()
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
@@ -138,7 +139,11 @@ async def go():
                               , header=None
                               , on_bad_lines='skip'):
 
-        data  = list(zip(chunk["CID"], chunk[main_column]))
+        #columns = []
+        #for col in column_names:
+          #columns.append(chunk[col])
+        #data  = list(zip(chunk['CID'], chunk[main_column]))
+        data = list(chunk.itertuples(index=False))
         await bulk_insert(data, file_name.replace("-", "_"), pool)
 
       await create_indexes(pool, file_name)
