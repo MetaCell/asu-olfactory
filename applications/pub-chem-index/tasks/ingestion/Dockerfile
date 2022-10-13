@@ -6,7 +6,7 @@ USER root
 
 RUN pip install --upgrade pip
 # Update Ubuntu Software repository
-RUN pip install wget pandas psycopg2-binary wheel async_timeout dask aiopg asyncio
+RUN pip install wget pandas==1.4.2 psycopg2-binary==2.9.3 wheel==0.37.1 async_timeout aiopg asyncio
 
 WORKDIR /
 COPY . .
