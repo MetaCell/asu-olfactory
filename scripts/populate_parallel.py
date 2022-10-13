@@ -92,7 +92,7 @@ async def create_indexes(pool, table_name):
   column_names = added_col_dic[table_name]
   column_names = [x.upper() for x in column_names]
   main_column  = column_names[1]#.upper()
-  table_name   = table_name.replace("-", "_").upper()
+  table_name   = table_name.replace("-", "_").lower()
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
   sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
@@ -129,7 +129,7 @@ async def go():
 
       await create_table(pool, file_name)
 
-      chunksize = 10000
+      chunksize = 1000000
       for chunk in pd.read_csv(file
                               , quoting=csv.QUOTE_NONE
                               , names=column_name
