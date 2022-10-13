@@ -1,14 +1,12 @@
 import pandas as pd
+import numpy as np
 import os
 import sys
 import csv
 import logging
-import dask.dataframe as dd
 import asyncio
 import aiopg
-import shutil
-import stat
-from functools import reduce
+import psycopg2
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
@@ -37,7 +35,7 @@ added_col_dic = {
 async def execute_sql(pool, sql):
   #print(sql)
   async with pool.acquire() as conn:
-    async with conn.cursor() as cur:
+    async with conn.cursor(timeout=5000000) as cur:
       await cur.execute(sql)
 
 def change_permissions_recursive(path, mode):
@@ -47,12 +45,11 @@ def change_permissions_recursive(path, mode):
           os.chmod(file, mode)
   #os.chmod(path, mode)
 
-async def populate_table(table_name, path, dns):
+async def create_table(pool, table_name):
   #Populate GIN indexed table, this will take about 30 minutes.
-  pool = await aiopg.create_pool(dns)
-
   column_names = added_col_dic[table_name]
-  main_column = column_names[1]
+  column_names = [x.upper() for x in column_names]
+  table_name   = table_name.replace("-", "_").upper()
 
   str_column_names =""
 
@@ -62,8 +59,6 @@ async def populate_table(table_name, path, dns):
 
   str_column_names = str_column_names[:len(str_column_names)-1]
 
-  table_name = table_name.replace("-", "_")
-
   sql_copy = """
   DROP TABLE IF EXISTS %s
   """ % (table_name)  #better management
@@ -72,7 +67,7 @@ async def populate_table(table_name, path, dns):
 
   sql_copy = """
   CREATE TABLE %s (
-      CID VARCHAR NOT NULL,
+      CID INTEGER NOT NULL,
       %s
   )
   """ % (table_name, str_column_names)  #better management
@@ -81,29 +76,36 @@ async def populate_table(table_name, path, dns):
 
   logging.info("Table created")
 
-  # loop over the list of csv files
-  file_list = [path + f for f in os.listdir(path) if f.startswith('export-')]
+async def bulk_insert(chunk, table_name, pool):
 
-  sql_list = []
-  for f in file_list:
-    logging.info("Ingesting file %s", f)
-    sql_copy = '''
-        COPY %s
-        FROM '%s'
-        DELIMITER '\t' CSV HEADER;
-        '''  % (table_name , f)
-    logging.info("Query is %s", sql_copy)
-    await execute_sql(pool, sql_copy)
-    
+  async with pool.acquire() as conn:
+    async with conn.cursor() as cur:
+      template   = ','.join(['%s'] * len(chunk))
+      sql_insert = 'insert into '+table_name.lower()+' VALUES {}'.format(template)
+      sql_insert_values = cur.mogrify(sql_insert, chunk).decode('utf8')
+      #print()
+      #await cur.execute(sql_insert_values) 
+      await execute_sql(pool, sql_insert_values)
+
+
+async def create_indexes(pool, table_name):
+  column_names = added_col_dic[table_name]
+  column_names = [x.upper() for x in column_names]
+  main_column  = column_names[1].lower()
+  table_name   = table_name.replace("-", "_").lower()
+
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin ON %s USING gin (%s gin_trgm_ops);''' % (table_name, main_column)
+  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
   await execute_sql(pool, sql_copy)
-  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx ON %s (CID);''' % table_name
+  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx_%s ON %s (CID);''' % (table_name, table_name)
   await execute_sql(pool, sql_copy) 
   pool.close()
 
 async def go():
-  path = os.path.dirname(os.path.realpath(__file__)) + "/../CID"
+
+  psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
+
+  path = os.path.dirname(os.path.realpath(__file__)) + "/db/"
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
@@ -112,32 +114,40 @@ async def go():
       file_name = os.path.basename(file)
       column_name      = ['CID', file_name]
       types            = { file_name: 'string', 'CID': 'Int64' }
+      column_names = added_col_dic[file_name]
+      #column_names = [x.upper() for x in column_names]
+      main_column  = column_names[1] #.upper()
+      
       if file_name in added_col_dic:
         column_name = added_col_dic[file_name]
         types = { 'CID': 'Int64' }
         for c in column_name:
           if c is not 'CID':
             types[c] = 'string'
+      
+      pool = await aiopg.create_pool(dns)
 
-      df = dd.read_csv(file
-                      , quoting=csv.QUOTE_NONE
-                      , names=column_name
-                      , blocksize=150e6 #150MB
-                      , dtype=types
-                      , sep='\t'
-                      , header=None
-                      , on_bad_lines='skip')
+      await create_table(pool, file_name)
 
-      output = '/tmp/CID/' + file_name + '/'
-      #delete tmp
-      if os.path.isdir(output):
-        shutil.rmtree(output)
-      #spit out and populate
-      df.to_csv(output + "export-*.csv", sep='\t', index=False)
+      chunksize = 1000000
+      for chunk in pd.read_csv(file
+                              , quoting=csv.QUOTE_NONE
+                              , names=column_name
+                              , chunksize=chunksize
+                              , dtype=types
+                              , sep='\t'
+                              , header=None
+                              , on_bad_lines='skip'):
 
-      change_permissions_recursive(output, stat.S_IROTH)
+        #columns = []
+        #for col in column_names:
+          #columns.append(chunk[col])
+        #data  = list(zip(chunk['CID'], chunk[main_column]))
+        data = list(chunk.itertuples(index=False))
+        await bulk_insert(data, file_name.replace("-", "_"), pool)
 
-      await populate_table(file_name, output, dns) 
+      await create_indexes(pool, file_name)
+
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(go())  
