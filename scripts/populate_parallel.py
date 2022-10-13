@@ -91,7 +91,7 @@ async def bulk_insert(chunk, table_name, pool):
 async def create_indexes(pool, table_name):
   column_names = added_col_dic[table_name]
   column_names = [x.upper() for x in column_names]
-  main_column  = column_names[1]#.upper()
+  main_column  = column_names[1].lower()
   table_name   = table_name.replace("-", "_").lower()
 
   await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
