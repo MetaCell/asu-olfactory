@@ -5,6 +5,7 @@ export const CustomDropdown = (props) => (
       className="form-control"
       name="{syn}"
       onChange={props.onChange}
+      id="results"
     >
       <option defaultValue>Select {props.name}</option>
       {props.options.map((item, index) => (
@@ -40,12 +41,15 @@ export default class CustomListDropDown extends React.Component {
         }
     }
     console.log("Endpoint selected : ", endpoint);
-    
+
     fetch(`/molecules/${endpoint}/${this.state.value}`)
     .then(response => { return response.json() })
     .then((data) => {
       const options = data.map( item => { return { id : item[0], name: item[1] }})
       this.setState({ collection: options })
+
+      //open drop down
+      document.getElementById('results').click()
     })
     .catch((error) => {
       
@@ -60,32 +64,32 @@ export default class CustomListDropDown extends React.Component {
         <fieldset>
           <legend>Select a CID Table:</legend>
           <div>
-            <input type="radio" id="synonyms" name="synonyms" value="synonyms" checked/>
+            <input type="radio" id="synonyms" name="cids" value="synonyms" checked/>
             <label for="synonyms">CID-Synonyms</label>
           </div>
 
           <div>
-            <input type="radio" id="mesh" name="mesh" value="mesh"/>
+            <input type="radio" id="mesh" name="cids" value="mesh"/>
             <label for="mesh">CID-Mesh</label>
           </div>
 
           <div>
-            <input type="radio" id="smiles" name="smiles" value="smiles"/>
+            <input type="radio" id="smiles" name="cids" value="smiles"/>
             <label for="smiles">CID-Smiles</label>
           </div>
 
           <div>
-            <input type="radio" id="iupac" name="iupac" value="iupac"/>
+            <input type="radio" id="iupac" name="cids" value="iupac"/>
             <label for="iupac">CID-IUPAC</label>
           </div>
 
           <div>
-            <input type="radio" id="inchi" name="inchi" value="inchi"/>
+            <input type="radio" id="inchi" name="cids" value="inchi"/>
             <label for="inchi">CID-INCHI-Key</label>
           </div>
 
           <div>
-            <input type="radio" id="title" name="title" value="title"/>
+            <input type="radio" id="title" name="cids" value="title"/>
             <label for="title">CID-Titles</label>
           </div>
         </fieldset>
