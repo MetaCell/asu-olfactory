@@ -31,7 +31,17 @@ export default class CustomListDropDown extends React.Component {
     this.setState({ value: event.target.value })
   }
   handleClick () {
-    fetch(`/molecules/${this.state.value}`)
+    const radios = document.getElementsByTagName('input');
+    // By default is synonyms
+    let endpoint = "synonyms";
+    for (let i = 0; i < radios.length; i++) {
+        if (radios[i].type === 'radio' && radios[i].checked) {
+            endpoint = radios[i].value;       
+        }
+    }
+    console.log("Endpoint selected : ", endpoint);
+    
+    fetch(`/molecules/${endpoint}/${this.state.value}`)
     .then(response => { return response.json() })
     .then((data) => {
       const options = data.map( item => { return { id : item[0], name: item[1] }})
@@ -47,6 +57,38 @@ export default class CustomListDropDown extends React.Component {
         <h2>Pubchem search sample React app</h2>
         <input value={this.state.value} onChange={(e) => {this.handleInputChange(e)}} />
         <button onClick={this.handleClick.bind(this)}>Search</button>
+        <fieldset>
+          <legend>Select a CID Table:</legend>
+          <div>
+            <input type="radio" id="synonyms" name="synonyms" value="synonyms" checked/>
+            <label for="synonyms">CID-Synonyms</label>
+          </div>
+
+          <div>
+            <input type="radio" id="mesh" name="mesh" value="mesh"/>
+            <label for="mesh">CID-Mesh</label>
+          </div>
+
+          <div>
+            <input type="radio" id="smiles" name="smiles" value="smiles"/>
+            <label for="smiles">CID-Smiles</label>
+          </div>
+
+          <div>
+            <input type="radio" id="iupac" name="iupac" value="iupac"/>
+            <label for="iupac">CID-IUPAC</label>
+          </div>
+
+          <div>
+            <input type="radio" id="inchi" name="inchi" value="inchi"/>
+            <label for="inchi">CID-INCHI-Key</label>
+          </div>
+
+          <div>
+            <input type="radio" id="title" name="title" value="title"/>
+            <label for="title">CID-Titles</label>
+          </div>
+        </fieldset>
         <CustomDropdown
           options={this.state.collection}
           onChange={this.handleSelectChange}
