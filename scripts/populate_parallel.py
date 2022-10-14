@@ -132,6 +132,7 @@ async def go():
       encoding = None
       if file_name == 'CID-Title':
         encoding = 'Latin'
+        
       chunksize = 1000000
       for chunk in pd.read_csv(file
                               , quoting=csv.QUOTE_NONE
