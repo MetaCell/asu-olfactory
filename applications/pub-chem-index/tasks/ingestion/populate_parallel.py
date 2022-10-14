@@ -30,7 +30,7 @@ added_col_dic = {
   "CID-Patent": ["CID", "Patent"],
   "CID-SID": ["CID", "SID"],
   "CID-MeSH": ["CID", "MeSH"],
-  "CID-SMILES": ["CID", "MID", "SMILES"],
+  "CID-SMILES": ["CID","SMILES"],
   "CID-Synonym-filtered": ["CID", "Synonym"],
   "CID-Synonym-unfiltered": ["CID", "Syn"],
   "CID-Title": ["CID", "Title"],
@@ -79,7 +79,7 @@ async def create_table(pool, table_name):
 
   await execute_sql(pool, sql_copy)
 
-  logging.info("Table created")
+  logging.info("Table created %s ", table_name)
 
 async def bulk_insert(chunk, table_name, pool):
 
@@ -130,6 +130,7 @@ async def go():
           if c is not 'CID':
             types[c] = 'string'
       
+      logging.info("DNS %s ", dns);
       pool = await aiopg.create_pool(dns)
 
       await create_table(pool, file_name)
@@ -144,10 +145,7 @@ async def go():
                               , header=None
                               , on_bad_lines='skip'):
 
-        #columns = []
-        #for col in column_names:
-          #columns.append(chunk[col])
-        #data  = list(zip(chunk['CID'], chunk[main_column]))
+        chunk = chunk.dropna()
         data = list(chunk.itertuples(index=False))
         await bulk_insert(data, file_name.replace("-", "_"), pool)
 

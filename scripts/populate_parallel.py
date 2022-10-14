@@ -74,7 +74,7 @@ async def create_table(pool, table_name):
 
   await execute_sql(pool, sql_copy)
 
-  logging.info("Table created")
+  logging.info("Table created %s ", table_name)
 
 async def bulk_insert(chunk, table_name, pool):
 
