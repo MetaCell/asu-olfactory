@@ -64,7 +64,7 @@ export default class CustomListDropDown extends React.Component {
         <fieldset>
           <legend>Select a CID Table:</legend>
           <div>
-            <input type="radio" id="synonyms" name="cids" value="synonyms" checked/>
+            <input type="radio" id="synonyms" name="cids" value="synonyms"/>
             <label for="synonyms">CID-Synonyms</label>
           </div>
 
