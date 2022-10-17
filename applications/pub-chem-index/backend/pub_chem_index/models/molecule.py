@@ -15,26 +15,26 @@ class Molecule(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, cid=None, synonyms=None):  # noqa: E501
+    def __init__(self, cid=None, synonym=None):  # noqa: E501
         """Molecule - a model defined in OpenAPI
 
         :param cid: The cid of this Molecule.  # noqa: E501
         :type cid: int
-        :param synonyms: The synonyms of this Molecule.  # noqa: E501
-        :type synonyms: List[str]
+        :param synonym: The synonym of this Molecule.  # noqa: E501
+        :type synonym: str
         """
         self.openapi_types = {
             'cid': int,
-            'synonyms': List[str]
+            'synonym': str
         }
 
         self.attribute_map = {
             'cid': 'cid',
-            'synonyms': 'synonyms'
+            'synonym': 'synonym'
         }
 
         self._cid = cid
-        self._synonyms = synonyms
+        self._synonym = synonym
 
     @classmethod
     def from_dict(cls, dikt) -> 'Molecule':
@@ -65,30 +65,28 @@ class Molecule(Model):
         :param cid: The cid of this Molecule.
         :type cid: int
         """
-        if cid is None:
-            raise ValueError("Invalid value for `cid`, must not be `None`")  # noqa: E501
 
         self._cid = cid
 
     @property
-    def synonyms(self):
-        """Gets the synonyms of this Molecule.
+    def synonym(self):
+        """Gets the synonym of this Molecule.
 
+        List of synonyms matching search query  # noqa: E501
 
-        :return: The synonyms of this Molecule.
-        :rtype: List[str]
+        :return: The synonym of this Molecule.
+        :rtype: str
         """
-        return self._synonyms
+        return self._synonym
 
-    @synonyms.setter
-    def synonyms(self, synonyms):
-        """Sets the synonyms of this Molecule.
+    @synonym.setter
+    def synonym(self, synonym):
+        """Sets the synonym of this Molecule.
 
+        List of synonyms matching search query  # noqa: E501
 
-        :param synonyms: The synonyms of this Molecule.
-        :type synonyms: List[str]
+        :param synonym: The synonym of this Molecule.
+        :type synonym: str
         """
-        if synonyms is None:
-            raise ValueError("Invalid value for `synonyms`, must not be `None`")  # noqa: E501
 
-        self._synonyms = synonyms
+        self._synonym = synonym
