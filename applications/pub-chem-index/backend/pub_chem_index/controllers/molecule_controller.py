@@ -119,7 +119,7 @@ def search_smiles(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_smiles', term)
-    return lookup.search_table_by_value('cid_smiles', 'mid' ,term)
+    return lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
 
 
 
