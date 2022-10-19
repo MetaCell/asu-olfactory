@@ -24,7 +24,7 @@ harness:
     port: 8080
   dependencies:
     build:
-      - cloudharness-base
+      - cloudharness-base-debian
       - cloudharness-flask
       - pubchem-postgres
     soft:

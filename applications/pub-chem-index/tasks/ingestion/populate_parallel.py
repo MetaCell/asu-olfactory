@@ -1,19 +1,25 @@
 import pandas as pd
-import numpy as np
+import numpy
 import os
 import sys
 import csv
 import logging
-import asyncio
-import aiopg
 import psycopg2
 
+from psycopg2.extensions import register_adapter, AsIs
 from cloudharness import applications
 
+def addapt_numpy_int64(numpy_int64):
+    return AsIs(numpy_int64)
+register_adapter(numpy.int64, addapt_numpy_int64)
+
 app = applications.get_configuration('pub-chem-index')
-conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password=metacell"
+conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password={app.harness.database.get('pass')}"
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+NUM_PROCESSES = 2
+NUM_QUEUE_ITEMS = 20
 
 #
 # WARNING!!! use head command on files for debugging
@@ -37,12 +43,6 @@ added_col_dic = {
   "CID-IUPAC": ["CID", "IUPAC"]
 }
 
-async def execute_sql(pool, sql):
-  #print(sql)
-  async with pool.acquire() as conn:
-    async with conn.cursor(timeout=5000000) as cur:
-      await cur.execute(sql)
-
 def change_permissions_recursive(path, mode):
   for root, dirs, files in os.walk(path, topdown=False):
     for file in [os.path.join(root, f) for f in files]:
@@ -50,7 +50,8 @@ def change_permissions_recursive(path, mode):
           os.chmod(file, mode)
   #os.chmod(path, mode)
 
-async def create_table(pool, table_name):
+
+def create_table(conn, table_name):
   #Populate GIN indexed table, this will take about 30 minutes.
   column_names = added_col_dic[table_name]
   column_names = [x.upper() for x in column_names]
@@ -64,55 +65,56 @@ async def create_table(pool, table_name):
 
   str_column_names = str_column_names[:len(str_column_names)-1]
 
-  sql_copy = """
+  sql_drop_table = """
   DROP TABLE IF EXISTS %s
   """ % (table_name)  #better management
 
-  await execute_sql(pool, sql_copy)
-
-  sql_copy = """
+  sql_create_table = """
   CREATE TABLE %s (
       CID INTEGER NOT NULL,
       %s
   )
   """ % (table_name, str_column_names)  #better management
 
-  await execute_sql(pool, sql_copy)
+  with conn.cursor() as cur:
+    cur.execute(sql_drop_table)
+    cur.execute(sql_create_table)
 
   logging.info("Table created %s ", table_name)
 
-async def bulk_insert(chunk, table_name, pool):
 
-  async with pool.acquire() as conn:
-    async with conn.cursor() as cur:
-      template   = ','.join(['%s'] * len(chunk))
-      sql_insert = 'insert into '+table_name.lower()+' VALUES {}'.format(template)
-      sql_insert_values = cur.mogrify(sql_insert, chunk).decode('utf8')
-      #print()
-      #await cur.execute(sql_insert_values) 
-      await execute_sql(pool, sql_insert_values)
+def bulk_insert(conn, data, file_name):
+    with conn.cursor() as cur:
+        table_name   = file_name.replace("-", "_").upper()
+        columns = added_col_dic[file_name]
+        column_list = ", ".join(columns)
+        records_list_template = ','.join(['%s'] * len(data))
+        insert_query = 'insert into {table_name} ({columns}) values {};'.format(records_list_template,table_name=table_name,columns=column_list)
+        cur.execute(insert_query, data)
+        logging.info(f"Insert done, {len(data)} records")
 
 
-async def create_indexes(pool, table_name):
-  column_names = added_col_dic[table_name]
-  column_names = [x.upper() for x in column_names]
-  main_column  = column_names[1].lower()
-  table_name   = table_name.replace("-", "_").lower()
+def create_indexes(conn, table_name):
+  with conn.cursor() as cur:
+    column_names = added_col_dic[table_name]
+    column_names = [x.upper() for x in column_names]
+    main_column  = column_names[1].lower()
+    table_name   = table_name.replace("-", "_").lower()
 
-  await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
-  await execute_sql(pool, sql_copy)
-  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx_%s ON %s (CID);''' % (table_name, table_name)
-  await execute_sql(pool, sql_copy) 
-  pool.close()
+    logging.info("Create index pg_trgm")
+    cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+    logging.info(f"Create index idx_gin_{table_name}")
+    cur.execute(f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops)")
+    logging.info(f"Create index cid_idx_{table_name}")
+    cur.execute(f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID)")
+    logging.info("Creating indexes done")
 
-async def go():
-
-  psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
+def go():
+  logging.info(f"Connecting with string: {conn_string}")
+  conn = psycopg2.connect(conn_string)
 
   path = sys.argv[1]
   logging.info("Populating table using files from %s", path)
-  dns = conn_string
 
   file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
   for file in sorted(file_list):
@@ -125,20 +127,18 @@ async def go():
       
       if file_name in added_col_dic:
         column_name = added_col_dic[file_name]
-        types = { 'CID': 'Int64' }
+        types = { 'CID': 'string' }
         for c in column_name:
-          if c is not 'CID':
+          if c != 'CID':
             types[c] = 'string'
-      
-      logging.info("DNS %s ", dns);
-      pool = await aiopg.create_pool(dns)
 
-      await create_table(pool, file_name)
+      create_table(conn, file_name)
 
       encoding = None
       if file_name == 'CID-Title':
         encoding = 'Latin'
-      chunksize = 1000000
+      chunksize = 500000
+
       for chunk in pd.read_csv(file
                               , quoting=csv.QUOTE_NONE
                               , names=column_name
@@ -151,10 +151,10 @@ async def go():
 
         chunk = chunk.dropna()
         data = list(chunk.itertuples(index=False))
-        await bulk_insert(data, file_name.replace("-", "_"), pool)
+        with conn:
+            bulk_insert(conn, data, file_name)
 
-      await create_indexes(pool, file_name)
+      create_indexes(conn, file_name)
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(go())
+go()
