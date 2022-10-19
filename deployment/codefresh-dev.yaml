@@ -107,6 +107,7 @@ steps:
         - REGISTRY=${{REGISTRY}}/olphactory/
         - PUB_CHEM_INDEX_INGESTION=${{REGISTRY}}/olphactory/pub-chem-index-ingestion:${{CF_BUILD_ID}}
         - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
+        - CLOUDHARNESS_BASE_DEBIAN=${{REGISTRY}}/olphactory/cloudharness-base-debian:${{CF_BUILD_ID}}
         - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
         - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/pubchem-postgres
