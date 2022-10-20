@@ -102,7 +102,6 @@ def bulk_insert(conn, data, file_name):
             records_list_template, table_name=table_name, columns=column_list
         )
         cur.execute(insert_query, data)
-        logging.info(f"Insert done, {len(data)} records")
 
 
 def create_indexes(conn, table_name):
@@ -135,47 +134,54 @@ def go():
     logging.info(f"Connecting with string: {conn_string}")
     conn = psycopg2.connect(conn_string)
 
-    path = sys.argv[1]
-    logging.info("Populating table using files from %s", path)
+    file = sys.argv[1]
+    file_name = os.path.basename(file)
+    logging.info(f"Populating table using file {file_name}")
 
-    file_list = [path + "/" + f for f in os.listdir(path) if f.startswith("CID-")]
-    for file in sorted(file_list):
-        file_name = os.path.basename(file)
-        column_name = ["CID", file_name]
-        types = {file_name: "string", "CID": "Int64"}
-        column_names = added_col_dic[file_name]
-        # column_names = [x.upper() for x in column_names]
-        main_column = column_names[1]  # .upper()
+    column_name = ["CID", file_name]
+    types = {file_name: "string", "CID": "Int64"}
+    column_names = added_col_dic[file_name]
+    # column_names = [x.upper() for x in column_names]
+    main_column = column_names[1]  # .upper()
 
-        if file_name in added_col_dic:
-            column_name = added_col_dic[file_name]
-            types = {"CID": "string"}
-            for c in column_name:
-                if c != "CID":
-                    types[c] = "string"
+    if file_name in added_col_dic:
+        column_name = added_col_dic[file_name]
+        types = {"CID": "string"}
+        for c in column_name:
+            if c != "CID":
+                types[c] = "string"
 
-        create_table(conn, file_name)
+    create_table(conn, file_name)
 
-        encoding = None
-        if file_name == "CID-Title":
-            encoding = "Latin"
-        chunksize = 1000000
+    encoding = "UTF-8"
+    if file_name == "CID-Title":
+        encoding = "Latin"
+    chunksize = 200000
+    column_slice_size = len(column_names)
 
-        with open(file) as f:
-            data = []
-            for line in f:
-                data.append(tuple(line.replace("\n","").split("\t")))
-                if len(data) == chunksize:
-                    with conn:
-                        bulk_insert(conn, data, file_name)
-                    data = []
+    logging.info("Inserting...")
+    record_counter = 0
+    with open(file, "rb") as f:
+        data = []
+        for line in f:
+            data.append(tuple(line.decode(encoding).replace("\n","").split("\t")[:column_slice_size]))
+            if len(data) == chunksize:
+                with conn:
+                    bulk_insert(conn, data, file_name)
+                    record_counter += chunksize
+                    if record_counter%5000000 == 0:
+                        logging.info(f"Total number of records inserted: {record_counter}")
+                data = []
 
-        if len(data) != chunksize:
-            # insert the left over data
-            with conn:
-                bulk_insert(conn, data, file_name)
+    # insert the left over data (if there is any)
+    if len(data) != chunksize:
+        with conn:
+            bulk_insert(conn, data, file_name)
+            record_counter += len(data)
+            logging.info(f"Total number of records inserted: {record_counter}")
+    logging.info("Inserting done...")
 
-        create_indexes(conn, file_name)
+    create_indexes(conn, file_name)
 
 
 go()

@@ -7,23 +7,24 @@ ENV WORKERS=2
 ENV PORT=8080
 ENV BUILDDIR=/dist
 
-COPY ./api-call-example-client ${BUILDDIR}
-RUN ls -la
-COPY requirements.txt /usr/src/app/
-
 RUN apk update
 RUN apk add postgresql-dev gcc python3-dev musl-dev npm
+
+COPY ./api-call-example-client ${BUILDDIR}
+WORKDIR ${BUILDDIR}
+RUN npm install
+RUN npm run build
+
+WORKDIR /usr/src/app
+
+COPY requirements.txt /usr/src/app/
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-WORKDIR /usr/src/app
 RUN pip3 install -e .
 
-WORKDIR ${BUILDDIR}
-RUN npm install
-RUN npm run build
-RUN cp -r build /usr/src/app/pub_chem_index/www
+RUN cp -r ${BUILDDIR}/build /usr/src/app/pub_chem_index/www
 
 WORKDIR /usr/src/app/pub_chem_index
 RUN mkdir -p www/files
