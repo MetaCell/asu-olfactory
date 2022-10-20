@@ -23,5 +23,6 @@ pip install -r requirements.txt
 
 run the ingestion script
 ```bash
-source ./ingest.sh
+chmod +x ingest.sh
+filename="<filename>" ./ingest.sh
 ```
