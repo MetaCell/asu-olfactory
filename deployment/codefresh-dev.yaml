@@ -47,6 +47,21 @@ steps:
     type: parallel
     stage: build
     steps:
+      cloudharness-base-debian:
+        type: build
+        stage: build
+        tag: '${{CF_BUILD_ID}}'
+        dockerfile: infrastructure/base-images/cloudharness-base-debian/Dockerfile
+        registry: '${{CODEFRESH_REGISTRY}}'
+        buildkit: true
+        build_arguments:
+        - TAG=${{CF_BUILD_ID}}
+        - DOMAIN=${{DOMAIN}}
+        - NOCACHE=${{CF_BUILD_ID}}
+        - REGISTRY=${{REGISTRY}}/olphactory/
+        image_name: olphactory/cloudharness-base-debian
+        title: Cloudharness base debian
+        working_directory: ./cloud-harness
       cloudharness-base:
         type: build
         stage: build
@@ -56,14 +71,9 @@ steps:
         buildkit: true
         build_arguments:
         - TAG=${{CF_BUILD_ID}}
-        - NAMESPACE=${{NAMESPACE}}
         - DOMAIN=${{DOMAIN}}
         - NOCACHE=${{CF_BUILD_ID}}
         - REGISTRY=${{REGISTRY}}/olphactory/
-        - PUB_CHEM_INDEX_INGESTION=${{REGISTRY}}/olphactory/pub-chem-index-ingestion:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
-        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/cloudharness-base
         title: Cloudharness base
         working_directory: ./cloud-harness
@@ -81,14 +91,10 @@ steps:
         buildkit: true
         build_arguments:
         - TAG=${{CF_BUILD_ID}}
-        - NAMESPACE=${{NAMESPACE}}
         - DOMAIN=${{DOMAIN}}
         - NOCACHE=${{CF_BUILD_ID}}
         - REGISTRY=${{REGISTRY}}/olphactory/
-        - PUB_CHEM_INDEX_INGESTION=${{REGISTRY}}/olphactory/pub-chem-index-ingestion:${{CF_BUILD_ID}}
         - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
-        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/cloudharness-flask
         title: Cloudharness flask
         working_directory: ./cloud-harness/infrastructure/common-images/cloudharness-flask
@@ -101,14 +107,9 @@ steps:
         buildkit: true
         build_arguments:
         - TAG=${{CF_BUILD_ID}}
-        - NAMESPACE=${{NAMESPACE}}
         - DOMAIN=${{DOMAIN}}
         - NOCACHE=${{CF_BUILD_ID}}
         - REGISTRY=${{REGISTRY}}/olphactory/
-        - PUB_CHEM_INDEX_INGESTION=${{REGISTRY}}/olphactory/pub-chem-index-ingestion:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
-        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/pubchem-postgres
         title: Pubchem postgres
         working_directory: ./infrastructure/common-images/pubchem-postgres
@@ -116,22 +117,6 @@ steps:
     type: parallel
     stage: build
     steps:
-      accounts:
-        type: build
-        stage: build
-        tag: '${{CF_BUILD_ID}}'
-        dockerfile: Dockerfile
-        registry: '${{CODEFRESH_REGISTRY}}'
-        buildkit: true
-        build_arguments:
-        - TAG=${{CF_BUILD_ID}}
-        - NAMESPACE=${{NAMESPACE}}
-        - DOMAIN=${{DOMAIN}}
-        - NOCACHE=${{CF_BUILD_ID}}
-        - REGISTRY=${{REGISTRY}}/olphactory/
-        image_name: olphactory/accounts
-        title: Accounts
-        working_directory: ./cloud-harness/applications/accounts
       pub-chem-index-ingestion:
         type: build
         stage: build
@@ -141,14 +126,10 @@ steps:
         buildkit: true
         build_arguments:
         - TAG=${{CF_BUILD_ID}}
-        - NAMESPACE=${{NAMESPACE}}
         - DOMAIN=${{DOMAIN}}
         - NOCACHE=${{CF_BUILD_ID}}
         - REGISTRY=${{REGISTRY}}/olphactory/
-        - PUB_CHEM_INDEX_INGESTION=${{REGISTRY}}/olphactory/pub-chem-index-ingestion:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
-        - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
-        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
+        - CLOUDHARNESS_BASE_DEBIAN=${{REGISTRY}}/olphactory/cloudharness-base-debian:${{CF_BUILD_ID}}
         image_name: olphactory/pub-chem-index-ingestion
         title: Pub chem index ingestion
         working_directory: ./applications/pub-chem-index/tasks/ingestion
@@ -161,34 +142,49 @@ steps:
         buildkit: true
         build_arguments:
         - TAG=${{CF_BUILD_ID}}
-        - NAMESPACE=${{NAMESPACE}}
         - DOMAIN=${{DOMAIN}}
         - NOCACHE=${{CF_BUILD_ID}}
         - REGISTRY=${{REGISTRY}}/olphactory/
-        - CLOUDHARNESS_BASE=${{REGISTRY}}/olphactory/cloudharness-base:${{CF_BUILD_ID}}
         - CLOUDHARNESS_FLASK=${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}
-        - PUBCHEM_POSTGRES=${{REGISTRY}}/olphactory/pubchem-postgres:${{CF_BUILD_ID}}
         image_name: olphactory/pub-chem-index
         title: Pub chem index
         working_directory: ./applications/pub-chem-index/backend
   deployment:
     stage: deploy
-    image: codefresh/cfstep-helm:3.6.2
+    type: helm
+    working_directory: ./${{CF_REPO_NAME}}
     title: Installing chart
-    environment:
-    - CHART_REF=./deployment/helm
-    - RELEASE_NAME=${{NAMESPACE}}
-    - KUBE_CONTEXT=${{CLUSTER_NAME}}
-    - NAMESPACE=${{NAMESPACE}}
-    - CHART_VERSION=${{DEPLOYMENT_PUBLISH_TAG}}
-    - HELM_REPO_USE_HTTP=false
-    - HELM_REPO_CONTEXT_PATH=
-    - TIMEOUT=600s
-    - VALUESFILE_values=./deployment/helm/values.yaml
+    arguments:
+      helm_version: 3.6.2
+      chart_name: deployment/helm
+      release_name: '${{NAMESPACE}}'
+      kube_context: '${{CLUSTER_NAME}}'
+      namespace: '${{NAMESPACE}}'
+      chart_version: '${{CF_BUILD_ID}}'
+      cmd_ps: --wait --timeout 600s
+      custom_value_files:
+      - ./deployment/helm/values.yaml
+      custom_values: []
+  approval:
+    type: pending-approval
+    stage: publish
+    title: Approve build
+    description: Approve build release and tagging
+    timeout:
+      duration: 168
+      finalState: denied
   publish:
     type: parallel
     stage: publish
     steps:
+      publish_cloudharness-base-debian:
+        stage: publish
+        type: push
+        title: Cloudharness base debian
+        candidate: '${{REGISTRY}}/olphactory/cloudharness-base-debian:${{CF_BUILD_ID}}'
+        tags:
+        - '${{DEPLOYMENT_PUBLISH_TAG}}'
+        registry: '${{REGISTRY_PUBLISH_URL}}'
       publish_cloudharness-base:
         stage: publish
         type: push
@@ -202,14 +198,6 @@ steps:
         type: push
         title: Cloudharness flask
         candidate: '${{REGISTRY}}/olphactory/cloudharness-flask:${{CF_BUILD_ID}}'
-        tags:
-        - '${{DEPLOYMENT_PUBLISH_TAG}}'
-        registry: '${{REGISTRY_PUBLISH_URL}}'
-      publish_accounts:
-        stage: publish
-        type: push
-        title: Accounts
-        candidate: '${{REGISTRY}}/olphactory/accounts:${{CF_BUILD_ID}}'
         tags:
         - '${{DEPLOYMENT_PUBLISH_TAG}}'
         registry: '${{REGISTRY_PUBLISH_URL}}'
@@ -237,3 +225,8 @@ steps:
         tags:
         - '${{DEPLOYMENT_PUBLISH_TAG}}'
         registry: '${{REGISTRY_PUBLISH_URL}}'
+    when:
+      condition:
+        all:
+          whenVarExists: includes("${{DEPLOYMENT_PUBLISH_TAG}}", "{{DEPLOYMENT_PUBLISH_TAG}}")
+            == false
