@@ -55,6 +55,13 @@ def change_permissions_recursive(path, mode):
     # os.chmod(path, mode)
 
 
+def execute_sql(conn, command):
+    with conn.cursor() as cur:
+        logging.info(f"Execute {command}")
+        cur.execute(command)
+        conn.commit()
+
+
 def create_table(conn, table_name):
     # Populate GIN indexed table, this will take about 30 minutes.
     column_names = added_col_dic[table_name]
@@ -62,32 +69,19 @@ def create_table(conn, table_name):
     table_name = table_name.replace("-", "_").upper()
 
     str_column_names = ""
-
     for i in column_names:
-        if i != "CID":
+        if i == "CID":
+            str_column_names += i + " INTEGER NOT NULL,"
+        else:
             str_column_names += i + " VARCHAR,"
 
     str_column_names = str_column_names[: len(str_column_names) - 1]
 
-    sql_drop_table = """
-  DROP TABLE IF EXISTS %s
-  """ % (
-        table_name
-    )  # better management
+    sql_drop_table = f"DROP TABLE IF EXISTS {table_name}"
+    sql_create_table = f"CREATE TABLE {table_name} ({str_column_names})"
 
-    sql_create_table = """
-  CREATE TABLE %s (
-      CID INTEGER NOT NULL,
-      %s
-  )
-  """ % (
-        table_name,
-        str_column_names,
-    )  # better management
-
-    with conn.cursor() as cur:
-        cur.execute(sql_drop_table)
-        cur.execute(sql_create_table)
+    execute_sql(conn, sql_drop_table)
+    execute_sql(conn, sql_create_table)
 
     logging.info("Table created %s ", table_name)
 
@@ -102,26 +96,20 @@ def bulk_insert(conn, data, file_name):
             records_list_template, table_name=table_name, columns=column_list
         )
         cur.execute(insert_query, data)
+        conn.commit()
 
 
 def create_indexes(conn, table_name):
-    with conn.cursor() as cur:
-        column_names = added_col_dic[table_name]
-        column_names = [x.upper() for x in column_names]
-        main_column = column_names[1].lower()
-        table_name = table_name.replace("-", "_").lower()
+    column_names = added_col_dic[table_name]
+    column_names = [x.upper() for x in column_names]
+    main_column = column_names[1].lower()
+    table_name = table_name.replace("-", "_").lower()
 
-        logging.info("Create index pg_trgm")
-        cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-        logging.info(f"Create index idx_gin_{table_name}")
-        cur.execute(
-            f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops)"
-        )
-        logging.info(f"Create index cid_idx_{table_name}")
-        cur.execute(
-            f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID)"
-        )
-        logging.info("Creating indexes done")
+    logging.info("Start creating indexes")
+    execute_sql(conn, "CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+    execute_sql(conn, f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops);")
+    execute_sql(conn, f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID);")
+    logging.info("Finish creating indexes")
 
 
 def get_line(file_name):
