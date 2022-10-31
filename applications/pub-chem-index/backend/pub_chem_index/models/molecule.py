@@ -15,26 +15,31 @@ class Molecule(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, cid=None, synonym=None):  # noqa: E501
+    def __init__(self, cid=None, synonym=None, exact_match=None):  # noqa: E501
         """Molecule - a model defined in OpenAPI
 
         :param cid: The cid of this Molecule.  # noqa: E501
         :type cid: int
         :param synonym: The synonym of this Molecule.  # noqa: E501
         :type synonym: str
+        :param exact_match: The exact_match of this Molecule.  # noqa: E501
+        :type exact_match: bool
         """
         self.openapi_types = {
             'cid': int,
-            'synonym': str
+            'synonym': str,
+            'exact_match': bool
         }
 
         self.attribute_map = {
             'cid': 'cid',
-            'synonym': 'synonym'
+            'synonym': 'synonym',
+            'exact_match': 'exact_match'
         }
 
         self._cid = cid
         self._synonym = synonym
+        self._exact_match = exact_match
 
     @classmethod
     def from_dict(cls, dikt) -> 'Molecule':
@@ -90,3 +95,26 @@ class Molecule(Model):
         """
 
         self._synonym = synonym
+
+    @property
+    def exact_match(self):
+        """Gets the exact_match of this Molecule.
+
+        Flag true if it matches search exactly  # noqa: E501
+
+        :return: The exact_match of this Molecule.
+        :rtype: bool
+        """
+        return self._exact_match
+
+    @exact_match.setter
+    def exact_match(self, exact_match):
+        """Sets the exact_match of this Molecule.
+
+        Flag true if it matches search exactly  # noqa: E501
+
+        :param exact_match: The exact_match of this Molecule.
+        :type exact_match: bool
+        """
+
+        self._exact_match = exact_match

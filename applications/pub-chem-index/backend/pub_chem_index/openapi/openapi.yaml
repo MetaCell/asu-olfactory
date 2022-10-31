@@ -363,5 +363,10 @@ components:
           example: dimethyl
           title: key
           type: string
+        exact_match:
+          description: Flag true if it matches search exactly
+          example: true
+          title: match
+          type: boolean
       title: Molecule_Inchi
       type: object
