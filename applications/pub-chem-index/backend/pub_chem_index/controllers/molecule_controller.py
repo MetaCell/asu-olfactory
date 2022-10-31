@@ -93,9 +93,7 @@ def search_inchi(term):  # noqa: E501
     results = lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
     logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
-
-
+    return sorted(results, key=lambda x: x[1] == term)
 
 def search_mesh(term):  # noqa: E501
     """Get a Molecule
@@ -113,7 +111,7 @@ def search_mesh(term):  # noqa: E501
     results = lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
     logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
+    return sorted(results, key=lambda x: x[1] == term)
 
 def search_smiles(term):  # noqa: E501
     """Get a Molecule
@@ -131,7 +129,7 @@ def search_smiles(term):  # noqa: E501
     results = lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
     logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
+    return sorted(results, key=lambda x: x[1] == term)
 
 def search_synonyms(term):  # noqa: E501
     """Get a Molecule
@@ -149,7 +147,7 @@ def search_synonyms(term):  # noqa: E501
     results = lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
     logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
+    return sorted(results, key=lambda x: x[1] == term)
 
 def search_title(term):  # noqa: E501
     """Get a Molecule
@@ -167,7 +165,7 @@ def search_title(term):  # noqa: E501
     results = lookup.search_table_by_value('cid_title', 'title' ,term)
     logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
+    return sorted(results, key=lambda x: x[1] == term)
 
 
 def search_iupac(term):  # noqa: E501
@@ -186,4 +184,4 @@ def search_iupac(term):  # noqa: E501
     results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
     logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
+    return sorted(results, key=lambda x: x[1] == term)
