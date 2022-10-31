@@ -76,6 +76,12 @@ def get_iupac():  # noqa: E501
     """
     return lookup.get_all_values('cid_iupac')
 
+def exact_match_results(results, term):
+    for i, t in enumerate(results):
+        if t[1] == term:
+            results[i] = t[0], t[1], True
+        else:
+            results[i] = t[0], t[1], False
 
 def search_inchi(term):  # noqa: E501
     """Get a Molecule
@@ -91,14 +97,10 @@ def search_inchi(term):  # noqa: E501
         return lookup.search_table_by_cid('cid_inchi_key', term)
 
     results = lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
-    logging.info("Results for query %s %s", term, results)
 
-    for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
+    exact_match_results(results, term)
 
-    logging.info("Results for query %s %s", term, results)    
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z[1], term).ratio(), reverse=True)
+    return results.sort(key = lambda x: x[1]) 
 
 
 
@@ -116,14 +118,10 @@ def search_mesh(term):  # noqa: E501
         return lookup.search_table_by_cid('cid_mesh', term)
 
     results = lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
-    logging.info("Results for query %s %s", term, results)
 
-    for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
+    exact_match_results(results, term)
 
-    logging.info("Results for query %s %s", term, results)    
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z[1], term).ratio(), reverse=True)
+    return results.sort(key = lambda x: x[1]) 
 
 def search_smiles(term):  # noqa: E501
     """Get a Molecule
@@ -139,14 +137,10 @@ def search_smiles(term):  # noqa: E501
         return lookup.search_table_by_cid('cid_smiles', term)
 
     results = lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
-    logging.info("Results for query %s %s", term, results)
+    
+    exact_match_results(results, term)
 
-    for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
-
-    logging.info("Results for query %s %s", term, results)    
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z[1], term).ratio(), reverse=True)
+    return results.sort(key = lambda x: x[1]) 
 
 def search_synonyms(term):  # noqa: E501
     """Get a Molecule
@@ -162,14 +156,10 @@ def search_synonyms(term):  # noqa: E501
         return lookup.search_table_by_cid('cid_synonym_filtered', term)
 
     results = lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
-    logging.info("Results for query %s %s", term, results)
+    
+    exact_match_results(results, term)
 
-    for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
-
-    logging.info("Results for query %s %s", term, results)    
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z[1], term).ratio(), reverse=True)
+    return results.sort(key = lambda x: x[1]) 
 
 def search_title(term):  # noqa: E501
     """Get a Molecule
@@ -185,14 +175,10 @@ def search_title(term):  # noqa: E501
         return lookup.search_table_by_cid('cid_title', term)
     
     results = lookup.search_table_by_value('cid_title', 'title' ,term)
-    logging.info("Results for query %s %s", term, results)
+    
+    exact_match_results(results, term)
 
-    for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
-
-    logging.info("Results for query %s %s", term, results)    
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z[1], term).ratio(), reverse=True)
+    return results.sort(key = lambda x: x[1]) 
 
 
 def search_iupac(term):  # noqa: E501
@@ -209,12 +195,7 @@ def search_iupac(term):  # noqa: E501
         return lookup.search_table_by_cid('cid_iupac', term)
 
     results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
-    logging.info("Results for query %s %s", term, results)
-
-    for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
-
-    logging.info("Results for query %s %s", term, results)
     
-    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z[1], term).ratio(), reverse=True)
+    exact_match_results(results, term)
+
+    return results.sort(key = lambda x: x[1]) 
