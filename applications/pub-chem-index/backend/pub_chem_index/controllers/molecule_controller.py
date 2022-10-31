@@ -3,6 +3,8 @@ import os
 import csv
 import time
 import traceback
+import logging
+import difflib
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index.models.molecule_inchi import MoleculeInchi  # noqa: E501
 from pub_chem_index import util
@@ -87,7 +89,11 @@ def search_inchi(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_inchi_key', term)
-    return lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
+
+    results = lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
+    logging.info("Results for query %s %s", term, results)
+    
+    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
 
 
 
@@ -103,9 +109,11 @@ def search_mesh(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_mesh', term)
-    return lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
 
-
+    results = lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
+    logging.info("Results for query %s %s", term, results)
+    
+    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
 
 def search_smiles(term):  # noqa: E501
     """Get a Molecule
@@ -119,9 +127,11 @@ def search_smiles(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_smiles', term)
-    return lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
 
-
+    results = lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
+    logging.info("Results for query %s %s", term, results)
+    
+    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
 
 def search_synonyms(term):  # noqa: E501
     """Get a Molecule
@@ -135,8 +145,11 @@ def search_synonyms(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_synonym_filtered', term)
-    return lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
 
+    results = lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
+    logging.info("Results for query %s %s", term, results)
+    
+    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
 
 def search_title(term):  # noqa: E501
     """Get a Molecule
@@ -150,7 +163,11 @@ def search_title(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_title', term)
-    return lookup.search_table_by_value('cid_title', 'title' ,term)
+    
+    results = lookup.search_table_by_value('cid_title', 'title' ,term)
+    logging.info("Results for query %s %s", term, results)
+    
+    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)
 
 
 def search_iupac(term):  # noqa: E501
@@ -165,4 +182,8 @@ def search_iupac(term):  # noqa: E501
     """
     if term.isnumeric():
         return lookup.search_table_by_cid('cid_iupac', term)
-    return lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
+
+    results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
+    logging.info("Results for query %s %s", term, results)
+    
+    return sorted(results, key=lambda z: difflib.SequenceMatcher(None, z, term).ratio(), reverse=True)

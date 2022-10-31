@@ -335,6 +335,11 @@ components:
           example: dimethyl
           title: synonym
           type: string
+        exact_match:
+          description: Flag true if it matches search exactly
+          example: true
+          title: match
+          type: boolean
       title: Molecule
       type: object
     Molecule_Inchi:
