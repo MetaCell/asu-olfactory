@@ -15,7 +15,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # head -n 500000 CID-SMILES > CID-SMILES-head
 #
 
-#"https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
+#"``https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/`CID-Synonym-unfiltered.gz"
 
 added_col_dic = {
   "CID-InChI-Key": ["CID", "InChI", "Key"],
@@ -32,18 +32,13 @@ added_col_dic = {
   "CID-IUPAC": ["CID", "IUPAC"]
 }
 
+gin_indexes_tables = ['CID-Title', 'CID-MeSH', 'CID-UIPAC', 'CID-InChI-Key', 'CID-Synonym-filtered']
+
 async def execute_sql(pool, sql):
   #print(sql)
   async with pool.acquire() as conn:
     async with conn.cursor(timeout=5000000) as cur:
       await cur.execute(sql)
-
-def change_permissions_recursive(path, mode):
-  for root, dirs, files in os.walk(path, topdown=False):
-    for file in [os.path.join(root, f) for f in files]:
-      if file.startswith('export-'):
-          os.chmod(file, mode)
-  #os.chmod(path, mode)
 
 async def create_table(pool, table_name):
   #Populate GIN indexed table, this will take about 30 minutes.
@@ -88,15 +83,17 @@ async def bulk_insert(chunk, table_name, pool):
       await execute_sql(pool, sql_insert_values)
 
 
-async def create_indexes(pool, table_name):
+async def create_indexes(pool, table_name, create_gin):
   column_names = added_col_dic[table_name]
   column_names = [x.upper() for x in column_names]
   main_column  = column_names[1].lower()
   table_name   = table_name.replace("-", "_").lower()
 
-  await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
-  await execute_sql(pool, sql_copy)
+  if create_gin:
+    await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
+    sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
+    await execute_sql(pool, sql_copy)
+
   sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx_%s ON %s (CID);''' % (table_name, table_name)
   await execute_sql(pool, sql_copy) 
   pool.close()
@@ -105,7 +102,7 @@ async def go():
 
   psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
 
-  path = os.path.dirname(os.path.realpath(__file__)) + "/db/"
+  path = os.path.dirname(os.path.realpath(__file__)) + "/db"
   logging.info("Populating table using files from %s", path)
   dns = 'dbname=asu user=postgres password=postgres host=localhost'
 
@@ -117,6 +114,7 @@ async def go():
       column_names = added_col_dic[file_name]
       #column_names = [x.upper() for x in column_names]
       main_column  = column_names[1] #.upper()
+      gin_indexed = file_name in gin_indexes_tables
       
       if file_name in added_col_dic:
         column_name = added_col_dic[file_name]
@@ -149,7 +147,7 @@ async def go():
         data = list(chunk.itertuples(index=False))
         await bulk_insert(data, file_name.replace("-", "_"), pool)
 
-      await create_indexes(pool, file_name)
+      await create_indexes(pool, file_name, gin_indexed)
 
 
 loop = asyncio.get_event_loop()
