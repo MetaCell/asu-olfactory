@@ -83,6 +83,8 @@ def exact_match_results(results, term):
         else:
             results[i] = t[0], t[1], False
 
+    return results
+
 def search_inchi(term):  # noqa: E501
     """Get a Molecule
 
@@ -98,11 +100,9 @@ def search_inchi(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
 
-    exact_match_results(results, term)
+    results = exact_match_results(results, term)
 
-    return results.sort(key = lambda x: x[1]) 
-
-
+    return sorted(results, key = lambda t : (t[1], t[2]))
 
 def search_mesh(term):  # noqa: E501
     """Get a Molecule
@@ -119,9 +119,10 @@ def search_mesh(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
 
-    exact_match_results(results, term)
+    results = exact_match_results(results, term)
 
-    return results.sort(key = lambda x: x[1]) 
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
 
 def search_smiles(term):  # noqa: E501
     """Get a Molecule
@@ -138,9 +139,9 @@ def search_smiles(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
     
-    exact_match_results(results, term)
+    results = exact_match_results(results, term)
 
-    return results.sort(key = lambda x: x[1]) 
+    return sorted(results, key = lambda t : (t[1], t[2]))
 
 def search_synonyms(term):  # noqa: E501
     """Get a Molecule
@@ -157,9 +158,9 @@ def search_synonyms(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
     
-    exact_match_results(results, term)
+    results = exact_match_results(results, term)
 
-    return results.sort(key = lambda x: x[1]) 
+    return sorted(results, key = lambda t : (t[1], t[2]))
 
 def search_title(term):  # noqa: E501
     """Get a Molecule
@@ -176,10 +177,9 @@ def search_title(term):  # noqa: E501
     
     results = lookup.search_table_by_value('cid_title', 'title' ,term)
     
-    exact_match_results(results, term)
+    results = exact_match_results(results, term)
 
-    return results.sort(key = lambda x: x[1]) 
-
+    return sorted(results, key = lambda t : (t[1], t[2]))
 
 def search_iupac(term):  # noqa: E501
     """Get a Molecule
@@ -196,6 +196,6 @@ def search_iupac(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
     
-    exact_match_results(results, term)
+    results = exact_match_results(results, term)
 
-    return results.sort(key = lambda x: x[1]) 
+    return sorted(results, key = lambda t : (t[1], t[2]))
