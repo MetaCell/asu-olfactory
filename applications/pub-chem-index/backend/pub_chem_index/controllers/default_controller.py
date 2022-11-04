@@ -16,7 +16,6 @@ INGESTION_FILES = [
     "CID-Patent.gz",
     "CID-PMID.gz",
     "CID-Mass.gz",
-    "CID-PMID.gz",
     "CID-SID.gz"
 ]
 
