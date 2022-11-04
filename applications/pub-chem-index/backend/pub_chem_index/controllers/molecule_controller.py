@@ -76,6 +76,76 @@ def get_iupac():  # noqa: E501
     """
     return lookup.get_all_values('cid_iupac')
 
+def get_sid():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_sid')
+
+def get_pmid():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_pmid')
+
+def get_mass():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_mass')
+
+def get_component():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_component')
+
+def get_parent():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_parent')
+
+def get_patent():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_patent')
+
+def get_synonym_unfiltered():  # noqa: E501
+    """List All Molecules
+
+    Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
+
+
+    :rtype: List[Molecule]
+    """
+    return lookup.get_all_values('cid_synonym_unfiltered')
+
 def exact_match_results(results, term):
     for i, t in enumerate(results):
         if t[1] == term:
@@ -196,6 +266,139 @@ def search_iupac(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
     
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_pmid(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_pmid', term)
+
+    results = lookup.search_table_by_value('cid_pmid', 'pmid' ,term)
+
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_sid(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_sid', term)
+
+    results = lookup.search_table_by_value('cid_sid', 'sid' ,term)
+
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_mass(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_mass', term)
+
+    results = lookup.search_table_by_value('cid_mass', 'molecule' ,term)
+
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_component(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_component', term)
+
+    results = lookup.search_table_by_value('cid_component', 'component' ,term)
+
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_patent(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_patent', term)
+
+    results = lookup.search_table_by_value('cid_patent', 'patent' ,term)
+
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_parent(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_parent', term)
+
+    results = lookup.search_table_by_value('cid_parent', 'parent' ,term)
+
+    results = exact_match_results(results, term)
+
+    return sorted(results, key = lambda t : (t[1], t[2]))
+
+def search_synonym_unfiltered(term):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+
+    :rtype: List[Molecule]
+    """
+    if term.isnumeric():
+        return lookup.search_table_by_cid('cid_synonym_unfiltered', term)
+
+    results = lookup.search_table_by_value('cid_synonym_unfiltered', 'Synonym' ,term)
+
     results = exact_match_results(results, term)
 
     return sorted(results, key = lambda t : (t[1], t[2]))

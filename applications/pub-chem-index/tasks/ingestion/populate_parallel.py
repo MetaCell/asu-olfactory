@@ -41,11 +41,13 @@ added_col_dic = {
     "CID-MeSH": ["CID", "MeSH"],
     "CID-SMILES": ["CID", "SMILES"],
     "CID-Synonym-filtered": ["CID", "Synonym"],
-    "CID-Synonym-unfiltered": ["CID", "Syn"],
+    "CID-Synonym-unfiltered": ["CID", "Synonym"],
     "CID-Title": ["CID", "Title"],
     "CID-IUPAC": ["CID", "IUPAC"],
+    "CID-Component": ["CID", "component"],
 }
 
+gin_indexes_tables = ['CID-Title', 'CID-MeSH', 'CID-IUPAC', 'CID-InChI-Key', 'CID-Synonym-filtered']
 
 def change_permissions_recursive(path, mode):
     for root, dirs, files in os.walk(path, topdown=False):
@@ -99,17 +101,19 @@ def bulk_insert(conn, data, file_name):
         conn.commit()
 
 
-def create_indexes(conn, table_name):
+def create_indexes(conn, table_name, create_gin):
     column_names = added_col_dic[table_name]
     column_names = [x.upper() for x in column_names]
     main_column = column_names[1].lower()
     table_name = table_name.replace("-", "_").lower()
 
-    logging.info("Start creating indexes")
-    execute_sql(conn, "CREATE EXTENSION IF NOT EXISTS pg_trgm;")
-    execute_sql(conn, f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops);")
-    execute_sql(conn, f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID);")
-    logging.info("Finish creating indexes")
+
+    if create_gin:
+        logging.info("Start creating indexes")
+        execute_sql(conn, "CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+        execute_sql(conn, f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops);")
+        execute_sql(conn, f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID);")
+        logging.info("Finish creating indexes")
 
 
 def get_line(file_name):
@@ -131,6 +135,7 @@ def go():
     column_names = added_col_dic[file_name]
     # column_names = [x.upper() for x in column_names]
     main_column = column_names[1]  # .upper()
+    gin_indexed = file_name in gin_indexes_tables
 
     if file_name in added_col_dic:
         column_name = added_col_dic[file_name]
@@ -169,7 +174,7 @@ def go():
             logging.info(f"Total number of records inserted: {record_counter}")
     logging.info("Inserting done...")
 
-    create_indexes(conn, file_name)
+    create_indexes(conn, file_name, gin_indexed)
 
 
 go()
