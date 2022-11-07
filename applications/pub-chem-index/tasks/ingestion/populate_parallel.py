@@ -107,7 +107,6 @@ def create_indexes(conn, table_name, create_gin):
     main_column = column_names[1].lower()
     table_name = table_name.replace("-", "_").lower()
 
-
     if create_gin:
         logging.info("Start creating indexes")
         execute_sql(conn, "CREATE EXTENSION IF NOT EXISTS pg_trgm;")
@@ -162,7 +161,7 @@ def go():
                 with conn:
                     bulk_insert(conn, data, file_name)
                     record_counter += chunksize
-                    if record_counter%5000000 == 0:
+                    if record_counter%1000000 == 0:
                         logging.info(f"Total number of records inserted: {record_counter}")
                 data = []
 
