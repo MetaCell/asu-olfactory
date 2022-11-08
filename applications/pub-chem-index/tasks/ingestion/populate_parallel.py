@@ -161,7 +161,7 @@ def go():
                 with conn:
                     bulk_insert(conn, data, file_name)
                     record_counter += chunksize
-                    if record_counter%50000 == 0:
+                    if record_counter%10000 == 0:
                         logging.info(f"Total number of records inserted: {record_counter}")
                 data = []
 
