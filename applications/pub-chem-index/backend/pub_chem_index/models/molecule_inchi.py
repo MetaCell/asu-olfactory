@@ -15,7 +15,7 @@ class MoleculeInchi(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, cid=None, inchi=None, key=None):  # noqa: E501
+    def __init__(self, cid=None, inchi=None, key=None, exact_match=None):  # noqa: E501
         """MoleculeInchi - a model defined in OpenAPI
 
         :param cid: The cid of this MoleculeInchi.  # noqa: E501
@@ -24,22 +24,27 @@ class MoleculeInchi(Model):
         :type inchi: str
         :param key: The key of this MoleculeInchi.  # noqa: E501
         :type key: str
+        :param exact_match: The exact_match of this MoleculeInchi.  # noqa: E501
+        :type exact_match: bool
         """
         self.openapi_types = {
             'cid': int,
             'inchi': str,
-            'key': str
+            'key': str,
+            'exact_match': bool
         }
 
         self.attribute_map = {
             'cid': 'cid',
             'inchi': 'inchi',
-            'key': 'key'
+            'key': 'key',
+            'exact_match': 'exact_match'
         }
 
         self._cid = cid
         self._inchi = inchi
         self._key = key
+        self._exact_match = exact_match
 
     @classmethod
     def from_dict(cls, dikt) -> 'MoleculeInchi':
@@ -118,3 +123,26 @@ class MoleculeInchi(Model):
         """
 
         self._key = key
+
+    @property
+    def exact_match(self):
+        """Gets the exact_match of this MoleculeInchi.
+
+        Flag true if it matches search exactly  # noqa: E501
+
+        :return: The exact_match of this MoleculeInchi.
+        :rtype: bool
+        """
+        return self._exact_match
+
+    @exact_match.setter
+    def exact_match(self, exact_match):
+        """Sets the exact_match of this MoleculeInchi.
+
+        Flag true if it matches search exactly  # noqa: E501
+
+        :param exact_match: The exact_match of this MoleculeInchi.
+        :type exact_match: bool
+        """
+
+        self._exact_match = exact_match

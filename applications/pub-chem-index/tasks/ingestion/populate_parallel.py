@@ -1,160 +1,179 @@
 import pandas as pd
-import numpy as np
+import numpy
 import os
 import sys
 import csv
 import logging
-import asyncio
-import aiopg
 import psycopg2
 
+from psycopg2.extensions import register_adapter, AsIs
 from cloudharness import applications
 
-app = applications.get_configuration('pub-chem-index')
-conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password=metacell"
+
+def addapt_numpy_int64(numpy_int64):
+    return AsIs(numpy_int64)
+
+
+register_adapter(numpy.int64, addapt_numpy_int64)
+
+app = applications.get_configuration("pub-chem-index")
+conn_string = f"postgres://{app.db_name}:{app.harness.database.postgres.ports[0]['port']}/asu?user={app.harness.database.user}&password={app.harness.database.get('pass')}"
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+NUM_PROCESSES = 2
+NUM_QUEUE_ITEMS = 20
 
 #
 # WARNING!!! use head command on files for debugging
 # head -n 500000 CID-SMILES > CID-SMILES-head
 #
 
-#"https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
+# "https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/Extras/CID-Synonym-unfiltered.gz"
 
 added_col_dic = {
-  "CID-InChI-Key": ["CID", "InChI", "Key"],
-  "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
-  "CID-PMID": ["CID", "PMID"],
-  "CID-Parent": ["CID", "Parent"],
-  "CID-Patent": ["CID", "Patent"],
-  "CID-SID": ["CID", "SID"],
-  "CID-MeSH": ["CID", "MeSH"],
-  "CID-SMILES": ["CID","SMILES"],
-  "CID-Synonym-filtered": ["CID", "Synonym"],
-  "CID-Synonym-unfiltered": ["CID", "Syn"],
-  "CID-Title": ["CID", "Title"],
-  "CID-IUPAC": ["CID", "IUPAC"]
+    "CID-InChI-Key": ["CID", "InChI", "Key"],
+    "CID-Mass": ["CID", "Molecule", "Mass1", "Mass2"],
+    "CID-PMID": ["CID", "PMID"],
+    "CID-Parent": ["CID", "Parent"],
+    "CID-Patent": ["CID", "Patent"],
+    "CID-SID": ["CID", "SID"],
+    "CID-MeSH": ["CID", "MeSH"],
+    "CID-SMILES": ["CID", "SMILES"],
+    "CID-Synonym-filtered": ["CID", "Synonym"],
+    "CID-Synonym-unfiltered": ["CID", "Synonym"],
+    "CID-Title": ["CID", "Title"],
+    "CID-IUPAC": ["CID", "IUPAC"],
+    "CID-Component": ["CID", "component"],
 }
 
-async def execute_sql(pool, sql):
-  #print(sql)
-  async with pool.acquire() as conn:
-    async with conn.cursor(timeout=5000000) as cur:
-      await cur.execute(sql)
+gin_indexes_tables = ['CID-Title', 'CID-MeSH', 'CID-IUPAC', 'CID-InChI-Key', 'CID-Synonym-filtered']
 
 def change_permissions_recursive(path, mode):
-  for root, dirs, files in os.walk(path, topdown=False):
-    for file in [os.path.join(root, f) for f in files]:
-      if file.startswith('export-'):
-          os.chmod(file, mode)
-  #os.chmod(path, mode)
-
-async def create_table(pool, table_name):
-  #Populate GIN indexed table, this will take about 30 minutes.
-  column_names = added_col_dic[table_name]
-  column_names = [x.upper() for x in column_names]
-  table_name   = table_name.replace("-", "_").upper()
-
-  str_column_names =""
-
-  for i in column_names:
-    if i != "CID":
-      str_column_names+=i + ' VARCHAR,'
-
-  str_column_names = str_column_names[:len(str_column_names)-1]
-
-  sql_copy = """
-  DROP TABLE IF EXISTS %s
-  """ % (table_name)  #better management
-
-  await execute_sql(pool, sql_copy)
-
-  sql_copy = """
-  CREATE TABLE %s (
-      CID INTEGER NOT NULL,
-      %s
-  )
-  """ % (table_name, str_column_names)  #better management
-
-  await execute_sql(pool, sql_copy)
-
-  logging.info("Table created %s ", table_name)
-
-async def bulk_insert(chunk, table_name, pool):
-
-  async with pool.acquire() as conn:
-    async with conn.cursor() as cur:
-      template   = ','.join(['%s'] * len(chunk))
-      sql_insert = 'insert into '+table_name.lower()+' VALUES {}'.format(template)
-      sql_insert_values = cur.mogrify(sql_insert, chunk).decode('utf8')
-      #print()
-      #await cur.execute(sql_insert_values) 
-      await execute_sql(pool, sql_insert_values)
+    for root, dirs, files in os.walk(path, topdown=False):
+        for file in [os.path.join(root, f) for f in files]:
+            if file.startswith("export-"):
+                os.chmod(file, mode)
+    # os.chmod(path, mode)
 
 
-async def create_indexes(pool, table_name):
-  column_names = added_col_dic[table_name]
-  column_names = [x.upper() for x in column_names]
-  main_column  = column_names[1].lower()
-  table_name   = table_name.replace("-", "_").lower()
+def execute_sql(conn, command):
+    with conn.cursor() as cur:
+        logging.info(f"Execute {command}")
+        cur.execute(command)
+        conn.commit()
 
-  await execute_sql(pool, "CREATE EXTENSION IF NOT EXISTS pg_trgm")
-  sql_copy = '''CREATE INDEX IF NOT EXISTS idx_gin_%s ON %s USING gin (%s gin_trgm_ops);''' % (table_name, table_name, main_column)
-  await execute_sql(pool, sql_copy)
-  sql_copy = '''CREATE INDEX IF NOT EXISTS cid_idx_%s ON %s (CID);''' % (table_name, table_name)
-  await execute_sql(pool, sql_copy) 
-  pool.close()
 
-async def go():
+def create_table(conn, table_name):
+    # Populate GIN indexed table, this will take about 30 minutes.
+    column_names = added_col_dic[table_name]
+    column_names = [x.upper() for x in column_names]
+    table_name = table_name.replace("-", "_").upper()
 
-  psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
+    str_column_names = ""
+    for i in column_names:
+        if i == "CID":
+            str_column_names += i + " INTEGER NOT NULL,"
+        else:
+            str_column_names += i + " VARCHAR,"
 
-  path = sys.argv[1]
-  logging.info("Populating table using files from %s", path)
-  dns = conn_string
+    str_column_names = str_column_names[: len(str_column_names) - 1]
 
-  file_list = [path + '/' + f for f in os.listdir(path) if f.startswith('CID-')]
-  for file in sorted(file_list):
-      file_name = os.path.basename(file)
-      column_name      = ['CID', file_name]
-      types            = { file_name: 'string', 'CID': 'Int64' }
-      column_names = added_col_dic[file_name]
-      #column_names = [x.upper() for x in column_names]
-      main_column  = column_names[1] #.upper()
-      
-      if file_name in added_col_dic:
+    sql_drop_table = f"DROP TABLE IF EXISTS {table_name}"
+    sql_create_table = f"CREATE TABLE {table_name} ({str_column_names})"
+
+    execute_sql(conn, sql_drop_table)
+    execute_sql(conn, sql_create_table)
+
+    logging.info("Table created %s ", table_name)
+
+
+def bulk_insert(conn, data, file_name):
+    with conn.cursor() as cur:
+        table_name = file_name.replace("-", "_").upper()
+        columns = added_col_dic[file_name]
+        column_list = ", ".join(columns)
+        records_list_template = ",".join(["%s"] * len(data))
+        insert_query = "insert into {table_name} ({columns}) values {};".format(
+            records_list_template, table_name=table_name, columns=column_list
+        )
+        cur.execute(insert_query, data)
+        conn.commit()
+
+
+def create_indexes(conn, table_name, create_gin):
+    column_names = added_col_dic[table_name]
+    column_names = [x.upper() for x in column_names]
+    main_column = column_names[1].lower()
+    table_name = table_name.replace("-", "_").lower()
+
+    if create_gin:
+        logging.info("Start creating indexes")
+        execute_sql(conn, "CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+        execute_sql(conn, f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops);")
+        execute_sql(conn, f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID);")
+        logging.info("Finish creating indexes")
+
+
+def get_line(file_name):
+    with open(file_name) as file:
+        for i in file:
+            yield i
+
+
+def go():
+    logging.info(f"Connecting with string: {conn_string}")
+    conn = psycopg2.connect(conn_string)
+
+    file = sys.argv[1]
+    file_name = os.path.basename(file)
+    logging.info(f"Populating table using file {file_name}")
+
+    column_name = ["CID", file_name]
+    types = {file_name: "string", "CID": "Int64"}
+    column_names = added_col_dic[file_name]
+    # column_names = [x.upper() for x in column_names]
+    main_column = column_names[1]  # .upper()
+    gin_indexed = file_name in gin_indexes_tables
+
+    if file_name in added_col_dic:
         column_name = added_col_dic[file_name]
-        types = { 'CID': 'Int64' }
+        types = {"CID": "string"}
         for c in column_name:
-          if c is not 'CID':
-            types[c] = 'string'
-      
-      logging.info("DNS %s ", dns);
-      pool = await aiopg.create_pool(dns)
+            if c != "CID":
+                types[c] = "string"
 
-      await create_table(pool, file_name)
+    create_table(conn, file_name)
 
-      encoding = None
-      if file_name == 'CID-Title':
-        encoding = 'Latin'
-      chunksize = 1000000
-      for chunk in pd.read_csv(file
-                              , quoting=csv.QUOTE_NONE
-                              , names=column_name
-                              , chunksize=chunksize
-                              , dtype=types
-                              , sep='\t'
-                              , header=None
-                              , encoding = encoding
-                              , on_bad_lines='skip'):
+    encoding = "UTF-8"
+    if file_name == "CID-Title":
+        encoding = "Latin"
+    chunksize = 200000
+    column_slice_size = len(column_names)
 
-        chunk = chunk.dropna()
-        data = list(chunk.itertuples(index=False))
-        await bulk_insert(data, file_name.replace("-", "_"), pool)
+    logging.info("Inserting...")
+    record_counter = 0
+    with open(file, "rb") as f:
+        data = []
+        for line in f:
+            data.append(tuple(line.decode(encoding).replace("\n","").split("\t")[:column_slice_size]))
+            if len(data) == chunksize:
+                with conn:
+                    bulk_insert(conn, data, file_name)
+                    record_counter += chunksize
+                    if record_counter%10000 == 0:
+                        logging.info(f"Total number of records inserted: {record_counter}")
+                data = []
 
-      await create_indexes(pool, file_name)
+    # insert the left over data (if there is any)
+    if len(data) != chunksize:
+        with conn:
+            bulk_insert(conn, data, file_name)
+            record_counter += len(data)
+            logging.info(f"Total number of records inserted: {record_counter}")
+    logging.info("Inserting done...")
+
+    create_indexes(conn, file_name, gin_indexed)
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(go())
+go()
