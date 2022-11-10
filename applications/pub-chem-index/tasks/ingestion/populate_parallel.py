@@ -111,8 +111,9 @@ def create_indexes(conn, table_name, create_gin):
         logging.info("Start creating indexes")
         execute_sql(conn, "CREATE EXTENSION IF NOT EXISTS pg_trgm;")
         execute_sql(conn, f"CREATE INDEX IF NOT EXISTS idx_gin_{table_name} ON {table_name} USING gin ({main_column} gin_trgm_ops);")
-        execute_sql(conn, f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID);")
-        logging.info("Finish creating indexes")
+        
+    execute_sql(conn, f"CREATE INDEX IF NOT EXISTS cid_idx_{table_name} ON {table_name} (CID);")
+    logging.info("Finish creating indexes")
 
 
 def get_line(file_name):
