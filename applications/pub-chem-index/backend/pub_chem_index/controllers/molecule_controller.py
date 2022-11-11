@@ -403,6 +403,33 @@ def search_synonyms_unfiltered(term):  # noqa: E501
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
+def join_results(table_name, column_name, term, properties):
+    tables_list = properties.split(',')
+    logging.info("List of Tables %s", properties)
+    logging.info("List of Tables %s", tables_list)
+
+    first_results = []
+    if term.isnumeric():
+        first_results = lookup.search_table_by_cid(table_name, term)
+    else:
+        first_results = lookup.search_table_by_value(table_name, column_name ,term)
+
+    first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
+
+    results = []
+    for i, t in enumerate(first_results):
+        result = {}
+        result["cid"] = t[0]
+        result[column_name] = t[0]
+        logging.info("Looking at %s", t[0])
+        for table in tables_list:
+            table_results = lookup.search_table_by_cid(table, int(t[0]))
+            logging.info("Looking at table %s", table)
+            for t in enumerate(table_results):
+                result[table] = t[1]
+        results.append(result)
+
+    return results
 
 def search_across_tables(cids, tables):  # noqa: E501
     """Get a Molecule
@@ -437,76 +464,66 @@ def search_across_tables(cids, tables):  # noqa: E501
     return results
 
 def search_synonyms_properties(term, tables):  # noqa: E501
-    """Get a Molecule
-
-    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
-
-    :param cids: List of cids.
-    :type cids: str
-    :param tables: List of tables
-    :type tables: str
-
-    :rtype: List[Molecule]
-    """
-    tables_list = tables.split(',')
-    logging.info("List of Tables %s", tables)
-    logging.info("List of Tables %s", tables_list)
-
-    first_results = []
-    if term.isnumeric():
-        first_results = lookup.search_table_by_cid('cid_synonym_unfiltered', term)
-    else:
-        first_results = lookup.search_table_by_value('cid_synonym_unfiltered', 'Synonym' ,term)
-
-    first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
-
-    results = []
-    for i, t in enumerate(first_results):
-        result = {}
-        result["cid"] = t[0]
-        result["synonym"] = t[0]
-        logging.info("Looking at %s", t[0])
-        for table in tables_list:
-            table_results = lookup.search_table_by_cid(table, int(t[0]))
-            logging.info("Looking at table %s", table)
-            for t in enumerate(table_results):
-                result[table] = t[1]
-        results.append(result)
+    results = join_results("cid_synonym_filtered", "synonym", term, tables);
    
     return results
 
 def search_synonyms_unfiltered_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_synonym_unfiltered", "synonym", term, tables);
+   
+    return results
 
 def search_sid_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_sid", "sid", term, tables);
+   
+    return results
 
 def search_pmid_properties(term, tables):  # noqa: E501
-    return 'Test'
-
+    results = join_results("cid_pmid", "pmid", term, tables);
+   
+    return results
+    
 def search_smiles_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_smiles", "smiles", term, tables);
+   
+    return results
 
 def search_component_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_component", "component", term, tables);
+   
+    return results
 
 def search_title_properties(term, tables):  # noqa: E501
-    return 'Test'    
+    results = join_results("cid_title", "title", term, tables);
+   
+    return results    
 
 def search_mesh_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_mesh", "mesh", term, tables);
+   
+    return results
 
 def search_iupac_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_iupac", "iupac", term, tables);
+   
+    return results
 
 def search_inchi_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_inchi_key", "inchi", term, tables);
+   
+    return results
 
 def search_parent_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_parent", "parent", term, tables);
+   
+    return results
 
 def search_patent_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_patent", "patent", term, tables);
+   
+    return results
 
 def search_mass_properties(term, tables):  # noqa: E501
-    return 'Test'
+    results = join_results("cid_mass", "molecule", term, tables);
+   
+    return results
