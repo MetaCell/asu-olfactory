@@ -3,9 +3,9 @@ import psycopg2
 conn = psycopg2.connect(
     host='localhost',
     port=54320,
-    dbname='my_database',
+    dbname='asu',
     user='postgres',
-    password='my_password',
+    password='postgres',
 )
 cur = conn.cursor()
 cur.execute("CREATE TABLE t_hash AS SELECT id, md5(id::text) FROM generate_series(1, 50000000) AS id")

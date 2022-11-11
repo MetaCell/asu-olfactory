@@ -1,0 +1,5 @@
+docker-compose -f docker-compose-pg-only.yml up
+py normalize.py
+docker cp <containerId>:/ CID_Chunks
+py populateTable.py
+py lookup.py
