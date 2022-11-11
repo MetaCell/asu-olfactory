@@ -136,7 +136,7 @@ def get_patent():  # noqa: E501
     """
     return lookup.get_all_values('cid_patent')
 
-def get_synonym_unfiltered():  # noqa: E501
+def get_synonyms_unfiltered():  # noqa: E501
     """List All Molecules
 
     Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
@@ -384,7 +384,7 @@ def search_parent(term):  # noqa: E501
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
-def search_synonym_unfiltered(term):  # noqa: E501
+def search_synonyms_unfiltered(term):  # noqa: E501
     """Get a Molecule
 
     Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
@@ -403,20 +403,6 @@ def search_synonym_unfiltered(term):  # noqa: E501
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
-    
-def search_synonyms_properties(term, tables):  # noqa: E501
-    """Get a Molecule
-
-    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
-
-    :param term: A unique identifier for a &#x60;Molecule&#x60;.
-    :type term: str
-    :param tables: List of tables to search.
-    :type tables: str
-
-    :rtype: List[Molecule]
-    """
-    return 'do some magic!'
 
 def search_across_tables(cids, tables):  # noqa: E501
     """Get a Molecule
@@ -449,3 +435,78 @@ def search_across_tables(cids, tables):  # noqa: E501
                 result[table] = t[1]
         results.append(result)
     return results
+
+def search_synonyms_properties(term, tables):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param cids: List of cids.
+    :type cids: str
+    :param tables: List of tables
+    :type tables: str
+
+    :rtype: List[Molecule]
+    """
+    tables_list = tables.split(',')
+    logging.info("List of Tables %s", tables)
+    logging.info("List of Tables %s", tables_list)
+
+    first_results = []
+    if term.isnumeric():
+        first_results = lookup.search_table_by_cid('cid_synonym_unfiltered', term)
+    else:
+        first_results = lookup.search_table_by_value('cid_synonym_unfiltered', 'Synonym' ,term)
+
+    first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
+
+    results = []
+    for i, t in enumerate(first_results):
+        result = {}
+        result["cid"] = t[0]
+        result["synonym"] = t[0]
+        logging.info("Looking at %s", t[0])
+        for table in tables_list:
+            table_results = lookup.search_table_by_cid(table, int(t[0]))
+            logging.info("Looking at table %s", table)
+            for t in enumerate(table_results):
+                result[table] = t[1]
+        results.append(result)
+   
+    return results
+
+def search_synonyms_unfiltered_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_sid_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_pmid_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_smiles_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_component_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_title_properties(term, tables):  # noqa: E501
+    return 'Test'    
+
+def search_mesh_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_iupac_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_inchi_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_parent_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_patent_properties(term, tables):  # noqa: E501
+    return 'Test'
+
+def search_mass_properties(term, tables):  # noqa: E501
+    return 'Test'

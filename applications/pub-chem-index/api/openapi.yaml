@@ -468,13 +468,13 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/synonym_unfiltered:
+  /molecules/synonyms_unfiltered:
     description: The REST endpoint/path used to list and create zero or more `Molecule`
       entities.  This path contains a `GET` and `POST` operation to perform the list
       and create tasks, respectively.
     get:
       description: Gets a list of all `Molecule` entities.
-      operationId: get_synonym_unfiltered
+      operationId: get_synonyms_unfiltered
       responses:
         "200":
           content:
@@ -489,12 +489,12 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/synonym_unfiltered/{term}:
+  /molecules/synonyms_unfiltered/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
       description: Gets the details of a single instance of a `Molecule`.
-      operationId: search_synonym_unfiltered
+      operationId: search_synonyms_unfiltered
       parameters:
       - description: A unique identifier for a `Molecule`.
         explode: false
@@ -674,6 +674,450 @@ paths:
     get:
       description: Gets the details of a single instance of a `Molecule`.
       operationId: search_synonyms_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/synonyms_unfiltered/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_synonyms_unfiltered_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/sid/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_sid_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/pmid/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_pmid_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/parent/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_parent_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/patent/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_patent_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/smiles/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_smiles_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/title/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_title_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/iupac/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_iupac_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/inchi/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_inchi_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/mesh/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_mesh_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/mass/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_mass_properties
+      parameters:
+      - description: A unique identifier for a `Molecule`.
+        explode: false
+        in: path
+        name: term
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: List of tables to search.
+        explode: false
+        in: path
+        name: tables
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Molecule'
+                type: array
+          description: Successful response - returns a single `Molecule`.
+      summary: Get a Molecule
+      tags:
+      - molecule
+      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
+    summary: Path used to manage a single Molecule search by CID.
+  /molecules/component/{term}/properties/{tables}:
+    description: The REST endpoint/path used to get single instances of an `Molecule`.  This
+      path contains `GET` operations used to perform the get tasks, respectively.
+    get:
+      description: Gets the details of a single instance of a `Molecule`.
+      operationId: search_component_properties
       parameters:
       - description: A unique identifier for a `Molecule`.
         explode: false
