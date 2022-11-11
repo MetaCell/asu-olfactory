@@ -402,3 +402,40 @@ def search_synonym_unfiltered(term):  # noqa: E501
     results = exact_match_results(results, term)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
+
+    
+def search_synonyms_properties(term, tables):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param term: A unique identifier for a &#x60;Molecule&#x60;.
+    :type term: str
+    :param tables: List of tables to search.
+    :type tables: str
+
+    :rtype: List[Molecule]
+    """
+    return 'do some magic!'
+
+def search_across_tables(cids, tables):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param cids: List of cids.
+    :type cids: str
+    :param tables: List of tables
+    :type tables: str
+
+    :rtype: List[Molecule]
+    """
+    cids_list = cids.split(',')
+    tables_list = tables.split(',')
+
+    results = []
+    for cid in cids_list:
+        for table in tables_list:
+            results.extend(lookup.search_table_by_cid(table, cid))
+
+    return results
