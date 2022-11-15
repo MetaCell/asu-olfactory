@@ -420,15 +420,15 @@ def join_results(table_name, column_name, term, properties):
     for i, t in enumerate(first_results):
         result = {}
         result["cid"] = t[0]
-        result[column_name] = t[1]
+        result[table_name] = t[1]
         logging.info("Looking at %s", t[0])
         for table in tables_list:
             table_results = lookup.search_table_by_cid(table, int(t[0]))
             logging.info("Looking at table %s", table)
             for t in enumerate(table_results):
-                result[table] = t[1][1]
-            results.append(result)
-            logging.info("Looking at result %s", result)
+                result[table] = result[table] + ',' + t[1][1]
+            results.append(result[table])
+            logging.info("Looking at result %s", result[table])
 
     return results
 
