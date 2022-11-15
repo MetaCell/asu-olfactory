@@ -428,8 +428,8 @@ def join_results(table_name, column_name, term, properties):
             for t in enumerate(table_results):
                 t[1].pop(0)
                 result[table] = t[1]
-            results.append(result)
-            logging.info("Looking at result %s", result)
+        results.append(result)
+        logging.info("Looking at result %s", result)
 
     return results
 
