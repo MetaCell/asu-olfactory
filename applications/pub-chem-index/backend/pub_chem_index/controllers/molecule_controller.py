@@ -425,9 +425,9 @@ def join_results(table_name, column_name, term, properties):
         for table in tables_list:
             table_results = lookup.search_table_by_cid(table, int(t[0]))
             logging.info("Looking at table %s", table)
-            result[table] = ''
             for t in enumerate(table_results):
-                result[table] = t[1][1] + "," +result[table]
+                t[1].pop(0)
+                result[table] = t[1]
             results.append(result[table])
             logging.info("Looking at result %s", result[table])
 
