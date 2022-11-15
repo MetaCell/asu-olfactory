@@ -416,14 +416,15 @@ def join_results(table_name, column_name, term, properties):
 
     first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
 
+    logging.info("first_results %s", first_results)
     results = []
     for i, t in enumerate(first_results):
         result = {}
         result["cid"] = t[0]
         result[table_name] = t[1]
-        logging.info("Looking at %s", t[0])
+        logging.info("Looking at %s", t)
         for table in tables_list:
-            table_results = lookup.search_table_by_cid(table, int(t[0]))
+            table_results = lookup.search_table_by_cid(table, t[0])
             logging.info("Looking at table %s", table)
             for t in enumerate(table_results):
                 table_list = list(t[1])
