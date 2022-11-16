@@ -405,8 +405,6 @@ def search_synonyms_unfiltered(term):  # noqa: E501
 
 def join_results(table_name, column_name, term, properties):
     tables_list = properties.split(',')
-    logging.info("List of Tables %s", properties)
-    logging.info("List of Tables %s", tables_list)
 
     first_results = []
     if term.isnumeric():
@@ -416,22 +414,15 @@ def join_results(table_name, column_name, term, properties):
 
     first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
 
-    logging.info("first_results %s", first_results)
     results = []
     for i, t in enumerate(first_results):
         result = {}
         result["cid"] = t[0]
         result[table_name] = t[1]
-        logging.info("Looking at %s", t)
         for table in tables_list:
             table_results = lookup.search_table_by_cid(table, t[0])
-            logging.info("Looking at table %s, %s", table, t[0])
-            for tr in enumerate(table_results):
-                table_list = list(tr[1])
-                table_list.pop(0)
-                result[table] = table_list
+            result[table] = table_results
         results.append(result)
-        logging.info("Looking at result %s", result)
 
     return results
 
