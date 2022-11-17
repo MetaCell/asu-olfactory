@@ -415,13 +415,16 @@ def join_results(table_name, column_name, term, properties):
     first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
 
     results = []
+    tables = {}
     for i, t in enumerate(first_results):
         result = {}
         result["cid"] = t[0]
         result[table_name] = t[1]
         for table in tables_list:
-            table_results = lookup.search_table_by_cid(table, t[0])
-            result[table] = table_results
+            if tables[table] is None:
+                table_results = lookup.search_table_by_cid(table, t[0])
+                tables[table] = table_results
+            result[table] = tables[table]
         results.append(result)
 
     return results
