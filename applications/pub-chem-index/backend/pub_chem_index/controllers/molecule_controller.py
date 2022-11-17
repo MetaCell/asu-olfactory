@@ -421,7 +421,7 @@ def join_results(table_name, column_name, term, properties):
         result["cid"] = t[0]
         result[table_name] = t[1]
         for table in tables_list:
-            if tables[table] is None:
+            if table not in tables:
                 table_results = lookup.search_table_by_cid(table, t[0])
                 tables[table] = table_results
             result[table] = tables[table]
