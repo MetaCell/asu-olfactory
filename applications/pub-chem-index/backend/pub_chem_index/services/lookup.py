@@ -50,7 +50,7 @@ def search_table_by_cid(table_name, term):
     conn = connect()
     cur = connect().cursor()
     try:
-        table_query =  "SELECT * from {0} WHERE CID = '{1}'".format(table_name, term)
+        table_query =  "SELECT * from {0} WHERE CID = {1}".format(table_name, term)
         logging.info("Lookup query %s", table_query)
         cur.execute(table_query)
         result = cur.fetchall()
