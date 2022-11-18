@@ -34,7 +34,7 @@ def search_table_by_value(table_name, key, term):
     conn = connect()
     cur = connect().cursor()
     try:
-        table_query =  "SELECT * FROM {0} WHERE {1} LIKE '{2}%' ESCAPE '=';".format(table_name, key, term)
+        table_query =  "SELECT * FROM {0} WHERE {1} LIKE '%{2}%' ESCAPE '=';".format(table_name, key, term)
         logging.info("Lookup query %s", table_query)
         cur.execute(table_query)
         result = cur.fetchall()

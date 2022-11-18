@@ -443,19 +443,13 @@ def search_across_tables(cids, tables):  # noqa: E501
     """
     cids_list = cids.split(',')
     tables_list = tables.split(',')
-    logging.info("List of CIDS %s", cids)
-    logging.info("List of Tables %s", tables)
 
-    logging.info("List of CIDS %s", cids_list)
-    logging.info("List of Tables %s", tables_list)
     results = []
     for cid in cids_list:
         result = {}
         result["cid"] = cid
-        logging.info("Looking at %s", cid)
         for table in tables_list:
             table_results = lookup.search_table_by_cid(table, cid)
-            logging.info("Looking at table %s", table)
             for t in enumerate(table_results):
                 result[table] = t[1]
         results.append(result)
