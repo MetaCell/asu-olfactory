@@ -146,12 +146,18 @@ def get_synonyms_unfiltered():  # noqa: E501
     """
     return lookup.get_all_values('cid_synonym_unfiltered')
 
-def exact_match_results(results, term):
+def exact_match_results(results, term, include_cid):
     for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
+        if include_cid:
+            if t[1] == term:
+                results[i] = t[0], t[1], True
+            else:
+                results[i] = t[0], t[1], False
         else:
-            results[i] = t[0], t[1], False
+            if t[1] == term:
+                results[i] = t[1], True
+            else:
+                results[i] = t[1], False
 
     return results
 
@@ -170,7 +176,7 @@ def search_inchi(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -189,7 +195,7 @@ def search_mesh(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -209,7 +215,7 @@ def search_smiles(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -228,7 +234,7 @@ def search_synonyms(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -247,7 +253,7 @@ def search_title(term):  # noqa: E501
     
     results = lookup.search_table_by_value('cid_title', 'title' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -266,7 +272,7 @@ def search_iupac(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -285,7 +291,7 @@ def search_pmid(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_pmid', 'pmid' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -304,7 +310,7 @@ def search_sid(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_sid', 'sid' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -323,7 +329,7 @@ def search_mass(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_mass', 'molecule' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -342,7 +348,7 @@ def search_component(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_component', 'component' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -361,7 +367,7 @@ def search_patent(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_patent', 'patent' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -380,7 +386,7 @@ def search_parent(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_parent', 'parent' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
     return sorted(results, key = lambda t : (t[1], t[2]))
 
@@ -399,9 +405,9 @@ def search_synonyms_unfiltered(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_synonym_unfiltered', 'Synonym' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def join_results(table_name, column_name, term, properties):
     tables_list = properties.split(',')
@@ -424,7 +430,7 @@ def join_results(table_name, column_name, term, properties):
             if table not in tables:
                 table_results = lookup.search_table_by_cid(table, t[0])
                 tables[table] = table_results
-            result[table] = tables[table]
+            result[table] = exact_match_results(tables[table], term, False)
         results.append(result)
 
     return results
