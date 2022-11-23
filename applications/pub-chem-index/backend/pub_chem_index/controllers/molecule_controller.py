@@ -148,7 +148,7 @@ def get_synonyms_unfiltered():  # noqa: E501
 
 def exact_match_results(results, term, include_cid):
     for i, t in enumerate(results):
-        if include_cid:
+        if include_cid is True:
             if t[1] == term:
                 results[i] = t[0], t[1], True
             else:
@@ -418,7 +418,7 @@ def join_results(table_name, column_name, term, properties):
     else:
         first_results = lookup.search_table_by_value(table_name, column_name ,term)
 
-    first_results = sorted(exact_match_results(first_results, term, True), key = lambda t : (t[2]))
+    first_results = sorted(exact_match_results(first_results, term, False), key = lambda t : (t[2]))
 
     results = []
     tables = {}
@@ -430,7 +430,7 @@ def join_results(table_name, column_name, term, properties):
             if table not in tables:
                 table_results = lookup.search_table_by_cid(table, t[0])
                 tables[table] = table_results
-            result[table] = exact_match_results(tables[table], term, False)
+            result[table] = tables[table]
         results.append(result)
 
     return results
