@@ -178,7 +178,7 @@ def search_inchi(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_mesh(term):  # noqa: E501
     """Get a Molecule
@@ -197,7 +197,7 @@ def search_mesh(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 
 def search_smiles(term):  # noqa: E501
@@ -217,7 +217,7 @@ def search_smiles(term):  # noqa: E501
     
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_synonyms(term):  # noqa: E501
     """Get a Molecule
@@ -236,7 +236,7 @@ def search_synonyms(term):  # noqa: E501
     
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_title(term):  # noqa: E501
     """Get a Molecule
@@ -255,7 +255,7 @@ def search_title(term):  # noqa: E501
     
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_iupac(term):  # noqa: E501
     """Get a Molecule
@@ -274,7 +274,7 @@ def search_iupac(term):  # noqa: E501
     
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_pmid(term):  # noqa: E501
     """Get a Molecule
@@ -293,7 +293,7 @@ def search_pmid(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_sid(term):  # noqa: E501
     """Get a Molecule
@@ -312,7 +312,7 @@ def search_sid(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_mass(term):  # noqa: E501
     """Get a Molecule
@@ -331,7 +331,7 @@ def search_mass(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_component(term):  # noqa: E501
     """Get a Molecule
@@ -350,7 +350,7 @@ def search_component(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_patent(term):  # noqa: E501
     """Get a Molecule
@@ -369,7 +369,7 @@ def search_patent(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_parent(term):  # noqa: E501
     """Get a Molecule
@@ -388,7 +388,7 @@ def search_parent(term):  # noqa: E501
 
     results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]))
 
 def search_synonyms_unfiltered(term):  # noqa: E501
     """Get a Molecule
@@ -418,7 +418,7 @@ def join_results(table_name, column_name, term, properties):
     else:
         first_results = lookup.search_table_by_value(table_name, column_name ,term)
 
-    first_results = sorted(exact_match_results(first_results, term), key = lambda t : (t[1], t[2]))
+    first_results = sorted(exact_match_results(first_results, term, True), key = lambda t : (t[2]))
 
     results = []
     tables = {}
