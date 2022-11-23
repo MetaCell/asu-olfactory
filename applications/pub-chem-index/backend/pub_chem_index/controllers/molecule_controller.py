@@ -418,7 +418,7 @@ def join_results(table_name, column_name, term, properties):
     else:
         first_results = lookup.search_table_by_value(table_name, column_name ,term)
 
-    first_results = sorted(exact_match_results(first_results, term, True), key = lambda t : (t[2]), reverse=True)
+    first_results = sorted(exact_match_results(first_results, term, True), key = lambda t : (t[1]), reverse=True)
 
     results = []
     tables = {}
