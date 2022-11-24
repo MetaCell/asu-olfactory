@@ -136,7 +136,7 @@ def get_patent():  # noqa: E501
     """
     return lookup.get_all_values('cid_patent')
 
-def get_synonym_unfiltered():  # noqa: E501
+def get_synonyms_unfiltered():  # noqa: E501
     """List All Molecules
 
     Gets a list of all &#x60;Molecule&#x60; entities. # noqa: E501
@@ -146,12 +146,18 @@ def get_synonym_unfiltered():  # noqa: E501
     """
     return lookup.get_all_values('cid_synonym_unfiltered')
 
-def exact_match_results(results, term):
+def exact_match_results(results, term, include_cid):
     for i, t in enumerate(results):
-        if t[1] == term:
-            results[i] = t[0], t[1], True
-        else:
-            results[i] = t[0], t[1], False
+        if include_cid is True:
+            if t[1] == term:
+                results[i] = t[0], t[1], True
+            else:
+                results[i] = t[0], t[1], False
+        if include_cid is False:
+            if t[1] == term:
+                results[i] = t[1], True
+            else:
+                results[i] = t[1], False
 
     return results
 
@@ -170,9 +176,9 @@ def search_inchi(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_inchi_key', 'inchi' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_mesh(term):  # noqa: E501
     """Get a Molecule
@@ -189,9 +195,9 @@ def search_mesh(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_mesh', 'mesh' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 
 def search_smiles(term):  # noqa: E501
@@ -209,9 +215,9 @@ def search_smiles(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_smiles', 'smiles' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_synonyms(term):  # noqa: E501
     """Get a Molecule
@@ -228,9 +234,9 @@ def search_synonyms(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_synonym_filtered', 'Synonym' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_title(term):  # noqa: E501
     """Get a Molecule
@@ -247,9 +253,9 @@ def search_title(term):  # noqa: E501
     
     results = lookup.search_table_by_value('cid_title', 'title' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_iupac(term):  # noqa: E501
     """Get a Molecule
@@ -266,9 +272,9 @@ def search_iupac(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_iupac', 'iupac' ,term)
     
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_pmid(term):  # noqa: E501
     """Get a Molecule
@@ -285,9 +291,9 @@ def search_pmid(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_pmid', 'pmid' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_sid(term):  # noqa: E501
     """Get a Molecule
@@ -304,9 +310,9 @@ def search_sid(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_sid', 'sid' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_mass(term):  # noqa: E501
     """Get a Molecule
@@ -323,9 +329,9 @@ def search_mass(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_mass', 'molecule' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_component(term):  # noqa: E501
     """Get a Molecule
@@ -342,9 +348,9 @@ def search_component(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_component', 'component' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_patent(term):  # noqa: E501
     """Get a Molecule
@@ -361,9 +367,9 @@ def search_patent(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_patent', 'patent' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def search_parent(term):  # noqa: E501
     """Get a Molecule
@@ -380,11 +386,11 @@ def search_parent(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_parent', 'parent' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
 
-def search_synonym_unfiltered(term):  # noqa: E501
+def search_synonyms_unfiltered(term):  # noqa: E501
     """Get a Molecule
 
     Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
@@ -399,6 +405,123 @@ def search_synonym_unfiltered(term):  # noqa: E501
 
     results = lookup.search_table_by_value('cid_synonym_unfiltered', 'Synonym' ,term)
 
-    results = exact_match_results(results, term)
+    results = exact_match_results(results, term, True)
 
-    return sorted(results, key = lambda t : (t[1], t[2]))
+    return sorted(results, key = lambda t : (t[2]), reverse=True)
+
+def join_results(table_name, column_name, term, properties):
+    tables_list = properties.split(',')
+
+    first_results = []
+    if term.isnumeric():
+        first_results = lookup.search_table_by_cid(table_name, term)
+    else:
+        first_results = lookup.search_table_by_value(table_name, column_name ,term)
+
+    first_results = sorted(exact_match_results(first_results, term, True), key = lambda t : (t[2]), reverse=True)
+
+    results = []
+    tables = {}
+    for i, t in enumerate(first_results):
+        result = {}
+        result["cid"] = t[0]
+        result[table_name] = t[1]
+        for table in tables_list:
+            if table not in tables:
+                table_results = lookup.search_table_by_cid(table, t[0])
+                tables[table] = sorted(exact_match_results(table_results, term, False), key = lambda t : (t[1]), reverse=True)
+            result[table] = tables[table]
+        results.append(result)
+
+    return results
+
+def search_across_tables(cids, tables):  # noqa: E501
+    """Get a Molecule
+
+    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
+
+    :param cids: List of cids.
+    :type cids: str
+    :param tables: List of tables
+    :type tables: str
+
+    :rtype: List[Molecule]
+    """
+    cids_list = cids.split(',')
+    tables_list = tables.split(',')
+
+    results = []
+    for cid in cids_list:
+        result = {}
+        result["cid"] = cid
+        for table in tables_list:
+            table_results = lookup.search_table_by_cid(table, cid)
+            for t in enumerate(table_results):
+                result[table] = t[1]
+        results.append(result)
+    return results
+
+def search_synonyms_properties(term, tables):  # noqa: E501
+    results = join_results("cid_synonym_filtered", "synonym", term, tables);
+   
+    return results
+
+def search_synonyms_unfiltered_properties(term, tables):  # noqa: E501
+    results = join_results("cid_synonym_unfiltered", "synonym", term, tables);
+   
+    return results
+
+def search_sid_properties(term, tables):  # noqa: E501
+    results = join_results("cid_sid", "sid", term, tables);
+   
+    return results
+
+def search_pmid_properties(term, tables):  # noqa: E501
+    results = join_results("cid_pmid", "pmid", term, tables);
+   
+    return results
+    
+def search_smiles_properties(term, tables):  # noqa: E501
+    results = join_results("cid_smiles", "smiles", term, tables);
+   
+    return results
+
+def search_component_properties(term, tables):  # noqa: E501
+    results = join_results("cid_component", "component", term, tables);
+   
+    return results
+
+def search_title_properties(term, tables):  # noqa: E501
+    results = join_results("cid_title", "title", term, tables);
+   
+    return results    
+
+def search_mesh_properties(term, tables):  # noqa: E501
+    results = join_results("cid_mesh", "mesh", term, tables);
+   
+    return results
+
+def search_iupac_properties(term, tables):  # noqa: E501
+    results = join_results("cid_iupac", "iupac", term, tables);
+   
+    return results
+
+def search_inchi_properties(term, tables):  # noqa: E501
+    results = join_results("cid_inchi_key", "inchi", term, tables);
+   
+    return results
+
+def search_parent_properties(term, tables):  # noqa: E501
+    results = join_results("cid_parent", "parent", term, tables);
+   
+    return results
+
+def search_patent_properties(term, tables):  # noqa: E501
+    results = join_results("cid_patent", "patent", term, tables);
+   
+    return results
+
+def search_mass_properties(term, tables):  # noqa: E501
+    results = join_results("cid_mass", "molecule", term, tables);
+   
+    return results
