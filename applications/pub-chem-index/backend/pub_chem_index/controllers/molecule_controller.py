@@ -406,6 +406,9 @@ def search_synonyms_unfiltered(term):  # noqa: E501
 def join_results(table_name, column_name, term, properties):
     tables_list = properties.split(',')
 
+    for index, table in enumerate(tables_list):
+        tables_list[index] = "cid_ " + table
+
     first_results = []
     if term.isnumeric():
         first_results = lookup.search_table_by_cid(table_name, term)
@@ -426,7 +429,7 @@ def join_results(table_name, column_name, term, properties):
         result[table_name] = t[1]
         for table in tables_list:
             if table not in tables:
-                table_results = lookup.search_table_by_cid(table, t[0])
+                table_results = lookup.search_table_by_cid("cid_" + table, t[0])
                 tables[table] = sorted(exact_match_results(table_results, term, False), key = lambda t : (t[1]), reverse=True)
             result[table] = tables[table]
         results.append(result)
