@@ -425,6 +425,10 @@ def join_results(table_name, column_name, term, properties):
     for i, t in enumerate(first_results):
         result = {}
         result["cid"] = t[0]
+        exact = False
+        if term == t[1]:
+            exact = True
+        result["exact"] = exact
         result[table_name] = t[1]
         for table in tables_list:
             if table not in tables:
@@ -433,7 +437,7 @@ def join_results(table_name, column_name, term, properties):
             result[table] = tables[table]
         results.append(result)
 
-    return results
+    return sorted(results, key = lambda t : (t[1]), reverse=True)
 
 def search_across_tables(cids, tables):  # noqa: E501
     """Get a Molecule
