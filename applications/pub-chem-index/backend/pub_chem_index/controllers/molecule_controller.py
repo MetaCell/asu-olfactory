@@ -437,7 +437,7 @@ def join_results(table_name, column_name, term, properties):
             result[table] = tables[table]
         results.append(result)
 
-    return sorted(results, key = lambda t : (t[1]), reverse=True)
+    return sorted(results, key = lambda x: x.exact, reverse=True)
 
 def search_across_tables(cids, tables):  # noqa: E501
     """Get a Molecule
