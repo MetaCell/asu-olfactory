@@ -431,33 +431,7 @@ def join_results(table_name, column_name, term, properties):
             result[table] = tables[table]
         results.append(result)
 
-    return results
-
-def search_across_tables(cids, tables):  # noqa: E501
-    """Get a Molecule
-
-    Gets the details of a single instance of a &#x60;Molecule&#x60;. # noqa: E501
-
-    :param cids: List of cids.
-    :type cids: str
-    :param tables: List of tables
-    :type tables: str
-
-    :rtype: List[Molecule]
-    """
-    cids_list = cids.split(',')
-    tables_list = tables.split(',')
-
-    results = []
-    for cid in cids_list:
-        result = {}
-        result["cid"] = cid
-        for table in tables_list:
-            table_results = lookup.search_table_by_cid(table, cid)
-            for t in enumerate(table_results):
-                result[table] = t[1]
-        results.append(result)
-    return results
+    return sorted(results.values(), key=operator.attrgetter('exact'), reverse=True)
 
 def search_synonyms_properties(term, tables):  # noqa: E501
     results = join_results("cid_synonym_filtered", "synonym", term, tables);
@@ -467,7 +441,7 @@ def search_synonyms_properties(term, tables):  # noqa: E501
 def search_synonyms_unfiltered_properties(term, tables):  # noqa: E501
     results = join_results("cid_synonym_unfiltered", "synonym", term, tables);
    
-    return sorted(results.values(), key=operator.attrgetter('exact'), reverse=True)
+    return results
 
 def search_sid_properties(term, tables):  # noqa: E501
     results = join_results("cid_sid", "sid", term, tables);
