@@ -55,6 +55,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -110,6 +111,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -165,6 +167,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -220,6 +223,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -275,6 +279,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -330,6 +335,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -385,6 +391,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -440,6 +447,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -495,6 +503,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -550,6 +559,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -605,6 +615,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -660,6 +671,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -715,6 +727,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -757,6 +770,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -799,6 +813,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -841,6 +856,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -883,6 +899,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -925,6 +942,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -967,6 +985,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1009,6 +1028,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1051,6 +1071,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1093,6 +1114,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1135,6 +1157,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1177,6 +1200,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1219,6 +1243,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
@@ -1261,6 +1286,7 @@ paths:
           type: string
         style: simple
       - in: query
+        required: false
         name: exactMatch
         schema:
           type: boolean
