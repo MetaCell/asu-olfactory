@@ -39,7 +39,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/synonyms/{term}?exactMatch=false:
+  /molecules/synonyms/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -95,7 +95,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/smiles/{term}?exactMatch=false:
+  /molecules/smiles/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -151,7 +151,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/inchi/{term}?exactMatch=false:
+  /molecules/inchi/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -207,7 +207,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/iupac/{term}?exactMatch=false:
+  /molecules/iupac/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -263,7 +263,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/mesh/{term}?exactMatch=false:
+  /molecules/mesh/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -319,7 +319,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/title/{term}?exactMatch=false:
+  /molecules/title/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -375,7 +375,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/pmid/{term}?exactMatch=false:
+  /molecules/pmid/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -431,7 +431,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/mass/{term}?exactMatch=false:
+  /molecules/mass/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -487,7 +487,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/component/{term}?exactMatch=false:
+  /molecules/component/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -543,7 +543,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/synonyms_unfiltered/{term}?exactMatch=false:
+  /molecules/synonyms_unfiltered/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -599,7 +599,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/sid/{term}?exactMatch=false:
+  /molecules/sid/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -655,7 +655,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/parent/{term}?exactMatch=false:
+  /molecules/parent/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -711,7 +711,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage the list of molecules.
-  /molecules/patent/{term}?exactMatch=false:
+  /molecules/patent/{term}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -746,7 +746,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/synonyms/{term}/properties/{tables}?exactMatch=false:
+  /molecules/synonyms/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -789,7 +789,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/synonyms_unfiltered/{term}/properties/{tables}?exactMatch=false:
+  /molecules/synonyms_unfiltered/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -832,7 +832,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/sid/{term}/properties/{tables}?exactMatch=false:
+  /molecules/sid/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -875,7 +875,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/pmid/{term}/properties/{tables}?exactMatch=false:
+  /molecules/pmid/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -918,7 +918,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/parent/{term}/properties/{tables}?exactMatch=false:
+  /molecules/parent/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -961,7 +961,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/patent/{term}/properties/{tables}?exactMatch=false:
+  /molecules/patent/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1004,7 +1004,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/smiles/{term}/properties/{tables}?exactMatch=false:
+  /molecules/smiles/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1047,7 +1047,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/title/{term}/properties/{tables}?exactMatch=false:
+  /molecules/title/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1090,7 +1090,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/iupac/{term}/properties/{tables}?exactMatch=false:
+  /molecules/iupac/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1133,7 +1133,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/inchi/{term}/properties/{tables}?exactMatch=false:
+  /molecules/inchi/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1176,7 +1176,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/mesh/{term}/properties/{tables}?exactMatch=false:
+  /molecules/mesh/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1219,7 +1219,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/mass/{term}/properties/{tables}?exactMatch=false:
+  /molecules/mass/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
@@ -1262,7 +1262,7 @@ paths:
       - molecule
       x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
     summary: Path used to manage a single Molecule search by CID.
-  /molecules/component/{term}/properties/{tables}?exactMatch=false:
+  /molecules/component/{term}/properties/{tables}:
     description: The REST endpoint/path used to get single instances of an `Molecule`.  This
       path contains `GET` operations used to perform the get tasks, respectively.
     get:
