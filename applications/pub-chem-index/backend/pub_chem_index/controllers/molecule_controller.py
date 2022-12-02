@@ -1,4 +1,5 @@
 import operator
+import logging
 
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index.models.molecule_inchi import MoleculeInchi  # noqa: E501
@@ -141,6 +142,7 @@ def get_synonyms_unfiltered():  # noqa: E501
     return lookup.get_all_values('cid_synonym_unfiltered')
 
 def exact_match_results(results, term, include_cid, exact_match):
+    logging.info("Exact Match: %s", exact_match)
     for i, t in enumerate(results):
         if include_cid is True:
             if t[1] == term:
@@ -159,6 +161,7 @@ def exact_match_results(results, term, include_cid, exact_match):
     if include_cid is False:
         filter_results = filter(lambda x: x[1]==exact_match, results)
 
+    logging.info("Matching results %s", filter_results)
     return filter_results
 
 def search_inchi(term, exact_match=None):  # noqa: E501
