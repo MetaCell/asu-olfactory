@@ -450,7 +450,7 @@ def join_results(table_name, column_name, term, properties, exact_match):
                 result[table] = tables[table]
             results.append(result)
 
-    return sorted(results.values(), key=operator.attrgetter('exact'), reverse=True)
+    return results
 
 def search_synonyms_properties(term, tables, exact_match=None):  # noqa: E501
     results = join_results("cid_synonym_filtered", "synonym", term, tables, exact_match);
