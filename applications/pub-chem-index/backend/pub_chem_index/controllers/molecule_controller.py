@@ -430,6 +430,7 @@ def join_results(table_name, column_name, term, properties, exact_match):
 
     first_results = sorted(exact_match_results(first_results, term, True, exact_match), key = lambda t : (t[2]), reverse=True)
 
+    logging.info("Sorted filtered results : %s ", first_results);
     results = []
     tables = {}
     for i, t in enumerate(first_results):
@@ -438,7 +439,7 @@ def join_results(table_name, column_name, term, properties, exact_match):
         exact = False
         if term == t[1]:
             exact = True
-        if (exact is True and exact_match is True) or exact_match is False:
+        if exact_match is True:
             result["exact"] = exact
             result[table_name.replace("cid_", "")] = t[1]
             for table in tables_list:
