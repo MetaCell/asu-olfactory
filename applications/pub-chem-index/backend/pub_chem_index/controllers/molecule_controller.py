@@ -1,6 +1,3 @@
-import operator
-import logging
-
 from pub_chem_index.models.molecule import Molecule  # noqa: E501
 from pub_chem_index.models.molecule_inchi import MoleculeInchi  # noqa: E501
 from pub_chem_index import util
@@ -142,8 +139,6 @@ def get_synonyms_unfiltered():  # noqa: E501
     return lookup.get_all_values('cid_synonym_unfiltered')
 
 def exact_match_results(results, term, include_cid, exact_match):
-    logging.info("Exact Match: %s", exact_match)
-    logging.info("Results %s", results)
     for i, t in enumerate(results):
         if include_cid is True:
             if t[1] == term:
@@ -157,7 +152,6 @@ def exact_match_results(results, term, include_cid, exact_match):
                 results[i] = t[1], False
 
     filter_results = results
-    logging.info("Matching filtered results %s", filter_results)
 
     if include_cid is True and exact_match is True:
         filter_results = filter(lambda x: x[2]==exact_match, results)
@@ -166,7 +160,6 @@ def exact_match_results(results, term, include_cid, exact_match):
     elif include_cid is False and exact_match is False:
         filter_results = filter(lambda x: x[1]==exact_match, results)
 
-    logging.info("Matching results %s", filter_results)
     return filter_results
 
 def search_inchi(term, exact_match=None):  # noqa: E501
@@ -423,9 +416,6 @@ def join_results(table_name, column_name, term, properties, exact_match):
     for index, table in enumerate(tables_list):
         tables_list[index] = "cid_" + table
 
-    logging.info("Tables list : %s ", tables_list)
-    logging.info("Tables exact match : %s ", exact_match)
-
     first_results = []
     if term.isnumeric():
         first_results = lookup.search_table_by_cid(table_name, term)
@@ -434,7 +424,6 @@ def join_results(table_name, column_name, term, properties, exact_match):
 
     first_results = sorted(exact_match_results(first_results, term, True, exact_match), key = lambda t : (t[2]), reverse=True)
 
-    logging.info("Sorted filtered results : %s ", first_results)
     results = []
     tables = {}
     for i, t in enumerate(first_results):
