@@ -421,7 +421,7 @@ def join_results(table_name, column_name, term, properties, exact_match):
     tables_list = properties.split(',')
 
     for index, table in enumerate(tables_list):
-        tables_list[index] = "cid_ " + table
+        tables_list[index] = "cid_" + table
 
     logging.info("Tables list : %s ", tables_list)
     logging.info("Tables exact match : %s ", exact_match)
