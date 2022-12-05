@@ -141,12 +141,12 @@ def get_synonyms_unfiltered():  # noqa: E501
 def exact_match_results(results, term, include_cid, exact_match):
     for i, t in enumerate(results):
         if include_cid is True:
-            if t[1] == term:
+            if t[1].casefold() == term.casefold():
                 results[i] = t[0], t[1], True
             else:
                 results[i] = t[0], t[1], False
         if include_cid is False:
-            if t[1] == term:
+            if t[1].casefold() == term.casefold():
                 results[i] = t[1], True
             else:
                 results[i] = t[1], False
@@ -437,8 +437,8 @@ def join_results(table_name, column_name, term, properties, exact_match):
         for table in tables_list:
             if table not in tables:
                 table_results = lookup.search_table_by_cid(table, t[0])
-                tables[table] = sorted(exact_match_results(table_results, term, False, exact_match), key = lambda t : (t[1]), reverse=True)
-            result[table] = tables[table]
+                tables[table.] = sorted(exact_match_results(table_results, term, False, exact_match), key = lambda t : (t[1]), reverse=True)
+            result[table.replace("cid_", "")] = tables[table]
         results.append(result)
 
     return results
