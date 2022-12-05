@@ -436,7 +436,7 @@ def join_results(table_name, column_name, term, properties, exact_match):
             if table not in tables:
                 table_results = lookup.search_table_by_cid(table, t[0])
                 tables[table.lower()] = sorted(exact_match_results(table_results, term, False, exact_match), key = lambda t : (t[1]), reverse=True)
-            result[table.replace("cid_", "").lower()] = tables[table]
+            result[table.replace("cid_", "").lower()] = tables[table.lower()]
         results.append(result)
 
     return results
