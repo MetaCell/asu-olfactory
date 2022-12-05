@@ -54,6 +54,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -104,6 +110,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -154,6 +166,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -204,6 +222,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -254,6 +278,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -304,6 +334,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -354,6 +390,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -404,6 +446,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -454,6 +502,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -504,6 +558,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -554,6 +614,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -604,6 +670,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -654,6 +726,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -691,6 +769,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -728,6 +812,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -765,6 +855,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -802,6 +898,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -839,6 +941,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -876,6 +984,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -913,6 +1027,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -950,6 +1070,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -987,6 +1113,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -1024,6 +1156,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -1061,6 +1199,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -1098,6 +1242,12 @@ paths:
         schema:
           type: string
         style: simple
+      - in: query
+        required: false
+        name: exactMatch
+        schema:
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
@@ -1135,42 +1285,12 @@ paths:
         schema:
           type: string
         style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Molecule'
-                type: array
-          description: Successful response - returns a single `Molecule`.
-      summary: Get a Molecule
-      tags:
-      - molecule
-      x-openapi-router-controller: pub_chem_index.controllers.molecule_controller
-    summary: Path used to manage a single Molecule search by CID.
-  /molecules/cids/{cids}/tables/{tables}:
-    description: The REST endpoint/path used to get instances from a list of tables
-    get:
-      description: Gets the details of a single instance of a `Molecule`.
-      operationId: search_across_tables
-      parameters:
-      - description: List of cids.
-        explode: false
-        in: path
-        name: cids
-        required: true
+      - in: query
+        required: false
+        name: exactMatch
         schema:
-          type: string
-        style: simple
-      - description: List of tables
-        explode: false
-        in: path
-        name: tables
-        required: true
-        schema:
-          type: string
-        style: simple
+          type: boolean
+        description: Return results matching exact query
       responses:
         "200":
           content:
