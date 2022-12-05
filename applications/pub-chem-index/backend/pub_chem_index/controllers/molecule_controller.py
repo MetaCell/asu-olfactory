@@ -157,8 +157,6 @@ def exact_match_results(results, term, include_cid, exact_match):
         filter_results = filter(lambda x: x[2]==exact_match, results)
     elif include_cid is False and exact_match is True:
         filter_results = filter(lambda x: x[1]==exact_match, results)
-    elif include_cid is False and exact_match is False:
-        filter_results = filter(lambda x: x[1]==exact_match, results)
 
     return filter_results
 
