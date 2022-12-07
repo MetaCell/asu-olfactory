@@ -441,7 +441,7 @@ def join_results(table_name, column_name, term, properties, exact_match):
             results.append(result)
 
             return results
-    except ValueError:
+    except:
         return "Invalid operation", 400
 
 def search_synonyms_properties(term, tables, exact_match=None):  # noqa: E501
