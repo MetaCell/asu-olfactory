@@ -1,4 +1,62 @@
-*Cloud harness deployment*
+# ASU Olfactory Instructions
+
+## Endpoints Use
+
+All available endpoints are available here https://pubchem.olfactory.dev.metacell.us/ui/
+
+For summary:
+- molecules/synonyms/{CID/TEXT}
+- molecules/synonyms_unfiltered/{CID/TEXT}
+- molecules/mesh/{CID/TEXT}
+- molecules/iupac/{CID/TEXT}
+- molecules/mass/{CID/TEXT}
+- molecules/component/{CID/TEXT}
+- molecules/title/{CID/TEXT}
+- molecules/smiles/{CID/TEXT}
+- molecules/pmid/{CID/TEXT}
+- molecules/sid/{CID/TEXT}
+- molecules/parent/{CID/TEXT}
+- molecules/patent/{CID/TEXT}
+- molecules/inchi/{CID/TEXT}
+
+Each of the above endpoints can be followed by 
+- /properties/{FILES_LIST}
+
+Where {FILES_LIST} is comma separated list of the PubChem file names.
+E.g. 
+ - /properties/synonym_filtered,synonym_unfiltered,mesh,title,iupac
+
+Any of the endpoints above can be followed by Query Parameter 
+```
+?exactMatch=True
+```
+Which will return the exact matches of the search.
+
+Example Searches returning exact matches:
+- https://pubchem.olfactory.dev.metacell.us/molecules/mesh/chlorin?exactMatch=True
+- https://pubchem.olfactory.dev.metacell.us/molecules/mesh/chlorin/properties/synonym_filtered,title,iupac?exactMatch=True
+
+By default, not using the query parameter will return all results regardless of exact match.
+- https://pubchem.olfactory.dev.metacell.us/molecules/mesh/chlorin
+- https://pubchem.olfactory.dev.metacell.us/molecules/mesh/chlorin?exactMatch=False
+
+***Names of tables that can be passed for cross table lookup.***
+- InChI_Key
+- Mass
+- PMID
+- Parent
+- Patent
+- SID
+- MeSH
+- SMILES
+- Synonyms_filtered
+- Synonym_unfiltered
+- Title
+- IUPAC
+- Component
+
+
+## Cloud harness deployment
 
 ```
 
