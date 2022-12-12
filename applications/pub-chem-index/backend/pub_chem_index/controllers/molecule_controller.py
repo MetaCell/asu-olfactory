@@ -409,37 +409,40 @@ def search_synonyms_unfiltered(term, exact_match=None):  # noqa: E501
     return sorted(results, key = lambda t : (t[2]), reverse=True)
 
 def join_results(table_name, column_name, term, properties, exact_match):
-    tables_list = properties.split(',')
+    try:
+        tables_list = properties.split(',')
 
-    for index, table in enumerate(tables_list):
-        tables_list[index] = "cid_" + table
+        for index, table in enumerate(tables_list):
+            tables_list[index] = "cid_" + table
 
-    first_results = []
-    if term.isnumeric():
-        first_results = lookup.search_table_by_cid(table_name, term)
-    else:
-        first_results = lookup.search_table_by_value(table_name, column_name ,term)
+        first_results = []
+        if term.isnumeric():
+            first_results = lookup.search_table_by_cid(table_name, term)
+        else:
+            first_results = lookup.search_table_by_value(table_name, column_name ,term)
 
-    first_results = sorted(exact_match_results(first_results, term, True, exact_match), key = lambda t : (t[2]), reverse=True)
+        first_results = sorted(exact_match_results(first_results, term, True, exact_match), key = lambda t : (t[2]), reverse=True)
 
-    results = []
-    tables = {}
-    for i, t in enumerate(first_results):
-        result = {}
-        result["cid"] = t[0]
-        exact = False
-        if term == t[1]:
-            exact = True
-        result["exact"] = exact
-        result[table_name.replace("cid_", "").lower()] = t[1]
-        for table in tables_list:
-            if table not in tables:
-                table_results = lookup.search_table_by_cid(table, t[0])
-                tables[table.lower()] = sorted(exact_match_results(table_results, term, False, exact_match), key = lambda t : (t[1]), reverse=True)
-            result[table.replace("cid_", "").lower()] = tables[table.lower()]
-        results.append(result)
+        results = []
+        tables = {}
+        for i, t in enumerate(first_results):
+            result = {}
+            result["cid"] = t[0]
+            exact = False
+            if term == t[1]:
+                exact = True
+            result["exact"] = exact
+            result[table_name.replace("cid_", "").lower()] = t[1]
+            for table in tables_list:
+                if table not in tables:
+                    table_results = lookup.search_table_by_cid(table, t[0])
+                    tables[table.lower()] = sorted(exact_match_results(table_results, term, False, exact_match), key = lambda t : (t[1]), reverse=True)
+                result[table.replace("cid_", "").lower()] = tables[table.lower()]
+            results.append(result)
 
-    return results
+            return results
+    except:
+        return "Invalid operation", 400
 
 def search_synonyms_properties(term, tables, exact_match=None):  # noqa: E501
     results = join_results("cid_synonym_filtered", "synonym", term, tables, exact_match);

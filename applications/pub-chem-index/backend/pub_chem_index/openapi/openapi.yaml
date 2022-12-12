@@ -116,6 +116,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -219,6 +221,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -322,6 +326,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -425,6 +431,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -528,6 +536,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -631,6 +641,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -734,6 +746,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -837,6 +851,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -940,6 +956,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -1043,6 +1061,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -1146,6 +1166,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -1249,6 +1271,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
@@ -1352,6 +1376,8 @@ paths:
                   $ref: '#/components/schemas/Molecule'
                 type: array
           description: Successful response - returns a single `Molecule`.
+        "400":
+          description: Parameter must be integer
       summary: Get a Molecule
       tags:
       - molecule
